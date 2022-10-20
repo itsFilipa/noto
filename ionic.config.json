@@ -1,0 +1,7 @@
+{
+  "name": "noto",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
