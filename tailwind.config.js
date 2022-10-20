@@ -2,7 +2,15 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        warmblack: "#242423",
+      },
+      fontFamily: {
+        display: ["Poppins", "sans-serif"],
+        body: ["Quicksand", "sans-serif"],
+      },
+    },
   },
   plugins: [
     require("@tailwindcss/aspect-ratio"),
