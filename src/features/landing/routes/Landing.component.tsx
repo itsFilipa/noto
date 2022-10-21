@@ -1,6 +1,11 @@
-import { IonPage, IonContent, IonButton } from "@ionic/react";
+import { IonPage, IonContent, IonButton, IonIcon } from "@ionic/react";
 import logo from "../assets/logo.svg";
 import watermind from "../assets/watermind.svg";
+import notecard from "../assets/notecard.svg";
+import filter from "../assets/filter.svg";
+
+import check from "../assets/check-badge.svg";
+import chevronRight from "../assets/chevron-right.svg"; 
 
 export const LandingPage = () => {
   return (
@@ -48,7 +53,42 @@ export const LandingPage = () => {
           />
         </div>
 
-        <div className="h-screen bg-indigo-100">
+        <div className="h-screen bg-indigo-100 px-16 col justify-evenly items-center">
+          <div className="col gap-7">
+            <p className="font-display font-semibold text-5xl w-fit mx-auto">
+              Presenting the notecard
+            </p>
+
+            <div className="flex gap-3 items-center justify-center">
+              <IonIcon icon={check} />
+              <p className="font-display font-semibold ">
+                Innovative note-taking structure
+              </p>
+            </div>
+
+          </div>
+
+          <img src={notecard} alt="notecard explained" className="w-[60%]" />
+
+          <div className="col items-center">
+            <p className="font-medium">A more simple way to organize and find information.</p>
+            <p className="font-medium w-4/5 text-center">The notecard is designed to deliver a powerful knowledge foundation.</p>
+          </div>
+
+          <div className="flex gap-3 items-center">
+            <p className="font-sm font-semibold text-indigo-600">Try it now</p>
+            <IonIcon icon={chevronRight} />
+          </div>
+        </div>
+
+        <div className="h-screen bg-white px-16">
+
+        <div className="grid grid-cols-2 gap-12 items-center justify-between">
+          <img src={filter} alt="collage of tags and other filtering components"/>
+          <div>
+
+          </div>
+        </div>
 
         </div>
       </IonContent>
