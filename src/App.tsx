@@ -21,6 +21,7 @@ import '@ionic/react/css/core.css';
 /* Theme variables */
 import './theme/variables.css';
 import "./theme/tailwind.css";
+import "./theme/ionic.css";
 
 setupIonicReact();
 

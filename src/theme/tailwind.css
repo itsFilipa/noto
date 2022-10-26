@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --button-bg: theme("colors.indigo.500");
+    --button-bg-active: theme("colors.indigo.700");
+    --button-bg-light: theme("colors.white");
+    --button-bg-light-active: theme("colors.neutral.200");
+    --button-bg-loading: theme("colors.indigo.300");
+    --button-border-color: theme("colors.neutral.200");
+    --button-border-radius: theme("borderRadius.xl");
+    --button-box-shadow: theme("boxShadow.none");
+    --button-font-size: theme("fontSize.base");
+    --button-font-weight: theme("fontWeight.medium");
+    --button-rounded: theme("borderRadius.full");
+    --button-default-text-color: theme("colors.white");
+    --button-text-color: theme("colors.neutral.400");
+  }
+}
+
 @layer utilities {
   .col {
     @apply flex flex-col;

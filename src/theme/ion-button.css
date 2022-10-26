@@ -1,0 +1,31 @@
+ion-button {
+  --border-radius: var(--button-border-radius);
+  --background: var(--button-bg);
+  --background-actived: var(--button-bg-active);
+  --color: var(--button-default-text-color);
+  font-weight: var(--button-font-weight);
+  font-size: var(--button-font-size);
+}
+
+ion-button[size="small"]{
+  height: 36px;
+}
+
+ion-button[size="large"]{
+  height: 52px;
+}
+
+ion-button[fill="outline"] {
+  --background: transparent;
+  --color: var(--button-text-color);
+  --border-color: var(--button-border-color);
+  --border-width: 2px;
+  --border-style: solid;
+  --background-activated: var(--button-bg-light-active);
+}
+
+ion-button[fill="clear"] {
+  --background: transparent;
+  --color: var(--button-text-color);
+  --background-activated: var(--button-bg-light-active);
+}

@@ -5,7 +5,7 @@ http://ionicframework.com/docs/theming/ */
 :root {
 
   /** Set the background for the entire app **/
-  --ion-background-color: theme("colors.neutral.100");
+  --ion-background-color: theme("colors.white");
   --ion-text-color: theme("colors.warmblack");
 
   --ion-font-family: theme("fontFamily.body");
