@@ -17,6 +17,18 @@
     --button-rounded: theme("borderRadius.full");
     --button-default-text-color: theme("colors.white");
     --button-text-color: theme("colors.neutral.400");
+    --button-child-spacing: theme("spacing.2");
+    --button-icon-size-small: theme("width.4");
+    --button-icon-size: 18px;
+    --button-icon-size-large: theme("width.6");
+    --button-icon-only-small: theme("width.6");
+    --button-icon-only: theme("width.7");
+    --button-icon-only-large: theme("width.9");
+
+    --radio-unchecked-border-color: theme("colors.neutral.400");
+    --radio-checked-border-color: theme("colors.indigo.700");
+    --radio-checked-bg: theme("colors.indigo.500");
+    --radio-unchecked-bg: theme("colors.white");
   }
 }
 

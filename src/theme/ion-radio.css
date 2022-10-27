@@ -1,0 +1,25 @@
+ion-radio {
+  width: 28px;
+  height: 28px;
+}
+
+ion-radio::part(container) {
+  background: var(--radio-unchecked-bg);
+  border: 1px solid var(--radio-unchecked-border-color);
+  @apply rounded-full;
+}
+
+ion-radio.radio-checked::part(container) {
+  background: var(--radio-checked-bg);
+  border: 1px solid var(--radio-checked-border-color);
+}
+
+ion-radio.radio-checked::part(mark) {
+  width: 6px;
+  height: 13px;
+  border-width: 0px 2px 2px 0px;
+  border-style: solid;
+  border-color: #fff;
+
+  transform: rotate(45deg);
+}

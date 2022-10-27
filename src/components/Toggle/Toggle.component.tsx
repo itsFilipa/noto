@@ -1,0 +1,1 @@
+export {IonToggle as Toggle} from '@ionic/react';

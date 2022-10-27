@@ -1,4 +1,18 @@
 ion-button {
+  display: block;
+}
+
+ion-button.md > div {
+  text-transform: none;
+}
+
+/************
+
+ BUTTON VARIANTS 
+
+ *************/
+
+ion-button[fill="default"] {
   --border-radius: var(--button-border-radius);
   --background: var(--button-bg);
   --background-actived: var(--button-bg-active);
@@ -7,12 +21,8 @@ ion-button {
   font-size: var(--button-font-size);
 }
 
-ion-button[size="small"]{
-  height: 36px;
-}
-
-ion-button[size="large"]{
-  height: 52px;
+ion-button.ion-activated[fill="default"].ios {
+  --background: var(--button-bg-active);
 }
 
 ion-button[fill="outline"] {
@@ -20,12 +30,116 @@ ion-button[fill="outline"] {
   --color: var(--button-text-color);
   --border-color: var(--button-border-color);
   --border-width: 2px;
+  --border-radius: var(--button-border-radius);
   --border-style: solid;
   --background-activated: var(--button-bg-light-active);
 }
 
 ion-button[fill="clear"] {
+  --border-radius: var(--button-border-radius);
   --background: transparent;
   --color: var(--button-text-color);
   --background-activated: var(--button-bg-light-active);
+}
+
+/************
+
+ BUTTON SIZES 
+ 
+ *************/
+
+ion-button[size="small"] {
+  height: 36px;
+}
+
+ion-button[size="large"] {
+  height: 52px;
+}
+
+/************
+
+ BUTTON ICON PLACEMENT 
+ 
+ *************/
+
+ion-button.align-sb > div {
+  @apply flex items-center w-full justify-between;
+}
+
+ion-button.align-start-sb > div {
+  @apply flex items-center w-full justify-start;
+}
+
+ion-button.align-start-sb > div > span[slot="end"] {
+  @apply ml-auto;
+}
+
+ion-button.align-center > div {
+  @apply flex items-center;
+}
+
+/* ion-button.align-center > div > span[slot="start"],
+ion-button.align-center > div > span[slot="end"] {
+  @apply flex flex-center;
+} */
+
+ion-button > div > span[slot="start"] {
+  margin-right: var(--button-child-spacing);
+}
+
+ion-button > div > span[slot="end"] {
+  margin-left: var(--button-child-spacing);
+}
+
+/************
+
+ BUTTON ICON-ONLY 
+ 
+ *************/
+
+ion-button.btn-icon-only {
+  width: var(--button-icon-only);
+  height: var(--button-icon-only);
+  --border-radius: var(--button-rounded);
+  --padding-start: 0px;
+  --padding-end: 0px;
+}
+
+ion-button.btn-icon-only > div > span[slot="start"] {
+  margin-right: 0px;
+}
+
+ion-button.btn-icon-only > div > span[slot="start"] > svg {
+  width: var(--button-icon-size);
+  height: var(--button-icon-size);
+}
+
+ion-button.btn-icon-only[size="small"] {
+  width: var(--button-icon-only-small);
+  height: var(--button-icon-only-small);
+}
+
+ion-button.btn-icon-only[size="small"] > div > span[slot="start"] > svg {
+  width: var(--button-icon-size-small);
+  height: var(--button-icon-size-small);
+}
+
+ion-button.btn-icon-only[size="large"] {
+  width: var(--button-icon-only-large);
+  height: var(--button-icon-only-large);
+}
+
+ion-button.btn-icon-only[size="large"] > div > span[slot="start"] > svg {
+  width: var(--button-icon-size-large);
+  height: var(--button-icon-size-large);
+}
+
+/************
+
+ BUTTON MISC 
+ 
+ *************/
+
+ion-button.btn-loading > div {
+  display: none;
 }

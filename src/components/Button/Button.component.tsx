@@ -4,13 +4,15 @@ import { forwardRef } from "react";
 import { cn } from "../../lib/cn";
 
 export type ButtonVariant = ComponentPropsWithRef<typeof IonButton>["fill"];
-type ButtonAlign = "center" | "space-between";
+type ButtonAlign = "align-center" | "align-sb" | "align-start-sb";
 
 export type ButtonProps = {
   align?: ButtonAlign;
   children?: ReactNode;
   className?: string;
   disabled?: boolean;
+  href?: string;
+  iconOnly?: boolean;
   loading?: boolean;
   prefix?: ReactNode;
   rounded?: boolean;
@@ -27,10 +29,12 @@ export type Ref = HTMLIonButtonElement;
 
 export const Button = forwardRef<Ref, ButtonProps>((
   {
-    align = "center",
+    align = "align-center",
     className,
     children,
     disabled = false,
+    href,
+    iconOnly = false,
     loading = false,
     prefix,
     rounded = false,
@@ -49,11 +53,14 @@ export const Button = forwardRef<Ref, ButtonProps>((
       className={cn(`
           ${shadow && "btn-shadow"}
           ${loading && "btn-loading"}
+          ${align && `${align}`}
+          ${iconOnly && "btn-icon-only"}
           ${className}
         `)}
       expand="block"
       fill={variant}
       disabled={disabled || loading}
+      href={href}
       size={size}
       style={{
         ...style,
@@ -65,7 +72,7 @@ export const Button = forwardRef<Ref, ButtonProps>((
           {children}
           {suffix && <span slot="end">{suffix}</span>}
         </div>
-      {loading && (<IonSpinner name="bubbles" />)}
+      {loading && (<IonSpinner name="crescent" />)}
     </IonButton>
   )
 });
