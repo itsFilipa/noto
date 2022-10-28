@@ -10,7 +10,8 @@ export const ButtonDocs = () => {
         <header>
           <h1 className="font-display text-2xl font-bold">Travel to</h1>
           <div className="flex gap-4">
-            <Button href="/components/toggles">Misc</Button>
+          <Button href="/components/buttons">Button</Button>
+            <Button href="/components/misc">Misc</Button>
           </div>
         </header>
 

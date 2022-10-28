@@ -3,6 +3,7 @@ ion-chip {
   --color: theme("colors.neutral.500");
   padding: 6px 16px;
   border: 1px solid theme("colors.neutral.300");
+  margin: 0px;
 }
 
 ion-chip.checked {
@@ -10,4 +11,9 @@ ion-chip.checked {
   --color: white;
   border: 1px solid theme("colors.indigo.700");
   @apply flex gap-2.5;
+}
+
+ion-chip.discover-chip {
+  padding: 4px 16px;
+  height: 26px;
 }
