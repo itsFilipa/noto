@@ -23,8 +23,7 @@ export const InputDocs = () => {
             <Input
               label="Email"
               placeholder="Enter your email here"
-              helperText="Enter a valid email"
-              errorText="Wrong"
+              errorText="This is an error"
             />
           </div>
         </main>

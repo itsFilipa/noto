@@ -1,14 +1,9 @@
-ion-item::part(native) {
+/* ion-input.custom {
+  --padding-end: 16px;
+} */
+
+ion-input {
   border: 1px solid theme("colors.neutral.400");
   border-radius: 12px;
-  padding-left: 16px;
-}
-
-ion-item ion-note {
-  margin-left: -4px;
-}
-
-ion-input.custom {
-  --padding-end: 16px;
-  width: calc(100vw - 16px - 40px);
+  --padding-start: 10px !important;
 }

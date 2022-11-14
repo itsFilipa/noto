@@ -5,6 +5,9 @@ module.exports = {
     extend: {
       colors: {
         warmblack: "#242423",
+        warning: "#ea8c55",
+        error: "#eb445a",
+        success: "#588157",
       },
       fontFamily: {
         display: ["Poppins", "sans-serif"],
