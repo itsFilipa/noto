@@ -1,13 +1,13 @@
 import { cn } from "../../lib/cn";
 
-import React, { cloneElement, createElement } from "react";
+import React, { cloneElement } from "react";
 
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 import { variantProps, VariantPropsOf } from "classname-variants/react";
 
 const noteProps = variantProps({
-  base: "flex justify-start",
+  base: "flex justify-start items-center",
   variants: {
     size: {
       small: "text-xs [&>div:first-child]:mt-[2px]",

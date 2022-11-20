@@ -15,7 +15,7 @@ import graphIcon from "../assets/graph-icon.svg";
 export const LandingPage = () => {
   return (
     <IonPage>
-      <IonContent>
+      <IonContent className="no-padding">
         <div className="snap-y snap-mandatory overflow-y-scroll max-h-screen">
           <div className="h-screen bg-white px-16 pt-5 col justify-between snap-start">
             <div className="flex justify-between items-center">

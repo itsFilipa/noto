@@ -1,36 +1,74 @@
 import { IonInput } from "@ionic/react";
 import { Note } from "../Note";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import type { VariantPropsOf } from "classname-variants/react";
+import { variants } from "classname-variants";
+import { cn } from "../../lib/cn";
+import { ComponentPropsWithoutRef, ForwardRefRenderFunction } from "react";
 
-export type InputProps = React.ComponentProps<typeof IonInput>;
-
-export type CustomInputProps = InputProps & {
+const inputVariants = variants({
+  base: "input",
+  variants: {
+    size: {
+      sm: "input-sm",
+      default: "input--size-default",
+    },
+    color: {
+      default: "input--color-default",
+      error: "input--color-error",
+    },
+    disabled: {
+      true: "input--disabled",
+    },
+  },
+  defaultVariants: {
+    size: "default",
+    color: "default",
+  },
+});
+export interface InputVariantProps
+  extends VariantPropsOf<typeof inputVariants> {
   label: string;
   errorText?: string;
   invalid?: boolean;
-};
+}
 
-export const Input = ({
+export type InputCustomProps = InputVariantProps &
+  Omit<ComponentPropsWithoutRef<typeof IonInput>, "size" | "color">;
+
+type Ref = HTMLIonInputElement;
+
+export const Input:ForwardRefRenderFunction<Ref, InputCustomProps> = ({
   label,
   errorText,
   invalid,
+  className,
+  placeholder,
+  size,
+  color,
+  disabled = false,
+  readonly = false,
   ...rest
-}: CustomInputProps) => {
+}: InputCustomProps) => {
   return (
-    // <IonItem lines="none">
-    //   <div>
-    //     <IonLabel position="floating">{label}</IonLabel>
-    //     <IonInput {...rest} className="custom"/>
-    //   </div>
-    //   <IonNote slot="helper">{helperText}</IonNote>
-    //   <IonNote slot="error">{errorText}</IonNote>
-    // </IonItem>
-
     <div>
-      <Note label={label} />
-      <IonInput {...rest} className="custom"></IonInput>
+      <Note label={label} className="mb-1" />
+      <IonInput
+        placeholder={placeholder}
+        disabled={disabled}
+        readonly={readonly}
+        //className={cn(`custom-input ${className}`)}
+        // className={inputVariants({
+        //   size,
+        //   color: errorText ? "error" : color,
+        //   disabled,
+        // })}
+        className={cn(`custom-input ${className} ${inputVariants({size,
+          color: errorText ? "error" : color, disabled})}}` )}
+      ></IonInput>
       {errorText && (
         <Note
+          className="mt-1"
           color="error"
           label={errorText}
           icon={<ExclamationTriangleIcon className="w-4 h-4 text-error" />}

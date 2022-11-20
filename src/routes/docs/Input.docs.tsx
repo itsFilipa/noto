@@ -23,7 +23,13 @@ export const InputDocs = () => {
             <Input
               label="Email"
               placeholder="Enter your email here"
+            />
+
+            <Input
+              label="Email"
+              placeholder="Enter your email here"
               errorText="This is an error"
+              size="sm"
             />
           </div>
         </main>

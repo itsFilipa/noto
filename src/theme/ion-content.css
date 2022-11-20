@@ -1,0 +1,9 @@
+ion-content {
+  --padding-start: theme("spacing.5");
+  --padding-end: theme("spacing.5");
+}
+
+ion-content.no-padding {
+  --padding-start: none;
+  --padding-end: none;
+}

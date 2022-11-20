@@ -19,6 +19,9 @@ module.exports = {
       height: {
         4.5: "1.125rem",
       },
+      boxShadow: {
+        shadowBase: "0 0 10px 0 rgba(24,24,23,0.1)",
+      },
     },
   },
   plugins: [

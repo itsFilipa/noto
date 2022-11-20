@@ -29,7 +29,7 @@ ion-button[fill="outline"] {
   --background: transparent;
   --color: var(--button-text-color);
   --border-color: var(--button-border-color);
-  --border-width: 2px;
+  --border-width: 1px;
   --border-radius: var(--button-border-radius);
   --border-style: solid;
   --background-activated: var(--button-bg-light-active);

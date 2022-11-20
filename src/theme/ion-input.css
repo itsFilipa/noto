@@ -1,9 +1,26 @@
-/* ion-input.custom {
-  --padding-end: 16px;
-} */
-
-ion-input {
-  border: 1px solid theme("colors.neutral.400");
+.custom-input {
   border-radius: 12px;
   --padding-start: 10px !important;
+  border: 1px solid theme("colors.neutral.400");
+}
+
+.custom-input.input--color-default {
+  border: 1px solid theme("colors.neutral.400");
+}
+
+.custom-input.input-sm {
+  width: 160px;
+}
+
+.custom-input.has-focus {
+  border: 1px solid theme("colors.indigo.500");
+}
+
+.custom-input.has-value {
+  border: 1px solid theme("colors.warmblack");
+}
+
+.custom-input.input--color-error{
+  border: 1px solid theme("colors.red.500");
+  background-color: theme("colors.red.100");
 }
