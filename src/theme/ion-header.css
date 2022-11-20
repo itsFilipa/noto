@@ -1,6 +1,7 @@
 
 ion-header ion-toolbar {
   height: 64px;
+  width: 100%;
   --background: theme("colors.white");
   --color: theme("colors.neutral.400");
   --border-style: none;
@@ -28,7 +29,7 @@ ion-header .sc-ion-buttons-ios-s ion-button:not(.button-round) {
   --border-radius: theme("borderRadius.full");
 }
 
-ion-header .sc-ion-buttons-ms-s ion-button:not(.button-round) {
+ion-header .sc-ion-buttons-md-s ion-button:not(.button-round) {
   --border-radius: theme("borderRadius.full");
 }
 

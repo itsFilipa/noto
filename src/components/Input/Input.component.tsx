@@ -43,9 +43,10 @@ export const Input:ForwardRefRenderFunction<Ref, InputCustomProps> = ({
   errorText,
   invalid,
   className,
-  placeholder,
+  placeholder ="Write here...",
   size,
   color,
+  value,
   disabled = false,
   readonly = false,
   ...rest
@@ -57,6 +58,7 @@ export const Input:ForwardRefRenderFunction<Ref, InputCustomProps> = ({
         placeholder={placeholder}
         disabled={disabled}
         readonly={readonly}
+        value={value}
         //className={cn(`custom-input ${className}`)}
         // className={inputVariants({
         //   size,

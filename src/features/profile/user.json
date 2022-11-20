@@ -1,7 +1,8 @@
 {
   "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80",
-  "name": "John Doe",
-  "username": "johndoe",
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "username": "janedoe",
   "description": "Lorem ipsum dolor sit amet consectetur adipiscing elit Ut et massa mi.",
   "followers": 20,
   "following": 10

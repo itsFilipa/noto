@@ -16,10 +16,13 @@ export type ButtonProps = {
   loading?: boolean;
   prefix?: ReactNode;
   rounded?: boolean;
+  routerDirection?: "back" | "forward" | "root";
+  routerLink?: string;
   shadow?: boolean;
   size?: "small" | "default" | "large";
   style?: React.CSSProperties;
   suffix?: ReactNode;
+  type?: "button" | "reset" | "submit";
   variant?: ButtonVariant;
 };
 
@@ -34,6 +37,8 @@ export const Button = forwardRef<Ref, ButtonProps>((
     children,
     disabled = false,
     href,
+    routerLink,
+    routerDirection,
     iconOnly = false,
     loading = false,
     prefix,
@@ -42,6 +47,7 @@ export const Button = forwardRef<Ref, ButtonProps>((
     size = "default",
     suffix,
     style,
+    type,
     variant = "default",
     ...otherProps
   }, ref
@@ -62,10 +68,13 @@ export const Button = forwardRef<Ref, ButtonProps>((
       disabled={disabled || loading}
       href={href}
       size={size}
+      routerLink={routerLink}
+      routerDirection={routerDirection}
       style={{
         ...style,
         ...(rounded && { "--border-radius": "999px" }),
       }}
+      type={type}
     >
       <div>
           {prefix && <span slot="start">{prefix}</span>}

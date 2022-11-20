@@ -2,6 +2,7 @@
   border-radius: 12px;
   --padding-start: 10px !important;
   border: 1px solid theme("colors.neutral.400");
+  background-color: theme("colors.white");
 }
 
 .custom-input.input--color-default {
