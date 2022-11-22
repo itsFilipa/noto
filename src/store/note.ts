@@ -3,6 +3,7 @@ import { User } from "./user";
 export interface Tag {
   id: string;
   name: string;
+  count: number;
   createdAt: string;
 }
 

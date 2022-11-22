@@ -1,0 +1,1 @@
+export {IonCheckbox as Checkbox} from "@ionic/react";

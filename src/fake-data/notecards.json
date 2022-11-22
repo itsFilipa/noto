@@ -7,11 +7,13 @@
       {
         "id": "0",
         "name": "electricity",
+        "count": 2,
         "createdAt": "2022-11-21T00:00:00.000Z"
       },
       {
         "id": "1",
         "name": "generator",
+        "count": 2,
         "createdAt": "2022-11-21T00:00:00.000Z"
       }
     ],
@@ -41,11 +43,13 @@
       {
         "id": "0",
         "name": "electricity",
+        "count": 2,
         "createdAt": "2022-11-21T00:00:00.000Z"
       },
       {
         "id": "1",
         "name": "generator",
+        "count": 2,
         "createdAt": "2022-11-21T00:00:00.000Z"
       }
     ],
@@ -58,11 +62,13 @@
           {
             "id": "0",
             "name": "electricity",
+            "count": 2,
             "createdAt": "2022-11-21T00:00:00.000Z"
           },
           {
             "id": "1",
             "name": "generator",
+            "count": 2,
             "createdAt": "2022-11-21T00:00:00.000Z"
           }
         ],

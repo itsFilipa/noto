@@ -1,8 +1,6 @@
-import { IonHeader, IonToolbar, IonButtons, IonIcon } from "@ionic/react";
+import { IonHeader, IonToolbar, IonButtons } from "@ionic/react";
 import { Button } from "../../../components/Button";
-
-import { MagnifyingGlassIcon, ChevronDownIcon, TrashIcon, EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
-import graphIcon from "../assets/graph.svg";
+import { MagnifyingGlassIcon, ChevronDownIcon, EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 
 export const NotecardHeader = () => {
 

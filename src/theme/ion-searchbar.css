@@ -1,0 +1,16 @@
+ion-searchbar{
+  --background: theme("colors.white") !important;
+  --placeholder-color: theme("colors.neutral.400") !important;
+  padding: 0px 20px !important;
+}
+
+ion-searchbar .searchbar-input-container{
+  --background: theme("colors.white") !important;
+  border-radius: theme("borderRadius.full");
+  border: 1px solid theme("colors.neutral.200");
+}
+
+ion-searchbar .searchbar-input{
+  width: 95% !important;
+  margin-left: 6px;
+}

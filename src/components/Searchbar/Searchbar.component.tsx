@@ -1,0 +1,1 @@
+export {IonSearchbar as Searchbar} from '@ionic/react';
