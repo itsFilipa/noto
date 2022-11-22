@@ -1,18 +1,105 @@
 [
   {
-    "id": "1",
+    "id": "0",
     "title": "Dynamo",
-    "text": "A dynamo is an electrical generator that creates direct current using a commutator. Dynamos were the first electrical generators capable of delivering power for industry, and the foundation upon which many other later electric-power conversion devices were based, including the electric motor, the alternating-current alternator, and the rotary converter.",
+    "content": "A dynamo is an electrical generator that creates direct current using a commutator. Dynamos were the first electrical generators capable of delivering power for industry, and the foundation upon which many other later electric-power conversion devices were based, including the electric motor, the alternating-current alternator, and the rotary converter.",
     "tags": [
-      "generator",
-      "electricity"
+      {
+        "id": "0",
+        "name": "electricity",
+        "createdAt": "2022-11-21T00:00:00.000Z"
+      },
+      {
+        "id": "1",
+        "name": "generator",
+        "createdAt": "2022-11-21T00:00:00.000Z"
+      }
     ],
-    "inlineLinks": 2,
+    "inlineLinks": [],
     "createdAt": "2022-11-21T00:00:00.000Z",
     "lastModifiedAt": "2022-11-21T15:15:00.000Z",
     "likes": 0,
     "forks": 0,
     "visibility": "public",
-    "author": "janedoe"
+    "author": {
+      "id": "0",
+      "profile": {
+        "username": "janedoe",
+        "firstName": "Jane",
+        "lastName": "Doe",
+        "biography": "I am a software engineer.",
+        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80"
+      },
+      "createdAt": "2022-11-21T00:00:00.000Z"
+    }
+  },
+  {
+    "id": "1",
+    "title": "Dynamo",
+    "content": "A dynamo is an electrical generator that creates direct current using a commutator. Dynamos were the first electrical generators capable of delivering power for industry, and the foundation upon which many other later electric-power conversion devices were based, including the electric motor, the alternating-current alternator, and the rotary converter.",
+    "tags": [
+      {
+        "id": "0",
+        "name": "electricity",
+        "createdAt": "2022-11-21T00:00:00.000Z"
+      },
+      {
+        "id": "1",
+        "name": "generator",
+        "createdAt": "2022-11-21T00:00:00.000Z"
+      }
+    ],
+    "inlineLinks": [
+      {
+        "id": "0",
+        "title": "Dynamo",
+        "content": "A dynamo is an electrical generator that creates direct current using a commutator. Dynamos were the first electrical generators capable of delivering power for industry, and the foundation upon which many other later electric-power conversion devices were based, including the electric motor, the alternating-current alternator, and the rotary converter.",
+        "tags": [
+          {
+            "id": "0",
+            "name": "electricity",
+            "createdAt": "2022-11-21T00:00:00.000Z"
+          },
+          {
+            "id": "1",
+            "name": "generator",
+            "createdAt": "2022-11-21T00:00:00.000Z"
+          }
+        ],
+        "inlineLinks": [],
+        "createdAt": "2022-11-21T00:00:00.000Z",
+        "lastModifiedAt": "2022-11-21T15:15:00.000Z",
+        "likes": 0,
+        "forks": 0,
+        "visibility": "public",
+        "author": {
+          "id": "0",
+          "profile": {
+            "username": "janedoe",
+            "firstName": "Jane",
+            "lastName": "Doe",
+            "biography": "I am a software engineer.",
+            "avatarUrl":"https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80"
+          },
+          "createdAt": "2022-11-21T00:00:00.000Z"
+        }
+      }
+    ],
+    "createdAt": "2022-11-21T00:00:00.000Z",
+    "lastModifiedAt": "2022-11-21T15:15:00.000Z",
+    "likes": 0,
+    "forks": 0,
+    "visibility": "public",
+    "author": {
+      "id": "0",
+      "profile": {
+        "username": "janedoe",
+        "firstName": "Jane",
+        "lastName": "Doe",
+        "biography": "I am a software engineer.",
+        "avatarUrl":"https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80"
+      },
+      "createdAt": "2022-11-21T00:00:00.000Z"
+    }
   }
 ]

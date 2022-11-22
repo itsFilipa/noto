@@ -28,29 +28,29 @@ interface UserStore {
   };
 }
 
-const useUserStore = create<UserStore>((set, store) => ({
-  users: [],
-  isLoading: false,
-  error: undefined,
-  actions: {
-    listUsers: async () => {
-      const cachedUsers = store().users;
-      if (cachedUsers.length > 0) {
-        return cachedUsers;
-      }
+// const useUserStore = create<UserStore>((set, store) => ({
+//   users: [],
+//   isLoading: false,
+//   error: undefined,
+//   actions: {
+//     listUsers: async () => {
+//       const cachedUsers = store().users;
+//       if (cachedUsers.length > 0) {
+//         return cachedUsers;
+//       }
 
-      set({ isLoading: true, error: undefined });
-      try {
-        const users = await DB.get<User[]>("users");
-        if (users) {
-          set({ users, isLoading: false });
-          return users;
-        } else {
-          set({ isLoading: false });
-        }
-      } catch (error) {
-        set({ isLoading: false, error: error as Error });
-      }
-    },
-  },
-}));
+//       set({ isLoading: true, error: undefined });
+//       try {
+//         const users = await DB.get<User[]>("users");
+//         if (users) {
+//           set({ users, isLoading: false });
+//           return users;
+//         } else {
+//           set({ isLoading: false });
+//         }
+//       } catch (error) {
+//         set({ isLoading: false, error: error as Error });
+//       }
+//     },
+//   },
+// }));

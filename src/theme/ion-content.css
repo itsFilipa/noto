@@ -9,3 +9,11 @@ ion-content.no-padding {
   --padding-end: none;
   --background: none;
 }
+
+ion-content.popover{
+  --padding-start: theme("spacing.4");
+  --padding-end: theme("spacing.4");
+  --padding-top: theme("spacing.3");
+  --padding-bottom: theme("spacing.3");
+  --background: theme("colors.white");
+}

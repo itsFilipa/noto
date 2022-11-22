@@ -1,0 +1,19 @@
+ion-toggle.toggle-sm{
+  height: 18px;
+  width: 36px;
+  --handle-spacing: 2px;
+  --handle-width: 14px;
+}
+
+ion-toggle.toggle-sm::part(handle){
+  height: 14px;
+  width: 14px;
+}
+
+ion-toggle.toggle-icon::part(handle){
+  background: white url("../components/Toggle/assets/arrow-up.svg") no-repeat center;
+}
+
+ion-toggle.toggle-checked.toggle-icon::part(handle){
+  background: white url("../components/Toggle/assets/arrow-down.svg") no-repeat center;
+}

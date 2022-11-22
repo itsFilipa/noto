@@ -1,12 +1,13 @@
 import { IonHeader, IonToolbar, IonButtons, IonIcon } from "@ionic/react";
 import { Button } from "../../../components/Button";
 
-import { MagnifyingGlassIcon, ChevronDownIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, ChevronDownIcon, TrashIcon, EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
 import graphIcon from "../assets/graph.svg";
 
 export const NotecardHeader = () => {
 
   return (
+    
     <IonHeader>
       <IonToolbar>
           <IonButtons slot="start">
@@ -23,8 +24,17 @@ export const NotecardHeader = () => {
               size="large"
               variant="outline"
               prefix={<ChevronDownIcon className="h-5 w-5 text-neutral-400" />}
+              id="sort"
+              onClick={() => console.log("Clicked")}
             ></Button>
             <Button
+              iconOnly
+              size="large"
+              variant="outline"
+              id="options"
+              prefix={<EllipsisHorizontalIcon className="h-5 w-5 text-neutral-400" />}
+            ></Button>
+            {/* <Button
               iconOnly
               size="large"
               variant="outline"
@@ -35,10 +45,10 @@ export const NotecardHeader = () => {
               size="large"
               variant="outline"
               prefix={<TrashIcon className="h-5 w-5 text-neutral-400" />}
-            ></Button>
+            ></Button> */}
           </IonButtons>
-        
       </IonToolbar>
     </IonHeader>
+
   );
 }

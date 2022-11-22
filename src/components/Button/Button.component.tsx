@@ -13,7 +13,9 @@ export type ButtonProps = {
   disabled?: boolean;
   href?: string;
   iconOnly?: boolean;
+  id?: string;
   loading?: boolean;
+  onClick?: () => void;
   prefix?: ReactNode;
   rounded?: boolean;
   routerDirection?: "back" | "forward" | "root";
@@ -40,7 +42,9 @@ export const Button = forwardRef<Ref, ButtonProps>((
     routerLink,
     routerDirection,
     iconOnly = false,
+    id,
     loading = false,
+    onClick,
     prefix,
     rounded = false,
     shadow = false,
@@ -66,7 +70,9 @@ export const Button = forwardRef<Ref, ButtonProps>((
       expand="block"
       fill={variant}
       disabled={disabled || loading}
+      id={id}
       href={href}
+      onClick={onClick}
       size={size}
       routerLink={routerLink}
       routerDirection={routerDirection}
