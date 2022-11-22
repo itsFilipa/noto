@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1",
+    "title": "Dynamo",
+    "text": "A dynamo is an electrical generator that creates direct current using a commutator. Dynamos were the first electrical generators capable of delivering power for industry, and the foundation upon which many other later electric-power conversion devices were based, including the electric motor, the alternating-current alternator, and the rotary converter.",
+    "tags": [
+      "generator",
+      "electricity"
+    ],
+    "inlineLinks": 2,
+    "createdAt": "2022-11-21T00:00:00.000Z",
+    "lastModifiedAt": "2022-11-21T15:15:00.000Z",
+    "likes": 0,
+    "forks": 0,
+    "visibility": "public",
+    "author": "janedoe"
+  }
+]

@@ -8,6 +8,7 @@
     "@capacitor/haptics": "4.0.1",
     "@capacitor/keyboard": "4.0.1",
     "@capacitor/status-bar": "4.0.1",
+    "@faker-js/faker": "^7.6.0",
     "@heroicons/react": "^2.0.12",
     "@hookform/resolvers": "^2.9.10",
     "@ionic/react": "^6.0.0",

@@ -1,3 +1,6 @@
 ion-tab-bar {
-  
+  --background: theme("colors.white");
+  /* height: 64px; */
+  box-shadow: theme("boxShadow.shadowBase");
 }
+

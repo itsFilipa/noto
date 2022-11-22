@@ -9,7 +9,9 @@ import {
   GlobeAltIcon,
   FunnelIcon,
   UserIcon,
+  PlusCircleIcon
 } from "@heroicons/react/24/outline";
+import {  } from "@heroicons/react/24/solid";
 import notecards from "./assets/cards.svg";
 
 export interface Tab {
@@ -34,6 +36,11 @@ export const TabArray = [
     icon: <IonIcon icon={notecards} />,
   },
   {
+    tab: "New Card",
+    href: "/new",
+    icon: <PlusCircleIcon className="h-[30px] w-[30px] text-warmblack" />,
+  },
+  {
     tab: "Filter",
     href: "/filter",
     icon: <FunnelIcon className="h-[30px] w-[30px] text-warmblack" />,
@@ -45,25 +52,25 @@ export const TabArray = [
   },
 ];
 
-export const Tabs = ({children}: TabsProps) => {
+export const Tabs = ({ children }: TabsProps) => {
   const router = useIonRouter();
 
   return (
     <IonTabs>
       {children}
-      <IonTabBar slot="bottom">
-        {TabArray.map((tab: Tab) => (
-          <IonTabButton
-            key={tab.tab}
-            tab={tab.tab}
-            href={tab.href}
-            selected={router.routeInfo.pathname.includes("/"+tab.href)}
-            // onClick={() => router.push(tab.href)}
-          >
-            {tab.icon}
-          </IonTabButton>
-        ))}
-      </IonTabBar>
+        <IonTabBar slot="bottom">
+          {TabArray.map((tab: Tab) => (
+            <IonTabButton
+              key={tab.tab}
+              tab={tab.tab}
+              href={tab.href}
+              selected={router.routeInfo.pathname.includes("/" + tab.href)}
+              // onClick={() => router.push(tab.href)}
+            >
+              {tab.icon}
+            </IonTabButton>
+          ))}
+        </IonTabBar>
     </IonTabs>
   );
 };
