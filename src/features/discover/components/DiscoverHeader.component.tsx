@@ -23,8 +23,8 @@ export const DiscoverHeader = () => {
             size="large"
             variant="outline"
             prefix={<UsersIcon className="h-5 w-5 text-neutral-400" />}
-            id="filter"
-            onClick={() => console.log("Clicked")}
+            routerLink="/discover/following"
+            routerDirection="forward"
           ></Button>
         </IonButtons>
       </IonToolbar>

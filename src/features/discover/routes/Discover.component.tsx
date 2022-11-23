@@ -45,6 +45,8 @@ export const DiscoverPage = () => {
             suffix={<ChevronRightIcon className="w-6 h-6 text-white" />}
             align="align-start-sb"
             size="small"
+            routerDirection="forward"
+            routerLink="/discover/trending"
           >
             Trending cards
           </Button>
@@ -53,6 +55,8 @@ export const DiscoverPage = () => {
             suffix={<ChevronRightIcon className="w-6 h-6 text-white" />}
             align="align-start-sb"
             size="small"
+            routerDirection="forward"
+            routerLink="/discover/suggestions"
           >
             Picked for you
           </Button>

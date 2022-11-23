@@ -1,0 +1,35 @@
+[
+  {
+    "id": "0",
+    "createdAt": "2019-01-01T00:00:00.000Z",
+    "profile": {
+      "username": "johny",
+      "firstName": "John",
+      "lastName": "Doe",
+      "biography": "I am a developer",
+      "avatarUrl": ""
+    }
+  },
+  {
+    "id": "1",
+    "createdAt": "2019-01-01T00:00:00.000Z",
+    "profile": {
+      "username": "jane",
+      "firstName": "Jane",
+      "lastName": "Doe",
+      "biography": "I am a developer who loves to code",
+      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80"
+    }
+  },
+  {
+    "id": "2",
+    "createdAt": "2019-01-01T00:00:00.000Z",
+    "profile": {
+      "username": "pipa",
+      "firstName": "Filipa",
+      "lastName": "Pips",
+      "biography": "I am an aspiring software enginner, who loves to code!",
+      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80"
+    }
+  }
+]
