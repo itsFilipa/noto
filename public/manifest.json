@@ -1,21 +1,27 @@
 {
-  "short_name": "Ionic App",
-  "name": "My Ionic App",
+  "short_name": "Nōto",
+  "name": "Nōto",
   "icons": [
     {
-      "src": "assets/icon/favicon.png",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "assets/icons/noto-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
     },
     {
-      "src": "assets/icon/icon.png",
+      "src": "assets/icons/noto-500.png",
       "type": "image/png",
-      "sizes": "512x512",
-      "purpose": "maskable"
+      "sizes": "500x500"
+    },
+    {
+      "src": "assets/icons/noto-32.ico",
+      "type": "image/ico",
+      "sizes": "32x32"
     }
   ],
-  "start_url": ".",
+  "id": "/?source=pwa",
+  "start_url": "/discover",
   "display": "standalone",
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff"
+  "theme_color": "#6366F1",
+  "background_color": "#030023",
+  "description": "Nōto is a note-taking platform for everyone. It's a place to share your thoughts, ideas, and passions with the world."
 }
