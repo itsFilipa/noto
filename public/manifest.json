@@ -8,9 +8,19 @@
       "sizes": "192x192"
     },
     {
-      "src": "assets/icons/noto-500.png",
+      "src": "assets/icons/noto-256.png",
       "type": "image/png",
-      "sizes": "500x500"
+      "sizes": "256x256"
+    },
+    {
+      "src": "assets/icons/noto-384.png",
+      "type": "image/png",
+      "sizes": "384x384"
+    },
+    {
+      "src": "assets/icons/noto-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
     },
     {
       "src": "assets/icons/noto-32.ico",
@@ -20,8 +30,9 @@
   ],
   "id": "/?source=pwa",
   "start_url": "/discover",
-  "display": "standalone",
+  "display": "fullscreen",
   "theme_color": "#6366F1",
+  "scope": "/",
   "background_color": "#030023",
   "description": "Nōto is a note-taking platform for everyone. It's a place to share your thoughts, ideas, and passions with the world."
 }
