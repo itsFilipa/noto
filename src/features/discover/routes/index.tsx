@@ -6,6 +6,7 @@ import { FollowingPage } from "./Following.component"
 import { PickedForYouPage } from "./PickedForYou.component"
 import { PopularTagsPage } from "./PopularTags.component"
 import { TrendingCardsPage } from "./TrendingCards.component"
+import { UserProfilePage } from "./UserProfile.component"
 
 export const DiscoverRoutes = () => {
 
@@ -26,6 +27,9 @@ export const DiscoverRoutes = () => {
         </Route>
         <Route exact path="/discover/following">
           <FollowingPage />
+        </Route>
+        <Route exact path="/discover/*/user/:id">
+          <UserProfilePage />
         </Route>
       </IonRouterOutlet>
     </Tabs>

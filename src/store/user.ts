@@ -7,6 +7,8 @@ export interface UserProfile {
   lastName: string;
   biography: string;
   avatarUrl: string; // generate from https://avatars.dicebear.com/
+  followers: string[];
+  following: string[];
 }
 
 export interface User {
