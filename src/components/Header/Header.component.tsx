@@ -12,10 +12,11 @@ export interface HeaderProps {
   title?: string;
   prefix?: JSX.Element;
   suffix?: JSX.Element;
+  suffixText?: string;
   backBtn?: boolean;
 }
 
-export const Header = ({ title, prefix, suffix, backBtn }: HeaderProps) => {
+export const Header = ({ title, prefix, suffix, suffixText, backBtn }: HeaderProps) => {
   return (
     <IonHeader>
       <IonToolbar>
@@ -52,6 +53,14 @@ export const Header = ({ title, prefix, suffix, backBtn }: HeaderProps) => {
               variant="outline"
               prefix={suffix}
             ></Button>
+          </IonButtons>
+        )}
+        {suffixText && (
+          <IonButtons slot="end">
+            <Button
+              size="large"
+              variant="clear"
+            >{suffixText}</Button>
           </IonButtons>
         )}
       </IonToolbar>

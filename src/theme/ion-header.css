@@ -36,3 +36,31 @@ ion-header .sc-ion-buttons-md-s ion-button:not(.button-round) {
 ion-header > ion-toolbar > ion-buttons > ion-button[fill="outline"] {
   --color: var(--button-border-color) !important;
 }
+
+ion-header.header-picker ion-toolbar:first-child {
+  height: 52px;
+  width: 100%;
+  padding-top: 12px;
+  --background: theme("colors.white");
+  --color: theme("colors.neutral.400");
+  --border-style: none;
+  box-shadow: none;
+}
+
+ion-header.header-picker ion-toolbar:last-child {
+  height: 52px;
+  width: 100%;
+  --background: theme("colors.white");
+  --color: theme("colors.neutral.400");
+  --border-style: none;
+  box-shadow: 0px 10px 10px -10px rgba(24, 24, 23, 0.1) !important;
+}
+
+ion-header.header-picker > ion-toolbar > div > ion-button[fill="outline"] {
+  --color: var(--button-border-color);
+  margin-left: 20px;
+}
+
+ion-header.header-picker > ion-toolbar > div > ion-button[fill="outline"] > div {
+  color: var(--button-text-color);
+}
