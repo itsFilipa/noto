@@ -31,7 +31,6 @@ export const FilterHeader = () => {
             variant="outline"
             prefix={<ChevronDownIcon className="h-5 w-5 text-neutral-400" />}
             id="filter"
-            onClick={() => console.log("Clicked")}
           ></Button>
         </IonButtons>
         {/* <Searchbar

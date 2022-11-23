@@ -50,7 +50,7 @@ export const Notecard = ({ notecard }: NoteEntity) => {
 
         {/* Footer */}
 
-        <div className="flex items-center justify-between mt-4">
+        <div className="flex items-center justify-between mt-4 truncate">
           {notecard.tags && (
             <div className="flex items-center gap-1">
               {notecard.tags.map((tag) => (

@@ -15,6 +15,24 @@
         "name": "generator",
         "count": 2,
         "createdAt": "2022-11-21T00:00:00.000Z"
+      },
+      {
+        "id": "2",
+        "name": "directCurrent",
+        "count": 1,
+        "createdAt": "2022-11-21T00:00:00.000Z"
+      },
+      {
+        "id": "3",
+        "name": "commutator",
+        "count": 1,
+        "createdAt": "2022-11-21T00:00:00.000Z"
+      },
+      {
+        "id": "4",
+        "name": "electricMotor",
+        "count": 1,
+        "createdAt": "2022-11-21T00:00:00.000Z"
       }
     ],
     "inlineLinks": [],
