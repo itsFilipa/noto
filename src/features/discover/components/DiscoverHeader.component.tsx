@@ -1,6 +1,9 @@
-import { MagnifyingGlassIcon, UsersIcon } from "@heroicons/react/24/outline"
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline"
 import { IonHeader, IonToolbar, IonButtons } from "@ionic/react"
 import { Button } from "../../../components/Button"
+import usersIcon from "../../../assets/iconout/users.svg";
+import searchIcon from "../../../assets/iconout/magnifying-glass.svg";
+import { Icon } from "../../../components";
 
 export const DiscoverHeader = () => {
 
@@ -13,8 +16,9 @@ export const DiscoverHeader = () => {
             variant="outline"
             size="large"
             prefix={
-              <MagnifyingGlassIcon className="h-5 w-5 text-neutral-400" />
+              <Icon icon={searchIcon} className="text-neutral-400" />
             }
+            id="open-search-modal"
           ></Button>
         </IonButtons>
         <IonButtons slot="end">
@@ -22,7 +26,7 @@ export const DiscoverHeader = () => {
             iconOnly
             size="large"
             variant="outline"
-            prefix={<UsersIcon className="h-5 w-5 text-neutral-400" />}
+            prefix={<Icon icon={usersIcon} className="text-neutral-400 !stroke-2" />}
             routerLink="/discover/following"
             routerDirection="forward"
           ></Button>

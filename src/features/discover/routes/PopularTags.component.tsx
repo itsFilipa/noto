@@ -57,6 +57,7 @@ export const PopularTagsPage = () => {
           ref={modal}
           trigger="popular-tag-modal"
           presentingElement={presentingElement!}
+          canDismiss
         >
           <IonHeader>
             <IonToolbar>
@@ -72,7 +73,6 @@ export const PopularTagsPage = () => {
             <IonList>
               {tags.map((tag) => (
                 <>
-                  {" "}
                   {filterTag && filterTag.id === tag.id ? (
                     <IonItem
                       key={tag.id}

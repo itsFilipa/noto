@@ -25,7 +25,7 @@ export const DiscoverChip = ({
     ${checked && "checked"}
     discover-chip
   `)}
-      onClick={toggleChecked}
+      // onClick={toggleChecked}
     >
       <p className="font-medium">{label}</p>
     </IonChip>

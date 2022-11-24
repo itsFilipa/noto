@@ -1,9 +1,11 @@
-import { HeartIcon } from "@heroicons/react/24/outline";
-import { IonIcon } from "@ionic/react";
 import { Button } from "../../../components/Button";
 import { NoteEntity } from "../../../types";
-import infoIcon from "../assets/info.svg";
-import forkIcon from "../assets/fork.svg";
+import { Icon } from "../../../components";
+import infoIcon from "../../../assets/iconout/info.svg";
+import forkIcon from "../../../assets/iconout/fork.svg";
+import forkFullIcon from "../../../assets/iconout/fork-full.svg";
+import heartIcon from "../../../assets/iconout/heart.svg";
+import heartFullIcon from "../../../assets/iconout/heart-full.svg";
 
 export const DiscoverNotecard = ({ notecard }: NoteEntity) => {
   return (
@@ -32,14 +34,15 @@ export const DiscoverNotecard = ({ notecard }: NoteEntity) => {
             size="default"
             variant="outline"
             iconOnly
-            prefix={<HeartIcon className="w-5 h-5 text-neutral-400" />}
+            prefix={<Icon icon={heartIcon} className=" text-neutral-400" />}
+            
           />
           <Button
             size="default"
             variant="outline"
             iconOnly
             prefix={
-              <IonIcon icon={forkIcon} className="w-5 h-5 text-neutral-400" />
+              <Icon icon={forkIcon} className="text-neutral-400" />
             }
           />
         </div>
@@ -49,7 +52,7 @@ export const DiscoverNotecard = ({ notecard }: NoteEntity) => {
           variant="clear"
           iconOnly
           prefix={
-            <IonIcon icon={infoIcon} className="w-5 h-5 text-neutral-400" />
+            <Icon icon={infoIcon} className="text-neutral-400" />
           }
         />
       </div>
