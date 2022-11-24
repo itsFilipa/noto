@@ -4,6 +4,7 @@ import { PowerIcon, UserIcon, UsersIcon } from "@heroicons/react/24/outline";
 import { Header } from "../../../components/Header";
 
 import user from "../user.json";
+import { ProfileHeader } from "../components";
 
 export type User = {
   avatar?: string;
@@ -17,7 +18,7 @@ export type User = {
 export const ProfilePage = () => {
   return (
     <IonPage>
-      <Header suffix={<PowerIcon className="text-neutral-400" />} />
+      <ProfileHeader />
       <IonContent>
         <div className="mt-6 flex items-center gap-3">
           <div className="w-16 h-16 border border-neutral-200 rounded-full">
@@ -67,10 +68,10 @@ export const ProfilePage = () => {
           </IonItem>
         </div>
 
-        <div className="mt-8 item-mul">
-          <IonItem routerLink="profile/change-email" routerDirection="forward">
+        <div className="mt-8 item-single">
+          {/* <IonItem routerLink="profile/change-email" routerDirection="forward">
             <IonLabel>Change Email</IonLabel>
-          </IonItem>
+          </IonItem> */}
           <IonItem
             routerLink="profile/change-password"
             lines="none"

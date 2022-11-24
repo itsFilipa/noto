@@ -1,10 +1,17 @@
+import {
+  ComponentPropsWithoutRef,
+  forwardRef,
+  ForwardRefRenderFunction,
+  useCallback,
+  useRef,
+} from "react";
+import { mergeRefs } from "react-merge-refs";
 import { IonInput } from "@ionic/react";
 import { Note } from "../Note";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import type { VariantPropsOf } from "classname-variants/react";
 import { variants } from "classname-variants";
 import { cn } from "../../lib/cn";
-import { ComponentPropsWithoutRef, ForwardRefRenderFunction } from "react";
 
 const inputVariants = variants({
   base: "input",
@@ -38,44 +45,63 @@ export type InputCustomProps = InputVariantProps &
 
 type Ref = HTMLIonInputElement;
 
-export const Input:ForwardRefRenderFunction<Ref, InputCustomProps> = ({
-  label,
-  errorText,
-  invalid,
-  className,
-  placeholder ="Write here...",
-  size,
-  color,
-  value,
-  disabled = false,
-  readonly = false,
-  ...rest
-}: InputCustomProps) => {
+export const InputInstance: ForwardRefRenderFunction<Ref, InputCustomProps> = (
+  {
+    className,
+    color,
+    disabled = false,
+    errorText,
+    invalid,
+    label,
+    placeholder = "Write here...",
+    readonly = false,
+    size,
+    value,
+    ...rest
+  },
+  ref
+) => {
+  const inputRef = useRef<HTMLIonInputElement>(null);
+
+  const handleFocus = useCallback(() => {
+    inputRef.current?.setFocus();
+  }, []);
+
   return (
     <div>
       <Note label={label} className="mb-1" />
       <IonInput
-        placeholder={placeholder}
         disabled={disabled}
+        placeholder={placeholder}
         readonly={readonly}
-        value={value}
+        ref={mergeRefs([inputRef, ref])}
+        // value={value}
         //className={cn(`custom-input ${className}`)}
         // className={inputVariants({
         //   size,
         //   color: errorText ? "error" : color,
         //   disabled,
         // })}
-        className={cn(`custom-input ${className} ${inputVariants({size,
-          color: errorText ? "error" : color, disabled})}}` )}
+        className={cn(
+          `custom-input ${className} ${inputVariants({
+            size,
+            color: errorText ? "error" : color,
+            disabled,
+          })}}`
+        )}
       ></IonInput>
       {errorText && (
         <Note
           className="mt-1"
           color="error"
           label={errorText}
+          onClick={handleFocus}
           icon={<ExclamationTriangleIcon className="w-4 h-4 text-error" />}
         />
       )}
     </div>
   );
 };
+
+export const Input = forwardRef(InputInstance);
+Input.displayName = "Input";
