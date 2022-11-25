@@ -5,8 +5,9 @@ import {
   IonTitle,
 } from "@ionic/react";
 import { Button } from "../Button";
+import chevronLeftIcon from "../../assets/iconout/chevron-left.svg";
+import { Icon } from "../Icon";
 
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 export interface HeaderProps {
   title?: string;
@@ -37,7 +38,7 @@ export const Header = ({ title, prefix, suffix, suffixText, backBtn }: HeaderPro
               variant="clear"
               size="large"
               prefix={
-                <ChevronLeftIcon className="h-[30px] w-[30px] text-neutral-400" />
+                <Icon icon={chevronLeftIcon} className="!h-[30px] !w-[30px] text-neutral-400" />
               }
               routerLink="/profile"
               routerDirection="back"

@@ -1,17 +1,16 @@
-import {
-  PencilIcon,
-  TrashIcon,
-  ClockIcon,
-  CalendarDaysIcon,
-  EyeIcon,
-  HeartIcon,
-  ChartBarSquareIcon,
-} from "@heroicons/react/24/outline";
 import { IonIcon } from "@ionic/react";
 import { Button } from "../../../components/Button";
 import { NoteEntity } from "../../../types/";
-import infoIcon from "../assets/info.svg";
-import forkIcon from "../assets/fork.svg";
+import { Icon } from "../../../components";
+import infoIcon from "../../../assets/iconout/info.svg";
+import forkIcon from "../../../assets/iconout/fork.svg";
+import pencilIcon from "../../../assets/iconout/pencil.svg";
+import trashIcon from "../../../assets/iconout/trash.svg";
+import clockIcon from "../../../assets/iconout/clock.svg";
+import calendarIcon from "../../../assets/iconout/calendar-days.svg";
+import eyeIcon from "../../../assets/iconout/eye.svg";
+import heartIcon from "../../../assets/iconout/heart.svg";
+import chartIcon from "../../../assets/iconout/chart-bar-square.svg";
 
 //Create a function to convert ISO Date to the format 'dd MMM yyyy'
 const convertDate = (date: string) => {
@@ -40,7 +39,7 @@ export const Notecard = ({ notecard }: NoteEntity) => {
             size="default"
             variant="outline"
             iconOnly
-            prefix={<PencilIcon className="w-5 h-5 text-neutral-400" />}
+            prefix={<Icon icon={pencilIcon} className="!w-5 !h-5 text-neutral-400" />}
           />
         </div>
 
@@ -67,14 +66,14 @@ export const Notecard = ({ notecard }: NoteEntity) => {
               variant="clear"
               iconOnly
               prefix={
-                <IonIcon icon={infoIcon} className="w-5 h-5 text-neutral-400" />
+                <Icon icon={infoIcon} className="!w-5 !h-5 text-neutral-400" />
               }
             />
             <Button
               size="default"
               variant="outline"
               iconOnly
-              prefix={<TrashIcon className="w-5 h-5 text-neutral-400" />}
+              prefix={<Icon icon={trashIcon} className="!w-5 !h-5 text-neutral-400" />}
             />
           </div>
         </div>

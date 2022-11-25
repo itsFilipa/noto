@@ -2,6 +2,7 @@ import { IonPage, IonContent } from "@ionic/react";
 import { object, string } from "zod";
 import { Form, ControlledInput, Button } from "../../../components";
 import logo from "../assets/logo.svg";
+import { SplashScreen } from '@capacitor/splash-screen';
 
 export const SignUpPage = () => {
   const schema = object({

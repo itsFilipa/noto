@@ -1,6 +1,4 @@
 import { IonPage, IonContent, IonButton, IonIcon } from "@ionic/react";
-import { InboxStackIcon } from "@heroicons/react/24/outline";
-import { HeartIcon } from "@heroicons/react/24/solid";
 import logo from "../assets/logo.svg";
 import watermind from "../assets/watermind.svg";
 import notecard from "../assets/notecard.svg";
@@ -11,6 +9,10 @@ import graph from "../assets/graph.svg";
 import check from "../assets/check-badge.svg";
 import chevronRight from "../assets/chevron-right.svg";
 import graphIcon from "../assets/graph-icon.svg";
+
+import inboxStackIcon from "../../../assets/iconout/inbox-stack.svg";
+import heartIcon from "../../../assets/iconout/heart-full.svg";
+import { Icon } from "../../../components";
 
 export const LandingPage = () => {
   return (
@@ -108,7 +110,7 @@ export const LandingPage = () => {
                 </p>
 
                 <div className="flex gap-3 mb-20">
-                  <InboxStackIcon className="h-6 w-6 text-indigo-500" />
+                  <Icon icon={inboxStackIcon} className="!h-6 !w-6 text-indigo-500" />
                   <p className="font-display font-semibold">
                     Effortless organization
                   </p>
@@ -134,7 +136,7 @@ export const LandingPage = () => {
                 </p>
 
                 <div className="flex gap-3 mb-16 w-[60%]">
-                  <HeartIcon className="h-6 w-6 text-indigo-500" />
+                  <Icon icon={heartIcon} className="!h-6 !w-6 text-indigo-500" />
                   <p className="font-display font-semibold">
                     Sharing is caring
                   </p>

@@ -1,7 +1,8 @@
-import { UserIcon } from "@heroicons/react/24/outline";
 import { IonRouterLink } from "@ionic/react";
 import { useLocation } from "react-router-dom";
 import { UserEntity } from "../../../types";
+import { Icon } from "../../../components";
+import userIcon from "../../../assets/iconout/user.svg";
 
 export const UsersList = ({ user }: UserEntity) => {
 
@@ -18,7 +19,7 @@ export const UsersList = ({ user }: UserEntity) => {
               alt="portrait of user"
             />
           ) : (
-            <UserIcon className="w-8 h-8 text-neutral-400" />
+            <Icon icon={userIcon} className="!w-8 !h-8 text-neutral-400" />
           )}
         </div>
         <div>

@@ -1,8 +1,8 @@
 import { IonChip } from "@ionic/react";
-import { XCircleIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { cn } from "../../lib/cn";
-export { IonChip } from "@ionic/react";
+import { Icon } from "../Icon";
+import xIcon from "../../assets/iconout/x-circle.svg";
 
 export type ChipProps = React.ComponentProps<typeof IonChip>;
 
@@ -26,7 +26,7 @@ export const Chip = ({ checked, label, className, ...rest }: CustomChipProps) =>
         <div
         // onClick={toggleChecked}
         >
-          <XCircleIcon className="h-4.5 w-4.5" />
+          <Icon icon={xIcon} className="h-4.5 w-4.5 text-white" />
         </div>
       </IonChip>
     );

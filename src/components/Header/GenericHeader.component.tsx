@@ -1,6 +1,6 @@
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { IonHeader, IonToolbar, IonButtons, IonTitle } from "@ionic/react";
-import { Button } from "..";
+import { Button, Icon } from "..";
+import chevronLeftIcon from "../../assets/iconout/chevron-left.svg";
 
 
 export interface GenericHeaderProps {
@@ -19,7 +19,7 @@ export const GenericHeader = ({title, backBtn}: GenericHeaderProps) => {
               variant="clear"
               size="large"
               prefix={
-                <ChevronLeftIcon className="h-[30px] w-[30px] text-neutral-400" />
+                <Icon icon={chevronLeftIcon} className="!h-[30px] !w-[30px] text-neutral-400" />
               }
               routerLink={backBtn}
               routerDirection="back"

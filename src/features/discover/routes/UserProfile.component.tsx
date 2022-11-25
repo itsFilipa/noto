@@ -1,13 +1,15 @@
-import { PlusIcon, UserIcon, UsersIcon } from "@heroicons/react/24/outline";
 import { IonPage, IonContent, IonIcon } from "@ionic/react";
 import { useLocation } from "react-router";
-import { Button, GenericHeader } from "../../../components";
+import { Button, GenericHeader, Icon } from "../../../components";
 import { DiscoverNotecard } from "../components";
+import { Note } from "../../../store";
+import plusIcon from "../../../assets/iconout/plus-small.svg";
+import userIcon from "../../../assets/iconout/user.svg";
+import usersIcon from "../../../assets/iconout/users.svg";
+import cardsIcon from "../../../assets/iconout/cards.svg";
 
-import cardsIcon from "../assets/cards-neutral.svg";
 import users from "../../../fake-data/users.json";
 import notecards from "../../../fake-data/notecards.json";
-import { Note } from "../../../store";
 
 export const UserProfilePage = () => {
   const user = users[1];
@@ -29,7 +31,7 @@ export const UserProfilePage = () => {
                 alt="portrait of user"
               />
             ) : (
-              <UserIcon className="w-10 h-10 text-neutral-400" />
+              <Icon icon={userIcon} className="!w-10 !h-10 text-neutral-400" />
             )}
           </div>
 
@@ -46,7 +48,7 @@ export const UserProfilePage = () => {
         <p className="font-medium mt-3">{user.profile.biography}</p>
 
         <div className="flex gap-1 mt-4">
-          <UsersIcon className="w-5 h-5 text-neutral-400" />
+          <Icon icon={usersIcon} className="!w-5 !h-5 text-neutral-400" />
           <p className="font-medium text-sm text-neutral-500">
             {user.profile.followers.length}
           </p>
@@ -60,13 +62,13 @@ export const UserProfilePage = () => {
         <Button
           size="small"
           className="mt-4"
-          prefix={<PlusIcon className="w-5 h-5 text-white" />}
+          prefix={<Icon icon={plusIcon} className="!w-5 !h-5 text-white" />}
         >
           Follow
         </Button>
 
         <div className="flex gap-2 items-center mt-8">
-          <IonIcon icon={cardsIcon} className="w-8 h-8"/>
+          <IonIcon icon={cardsIcon} className="!w-8 !h-8 text-neutral-400"/>
           <p className="font-display font-semibold text-lg text-neutral-500">Notecards</p>
         </div>
 

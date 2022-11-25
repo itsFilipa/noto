@@ -1,9 +1,7 @@
-import {
-  ChevronDownIcon,
-  ChevronLeftIcon,
-} from "@heroicons/react/24/outline";
 import { IonHeader, IonToolbar, IonButtons, IonTitle } from "@ionic/react";
-import { Button } from "../../../components";
+import { Button, Icon } from "../../../components";
+import chevronLeftIcon from "../../../assets/iconout/chevron-left.svg";
+import chevronDownIcon from "../../../assets/iconout/chevron-down.svg";
 
 type Header = {
   tag?: string;
@@ -20,7 +18,7 @@ export const PopularTagsHeader = ({ tag, clearTag }: Header) => {
             variant="clear"
             size="large"
             prefix={
-              <ChevronLeftIcon className="h-[30px] w-[30px] text-neutral-400" />
+              <Icon icon={chevronLeftIcon} className="!h-[30px] !w-[30px] text-neutral-400" />
             }
             routerLink="/discover"
             routerDirection="back"
@@ -33,7 +31,7 @@ export const PopularTagsHeader = ({ tag, clearTag }: Header) => {
           <Button
             size="small"
             variant="outline"
-            suffix={<ChevronDownIcon className="w-4 h-4 text-neutral-500" />}
+            suffix={<Icon icon={chevronDownIcon} className="!w-4 !h-4 text-neutral-500" />}
             align="align-sb"
             className="w-[50%]"
             id="popular-tag-modal"

@@ -1,9 +1,12 @@
 import { IonContent, IonItem, IonLabel, IonPage } from "@ionic/react";
 import { Button } from "../../../components/Button";
-import { UserIcon, UsersIcon } from "@heroicons/react/24/outline";
+
+import userIcon from "../../../assets/iconout/user.svg";
+import usersIcon from "../../../assets/iconout/users.svg";
 
 import user from "../user.json";
 import { ProfileHeader } from "../components";
+import { Icon } from "../../../components";
 
 export type User = {
   avatar?: string;
@@ -28,7 +31,7 @@ export const ProfilePage = () => {
                 className="h-full w-full object-cover rounded-full"
               />
             ) : (
-              <UserIcon className="text-neutral-400" />
+              <Icon icon={userIcon} className="text-neutral-400" />
             )}
           </div>
           <div className="col gap-px">
@@ -42,7 +45,7 @@ export const ProfilePage = () => {
         </div>
 
         <div className="mt-5 flex gap-1 items-center">
-          <UsersIcon className="w-5 h-5 text-neutral-400" />
+          <Icon icon={usersIcon} className="text-neutral-400" />
           <p className="font-medium text-sm text-neutral-500">
             {user.followers}
           </p>

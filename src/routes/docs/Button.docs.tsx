@@ -1,7 +1,8 @@
 import { IonContent, IonIcon, IonPage } from "@ionic/react";
 import { Button } from "../../components/Button";
-import { HeartIcon } from "@heroicons/react/24/solid";
 import { Icon } from "../../components/Icon";
+
+import heartIcon from "../../assets/iconout/heart.svg";
 
 export const ButtonDocs = () => {
   return (
@@ -35,18 +36,18 @@ export const ButtonDocs = () => {
           </div>
 
           <div className="my-6">
-            <h2 className="font-display text-3xl font-bold mb-6 mx-auto w-fit">
+            <h2 className="font-display text-3xl font-bold mb-6 mx-asuto w-fit">
               Icons
             </h2>
-            <Button prefix={<HeartIcon className="w-6 h-6 text-white" />}>
+            <Button prefix={<Icon icon={heartIcon} className="!w-6 !h-6 text-white" />}>
               Icon Left
             </Button>
-            <Button suffix={<HeartIcon className="w-6 h-6 text-white" />}>
+            <Button suffix={<Icon icon={heartIcon} className="!w-6 !h-6 text-white" />}>
               Icon Right
             </Button>
             <Button
-              prefix={<HeartIcon className="w-6 h-6 text-white" />}
-              suffix={<HeartIcon className="w-6 h-6 text-white" />}
+              prefix={<Icon icon={heartIcon} className="!w-6 !h-6 text-white" />}
+              suffix={<Icon icon={heartIcon} className="!w-6 !h-6 text-white" />}
             >
               Two Icons
             </Button>
@@ -56,18 +57,18 @@ export const ButtonDocs = () => {
             <h2 className="font-display text-3xl font-bold mb-6 mx-auto w-fit">
               Icon Spacing
             </h2>
-            <Button prefix={<HeartIcon className="w-6 h-6 text-white" />}>
+            <Button prefix={<Icon icon={heartIcon} className="!w-6 !h-6 text-white" />}>
               Center
             </Button>
             <Button
-              suffix={<HeartIcon className="w-6 h-6 text-white" />}
+              suffix={<Icon icon={heartIcon} className="!w-6 !h-6 text-white" />}
               align="align-sb"
             >
               Space Between
             </Button>
             <Button
-              prefix={<HeartIcon className="w-6 h-6 text-white" />}
-              suffix={<HeartIcon className="w-6 h-6 text-white" />}
+              prefix={<Icon icon={heartIcon} className="!w-6 !h-6 text-white" />}
+              suffix={<Icon icon={heartIcon} className="!w-6 !h-6 text-white" />}
               align="align-start-sb"
             >
               Start & Space Between
@@ -89,34 +90,34 @@ export const ButtonDocs = () => {
               <Button
                 iconOnly
                 size="small"
-                prefix={<HeartIcon />}
+                prefix={<Icon icon={heartIcon} />}
               ></Button>
               <Button
                 iconOnly
-                prefix={<HeartIcon  />}
+                prefix={<Icon icon={heartIcon}  />}
               ></Button>
               <Button
                 iconOnly
                 size="large"
-                prefix={<HeartIcon  />}
+                prefix={<Icon icon={heartIcon}  />}
               ></Button>
 
               <Button
                 iconOnly
                 size="large"
                 variant="outline"
-                prefix={<HeartIcon  />}
+                prefix={<Icon icon={heartIcon}  />}
               ></Button>
               <Button
                 iconOnly
                 variant="outline"
-                prefix={<HeartIcon  />}
+                prefix={<Icon icon={heartIcon}  />}
               ></Button>
               <Button
                 iconOnly
                 size="small"
                 variant="outline"
-                prefix={<HeartIcon />}
+                prefix={<Icon icon={heartIcon} />}
               ></Button>
             </div>
             <div className="flex items-center justify-evenly">
@@ -124,18 +125,18 @@ export const ButtonDocs = () => {
                 iconOnly
                 size="small"
                 variant="clear"
-                prefix={<HeartIcon />}
+                prefix={<Icon icon={heartIcon} />}
               ></Button>
               <Button
                 iconOnly
                 variant="clear"
-                prefix={<HeartIcon  />}
+                prefix={<Icon icon={heartIcon}  />}
               ></Button>
               <Button
                 iconOnly
                 size="large"
                 variant="clear"
-                prefix={<HeartIcon  />}
+                prefix={<Icon icon={heartIcon}  />}
               ></Button>
             </div>
           </div>

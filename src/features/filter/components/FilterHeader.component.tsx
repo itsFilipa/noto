@@ -1,11 +1,9 @@
-import {
-  MagnifyingGlassIcon,
-  ChevronDownIcon,
-} from "@heroicons/react/24/outline";
 import { IonHeader, IonToolbar, IonButtons } from "@ionic/react";
 import { Button } from "../../../components/Button";
 import { Searchbar } from "../../../components/Searchbar";
-import searchIcon from "../../../components/Searchbar/assets/magnifying-glass.svg";
+import searchIcon from "../../../assets/iconout/magnifying-glass.svg";
+import chevronDownIcon from "../../../assets/iconout/chevron-down.svg";
+import { Icon } from "../../../components";
 
 //TODO: animate searchbar
 //https://www.w3schools.com/howto/howto_css_animated_search.asp
@@ -20,7 +18,7 @@ export const FilterHeader = () => {
             variant="outline"
             size="large"
             prefix={
-              <MagnifyingGlassIcon className="h-5 w-5 text-neutral-400" />
+              <Icon icon={searchIcon} className="!h-5 !w-5 text-neutral-400" />
             }
           ></Button>
         </IonButtons>
@@ -29,7 +27,7 @@ export const FilterHeader = () => {
             iconOnly
             size="large"
             variant="outline"
-            prefix={<ChevronDownIcon className="h-5 w-5 text-neutral-400" />}
+            prefix={<Icon icon={chevronDownIcon} className="!h-5 !w-5 text-neutral-400" />}
             id="filter"
           ></Button>
         </IonButtons>

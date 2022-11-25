@@ -1,6 +1,9 @@
 import { IonHeader, IonToolbar, IonButtons } from "@ionic/react";
 import { Button } from "../../../components/Button";
-import { MagnifyingGlassIcon, ChevronDownIcon, EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
+import searchIcon from "../../../assets/iconout/magnifying-glass.svg";
+import chevronDownIcon from "../../../assets/iconout/chevron-down.svg";
+import ellipsisHorizontalIcon from "../../../assets/iconout/ellipsis-horizontal.svg";
+import { Icon } from "../../../components";
 
 export const NotecardHeader = () => {
 
@@ -13,7 +16,7 @@ export const NotecardHeader = () => {
               iconOnly
               variant="outline"
               size="large"
-              prefix={<MagnifyingGlassIcon className="h-5 w-5 text-neutral-400" />}
+              prefix={<Icon icon={searchIcon} className="!h-5 !w-5 text-neutral-400" />}
             ></Button>
           </IonButtons>
           <IonButtons slot="end">
@@ -21,7 +24,7 @@ export const NotecardHeader = () => {
               iconOnly
               size="large"
               variant="outline"
-              prefix={<ChevronDownIcon className="h-5 w-5 text-neutral-400" />}
+              prefix={<Icon icon={chevronDownIcon} className="!h-5 !w-5 text-neutral-400" />}
               id="sort"
               onClick={() => console.log("Clicked")}
             ></Button>
@@ -30,7 +33,7 @@ export const NotecardHeader = () => {
               size="large"
               variant="outline"
               id="options"
-              prefix={<EllipsisHorizontalIcon className="h-5 w-5 text-neutral-400" />}
+              prefix={<Icon icon={ellipsisHorizontalIcon} className="!h-5 !w-5 text-neutral-400" />}
             ></Button>
             {/* <Button
               iconOnly

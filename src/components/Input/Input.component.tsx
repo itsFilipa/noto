@@ -8,10 +8,11 @@ import {
 import { mergeRefs } from "react-merge-refs";
 import { IonInput } from "@ionic/react";
 import { Note } from "../Note";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import type { VariantPropsOf } from "classname-variants/react";
 import { variants } from "classname-variants";
 import { cn } from "../../lib/cn";
+import { Icon } from "../Icon";
+import dangerIcon from "../../assets/iconout/exclamation-triangle.svg";
 
 const inputVariants = variants({
   base: "input",
@@ -96,7 +97,7 @@ export const InputInstance: ForwardRefRenderFunction<Ref, InputCustomProps> = (
           color="error"
           label={errorText}
           onClick={handleFocus}
-          icon={<ExclamationTriangleIcon className="w-4 h-4 text-error" />}
+          icon={<Icon icon={dangerIcon} className="!w-4 !h-4 text-error" />}
         />
       )}
     </div>

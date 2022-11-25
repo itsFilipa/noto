@@ -1,4 +1,3 @@
-import { UserIcon, CameraIcon } from "@heroicons/react/24/outline";
 import { IonPage, IonContent } from "@ionic/react";
 import { object, string } from "zod";
 import { Button } from "../../../components/Button";
@@ -6,7 +5,11 @@ import { Form } from "../../../components/Form";
 import { Header } from "../../../components/Header";
 import { ControlledInput } from "../../../components/Input";
 
+import userIcon from "../../../assets/iconout/user.svg";
+import cameraIcon from "../../../assets/iconout/camera.svg";
+
 import user from "../user.json";
+import { Icon } from "../../../components";
 
 const userSchema = object({
   username: string()
@@ -44,7 +47,7 @@ export const ProfileEditPage = () => {
           {user.avatar ? (
             <>
               <div className="bg-warmblack/30 w-20 h-20 absolute rounded-full" />
-              <CameraIcon className="h-8 text-white absolute inset-center" />
+              <Icon icon={cameraIcon} className="!h-8 !w-8 text-white absolute inset-center" />
               <img
                 src={user.avatar}
                 alt="portrait of user"
@@ -52,7 +55,7 @@ export const ProfileEditPage = () => {
               />
             </>
           ) : (
-            <UserIcon className="text-neutral-400" />
+            <Icon icon={userIcon} className="text-neutral-400" />
           )}
         </div>
 
