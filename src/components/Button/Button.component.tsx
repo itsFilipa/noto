@@ -1,28 +1,21 @@
 import { IonButton, IonSpinner } from "@ionic/react";
-import type { ComponentPropsWithRef, ReactNode } from "react";
+import type { ComponentProps, ComponentPropsWithRef, ReactNode } from "react";
 import { forwardRef } from "react";
 import { cn } from "../../lib/cn";
 
 export type ButtonVariant = ComponentPropsWithRef<typeof IonButton>["fill"];
 type ButtonAlign = "align-center" | "align-sb" | "align-start-sb";
+type ButtonProps = ComponentProps<typeof IonButton>;
 
-export type ButtonProps = {
+export type ButtonCustomProps = Omit<ButtonProps, "prefix" | "suffix"> & {
   align?: ButtonAlign;
   children?: ReactNode;
-  className?: string;
-  disabled?: boolean;
-  href?: string;
   iconOnly?: boolean;
-  id?: string;
   loading?: boolean;
-  onClick?: () => void;
   prefix?: ReactNode;
   rounded?: boolean;
-  routerDirection?: "back" | "forward" | "root";
-  routerLink?: string;
   shadow?: boolean;
   size?: "small" | "default" | "large";
-  style?: React.CSSProperties;
   suffix?: ReactNode;
   type?: "button" | "reset" | "submit";
   variant?: ButtonVariant;
@@ -32,7 +25,7 @@ export type Ref = HTMLIonButtonElement;
 
 
 
-export const Button = forwardRef<Ref, ButtonProps>((
+export const Button = forwardRef<Ref, ButtonCustomProps>((
   {
     align = "align-center",
     className,

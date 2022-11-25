@@ -109,7 +109,7 @@ ion-button.btn-icon-only > div > span[slot="start"] {
   margin-right: 0px;
 }
 
-ion-button.btn-icon-only > div > span[slot="start"] > svg {
+ion-button.btn-icon-only > div > span[slot="start"] > ion-icon {
   width: var(--button-icon-size);
   height: var(--button-icon-size);
 }
@@ -119,7 +119,7 @@ ion-button.btn-icon-only[size="small"] {
   height: var(--button-icon-only-small);
 }
 
-ion-button.btn-icon-only[size="small"] > div > span[slot="start"] > svg {
+ion-button.btn-icon-only[size="small"] > div > span[slot="start"] > ion-icon {
   width: var(--button-icon-size-small);
   height: var(--button-icon-size-small);
 }
@@ -129,7 +129,7 @@ ion-button.btn-icon-only[size="large"] {
   height: var(--button-icon-only-large);
 }
 
-ion-button.btn-icon-only[size="large"] > div > span[slot="start"] > svg {
+ion-button.btn-icon-only[size="large"] > div > span[slot="start"] > ion-icon {
   width: var(--button-icon-size-large);
   height: var(--button-icon-size-large);
 }
