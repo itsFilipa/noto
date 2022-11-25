@@ -1,10 +1,9 @@
 import { cn } from "../../lib/cn";
 
-import React, { cloneElement } from "react";
-
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 import { variantProps, VariantPropsOf } from "classname-variants/react";
+import { Icon } from "../Icon";
 
 const noteProps = variantProps({
   base: "flex justify-start items-center",
@@ -31,7 +30,7 @@ const noteProps = variantProps({
 interface NoteVariantProps
   extends Omit<VariantPropsOf<typeof noteProps>, "label"> {
   label?: string | boolean;
-  icon?: JSX.Element;
+  icon?: string;
   children?: ReactNode;
 }
 
@@ -52,7 +51,7 @@ export const Note = ({
       })}
     >
       <div>
-        {icon && cloneElement(icon, { className: "h-4 w-4 text-error" }, null)}
+        {icon && <Icon icon={icon} className="!w-4 !h-4 text-red-500" />}
       </div>
       <div className={cn(`${icon ? "ml-2" : ""} items-center break-words`)}>
         {label && <span className="mr-1 font-medium">{label}</span>}

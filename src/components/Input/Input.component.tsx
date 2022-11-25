@@ -72,11 +72,12 @@ export const InputInstance: ForwardRefRenderFunction<Ref, InputCustomProps> = (
     <div>
       <Note label={label} className="mb-1" />
       <IonInput
+        {...rest}
         disabled={disabled}
         placeholder={placeholder}
         readonly={readonly}
         ref={mergeRefs([inputRef, ref])}
-        // value={value}
+        value={value}
         //className={cn(`custom-input ${className}`)}
         // className={inputVariants({
         //   size,
@@ -97,7 +98,7 @@ export const InputInstance: ForwardRefRenderFunction<Ref, InputCustomProps> = (
           color="error"
           label={errorText}
           onClick={handleFocus}
-          icon={<Icon icon={dangerIcon} className="!w-4 !h-4 text-error" />}
+          icon={dangerIcon}
         />
       )}
     </div>
