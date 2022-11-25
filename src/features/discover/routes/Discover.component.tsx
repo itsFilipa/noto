@@ -1,9 +1,4 @@
 import {
-  ChevronRightIcon,
-  HashtagIcon,
-  UserIcon,
-} from "@heroicons/react/24/outline";
-import {
   IonContent,
   IonHeader,
   IonIcon,
