@@ -10,7 +10,8 @@ ion-chip.checked {
   --background: theme("colors.indigo.500");
   --color: white;
   border: 1px solid theme("colors.indigo.700");
-  @apply flex gap-2.5;
+  gap: 8px;
+  width: fit-content;
 }
 
 ion-chip.discover-chip {

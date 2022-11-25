@@ -2,6 +2,8 @@ ion-content {
   --padding-start: theme("spacing.5");
   --padding-end: theme("spacing.5");
   --background: theme("colors.neutral.100");
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 ion-content.no-padding {
@@ -10,10 +12,23 @@ ion-content.no-padding {
   --background: none;
 }
 
-ion-content.popover{
+ion-content.popover {
   --padding-start: theme("spacing.4");
   --padding-end: theme("spacing.4");
   --padding-top: theme("spacing.3");
   --padding-bottom: theme("spacing.3");
   --background: theme("colors.white");
+}
+
+ion-content::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scroll::-webkit-scrollbar {
+  display: none;
 }

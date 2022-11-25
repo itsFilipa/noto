@@ -1,9 +1,20 @@
-export const HorizontalScroller = () => {
+import { cn } from "../../lib/cn";
+import { Chip } from "../Chip";
+
+export interface HorizontalScrollerProps {
+  children: React.ReactNode[];
+  className: string;
+}
+
+export const HorizontalScroller = ({children, className}: HorizontalScrollerProps) => {
   return (
-    <div className="overflow-x-scroll overflow-y-hidden whitespace-nowrap mt-5">
-      {/* {visibleTags.map((tag) => (
-       
-      ))} */}
+    <div className={cn(`overflow-x-scroll overflow-y-hidden whitespace-nowrap ${className}`)}>
+      {/* {children.map((child) => (
+        <Chip 
+           key={child.key}
+           label={child.name}
+        />
+       )) */}
     </div>
   );
 };

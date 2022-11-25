@@ -1,18 +1,15 @@
 import {
-  IonIcon,
   IonTabBar,
   IonTabButton,
   IonTabs,
   useIonRouter,
 } from "@ionic/react";
-import {
-  GlobeAltIcon,
-  FunnelIcon,
-  UserIcon,
-  PlusCircleIcon
-} from "@heroicons/react/24/outline";
-import {  } from "@heroicons/react/24/solid";
-import notecards from "./assets/cards.svg";
+import { Icon } from "../Icon";
+import filterIcon from "../../assets/iconout/funnel.svg";
+import globeIcon from "../../assets/iconout/globe-alt.svg";
+import notecards from "../../assets/iconout/cards.svg";
+import plusIcon from "../../assets/iconout/plus-circle.svg";
+import userIcon from "../../assets/iconout/user.svg";
 
 export interface Tab {
   tab: string;
@@ -28,27 +25,27 @@ export const TabArray = [
   {
     tab: "Discover",
     href: "/discover",
-    icon: <GlobeAltIcon className="h-[30px] w-[30px] text-warmblack" />,
+    icon: <Icon icon={globeIcon} className="text-warmblack !h-6 !w-6" />,
   },
   {
     tab: "Notecards",
     href: "/notecards",
-    icon: <IonIcon icon={notecards} />,
+    icon: <Icon icon={notecards} className="text-warmblack !w-6 !h-6" />,
   },
   {
     tab: "New Card",
     href: "/new",
-    icon: <PlusCircleIcon className="h-[30px] w-[30px] text-warmblack" />,
+    icon: <Icon icon={plusIcon} className="text-warmblack !h-6 !w-6" />,
   },
   {
     tab: "Filter",
     href: "/filter",
-    icon: <FunnelIcon className="h-[30px] w-[30px] text-warmblack" />,
+    icon: <Icon icon={filterIcon} className="text-warmblack !w-6 !h-6" />,
   },
   {
     tab: "Profile",
     href: "/profile",
-    icon: <UserIcon className="h-[30px] w-[30px] text-warmblack" />,
+    icon: <Icon icon={userIcon} className="text-warmblack !w-6 !h-6" />,
   },
 ];
 

@@ -56,7 +56,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
     "eject": "react-scripts eject",
-    "svgo": "svgo -f ./src/assets/icons -o ./src/assets/iconout --config ./svgo.config.js"
+    "svgo": "svgo -f ./public/assets/app-icons -o ./src/assets/iconout --config ./svgo.config.js"
   },
   "eslintConfig": {
     "extends": [

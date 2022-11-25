@@ -25,8 +25,7 @@ const getTopTags = (tags: Tag[]) => {
   return sortedTags.slice(0, 10);
 };
 
-export const FilterPage = () => { 
-
+export const FilterPage = () => {
   const topTags = getTopTags(tags);
 
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
@@ -41,36 +40,35 @@ export const FilterPage = () => {
 
   const visibleTags = topTags.filter((t) => {
     return !selectedTags.find((st) => st.id === t.id);
-  })
+  });
 
   return (
     <IonPage>
       <FilterHeader />
       <IonContent>
-        
-        <div className="overflow-x-scroll overflow-y-hidden whitespace-nowrap mt-5">
+        <div className="overflow-x-scroll overflow-y-hidden whitespace-nowrap mt-5 hide-scroll">
           {visibleTags.map((tag) => (
             <Chip
-              key={tag.id}
+              className="!mr-2"
               label={tag.name}
+              key={tag.id}
               onClick={() => {
                 addSelectedTag(tag);
               }}
-              className="mr-2"
             />
           ))}
         </div>
 
-        <div className="flex overflow-x-scroll overflow-y-hidden whitespace-nowrap mt-10">
+        <div className="overflow-x-scroll overflow-y-hidden whitespace-nowrap mt-5 hide-scroll">
           {selectedTags.map((tag) => (
             <Chip
-              key={tag.id}
-              label={tag.name}
               checked
+              className="!mr-2"
+              label={tag.name}
+              key={tag.id}
               onClick={() => {
                 removeSelectedTag(tag);
               }}
-              className="mr-2"
             />
           ))}
         </div>

@@ -1,6 +1,10 @@
 ion-tab-bar {
   --background: theme("colors.white");
-  /* height: 64px; */
+  height: 44px;
   box-shadow: theme("boxShadow.shadowBase");
+}
+
+ion-tab-bar > ion-tab-button.tab-selected > ion-icon {
+  color: theme("colors.indigo.500");
 }
 

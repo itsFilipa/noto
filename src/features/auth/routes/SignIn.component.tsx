@@ -3,7 +3,7 @@ import { object, string } from "zod";
 import { Form, ControlledInput, Button } from "../../../components";
 import logo from "../assets/logo.svg";
 
-export const SignUpPage = () => {
+export const SignInPage = () => {
   const schema = object({
     email: string().email("Please enter a valid email"),
     password: string().min(8, "Password must be at least 8 characters"),
@@ -24,7 +24,7 @@ export const SignUpPage = () => {
         <img src={logo} alt="logo for noto" className="mx-auto mt-12" />
 
         <p className="font-display font-semibold text-xl mt-10 mx-auto w-fit">
-          Sign up
+          Sign in
         </p>
 
         <Form<Inputs, typeof schema>
@@ -47,15 +47,15 @@ export const SignUpPage = () => {
                 type="password"
                 errorText={formState.errors.password?.message}
               />
-              <Button type="submit" className="!mt-10">Create account</Button>
+              <Button type="submit" className="!mt-10">Sign in</Button>
             </>
           )}
         </Form>
 
         <div className="flex justify-center items-center">
           <div className="absolute bottom-12 flex justify-center gap-1">
-            <p className="font-medium text-sm">Already have an account?</p>
-            <a className="font-medium text-sm text-indigo-500" href="/sign-in">Sign in here</a>
+            <p className="font-medium text-sm">Don't have an account?</p>
+            <a className="font-medium text-sm text-indigo-500" href="/sign-up">Sign up here</a>
           </div>
         </div>
       </IonContent>
