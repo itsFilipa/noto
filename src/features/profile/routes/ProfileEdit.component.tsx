@@ -4,15 +4,24 @@ import { object, string } from "zod";
 import { Button } from "../../../components/Button";
 import { Form } from "../../../components/Form";
 import { Header } from "../../../components/Header";
-import { Input } from "../../../components/Input";
+import { ControlledInput } from "../../../components/Input";
 
 import user from "../user.json";
 
 const userSchema = object({
-  username: string().min(3).max(30).regex(/^\S*$/u, "Cannot have spaces"),
-  firstName: string().min(3).max(25),
-  lastName: string().min(3).max(25),
-  description: string().min(3).max(100),
+  username: string()
+    .min(3, "Please choose a username")
+    .max(30, "Username is too long")
+    .regex(/^\S*$/u, "Cannot have spaces"),
+  firstName: string()
+    .min(3, "Please write your name")
+    .max(25, "Name is too long"),
+  lastName: string()
+    .min(3, "Please write your last name")
+    .max(25, "Last name is too long"),
+  description: string()
+    .min(3, "Write something about you")
+    .max(100, "Description is too long"),
 });
 
 interface Inputs extends Record<string, unknown> {
@@ -52,37 +61,41 @@ export const ProfileEditPage = () => {
           schema={userSchema}
           className="mt-7"
         >
-          {({ register, formState }) => (
-            <div className="col gap-5">
-              <div className="flex justify-between">
-                <Input
+          {({ control, formState }) => (
+            <>
+            
+              <div className="col gap-5">
+                <div className="flex justify-between">
+                <ControlledInput
+                  control={control}
                   label="First name"
+                  name="firstName"
                   size="sm"
-                  value={user.firstName}
                   errorText={formState.errors.firstName?.message}
                 />
-                <Input
+                <ControlledInput
+                  control={control}
                   label="Last name"
                   size="sm"
-                  value={user.lastName}
+                  name="lastName"
                   errorText={formState.errors.lastName?.message}
                 />
+                </div>
+                <ControlledInput
+                  control={control}
+                  label="Username"
+                  name="username"
+                  errorText={formState.errors.username?.message}
+                />
+                <ControlledInput
+                  control={control}
+                  label="Description"
+                  name="description"
+                  errorText={formState.errors.description?.message}
+                />
+                <Button type="submit">Save Changes</Button>
               </div>
-
-              <Input
-                label="Username"
-                value={user.username}
-                errorText={formState.errors.username?.message}
-              />
-
-              <Input
-                label="Description"
-                value={user.description}
-                errorText={formState.errors.description?.message}
-              />
-
-              <Button type="submit">Save Changes</Button>
-            </div>
+            </>
           )}
         </Form>
       </IonContent>

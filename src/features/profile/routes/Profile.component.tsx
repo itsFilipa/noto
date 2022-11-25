@@ -1,7 +1,6 @@
 import { IonContent, IonItem, IonLabel, IonPage } from "@ionic/react";
 import { Button } from "../../../components/Button";
-import { PowerIcon, UserIcon, UsersIcon } from "@heroicons/react/24/outline";
-import { Header } from "../../../components/Header";
+import { UserIcon, UsersIcon } from "@heroicons/react/24/outline";
 
 import user from "../user.json";
 import { ProfileHeader } from "../components";

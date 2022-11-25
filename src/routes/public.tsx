@@ -1,6 +1,6 @@
 import { IonRouterOutlet } from "@ionic/react"
 import { Route } from "react-router"
-import { LandingPage } from "../features/landing"
+import { SignUpPage, LandingPage } from "../features"
 import { DocsRoutes } from "./docs"
 
 export const PublicRoutes = () => {
@@ -12,6 +12,9 @@ export const PublicRoutes = () => {
       </Route>
       <Route path="/components">
         <DocsRoutes />
+      </Route>
+      <Route exact path="/sign-up">
+        <SignUpPage />
       </Route>
     </IonRouterOutlet>
   )
