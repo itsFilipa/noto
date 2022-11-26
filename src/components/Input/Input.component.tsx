@@ -72,6 +72,7 @@ export const InputInstance: ForwardRefRenderFunction<Ref, InputCustomProps> = (
     <div>
       <Note label={label} className="mb-1" />
       <IonInput
+        {...rest}
         disabled={disabled}
         placeholder={placeholder}
         readonly={readonly}

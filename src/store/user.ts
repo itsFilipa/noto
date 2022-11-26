@@ -1,20 +1,35 @@
 import create from "zustand";
 import { DB } from "../lib/db";
 
+interface UserSimplified {
+  id: string;
+  avatar: string;
+  firstName: string;
+  lastName: string;
+  biography: string;
+}
+
 export interface UserProfile {
   username: string;
   firstName: string;
   lastName: string;
   biography: string;
   avatarUrl: string; // generate from https://avatars.dicebear.com/
-  followers: string[];
-  following: string[];
+  followers: UserSimplified[];
+  following: UserSimplified[];
 }
 
 export interface User {
   id: string;
   profile: UserProfile;
   createdAt: string;
+}
+
+export interface DatabaseUser {
+  id: string;
+  email: string;
+  password: string;
+  user: User;
 }
 
 interface UserStore {

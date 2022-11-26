@@ -1,9 +1,14 @@
 import { IonPage, IonContent } from "@ionic/react";
+import { useCallback } from "react";
+import { SubmitHandler } from "react-hook-form";
 import { object, string } from "zod";
 import { Form, ControlledInput, Button } from "../../../components";
+import { useAuth } from "../../../store";
 import logo from "../assets/logo.svg";
 
 export const SignUpPage = () => {
+  const { user, isLoading, register } = useAuth();
+
   const schema = object({
     email: string().email("Please enter a valid email"),
     password: string().min(8, "Password must be at least 8 characters"),
@@ -14,9 +19,17 @@ export const SignUpPage = () => {
     password: string;
   }
 
-  const submitTest = () => {
-    console.log("submit");
-  };
+  const onSubmit = useCallback<SubmitHandler<Inputs>>(
+    async({ email, password }) => {
+     
+        const { error } = await register({ email, password });
+        if (error) {
+          console.error(error)
+        }
+      
+    },
+    [register]
+  );
 
   return (
     <IonPage>
@@ -28,7 +41,7 @@ export const SignUpPage = () => {
         </p>
 
         <Form<Inputs, typeof schema>
-          onSubmit={submitTest}
+          onSubmit={onSubmit}
           schema={schema}
           className="mt-8"
         >
@@ -47,7 +60,7 @@ export const SignUpPage = () => {
                 type="password"
                 errorText={formState.errors.password?.message}
               />
-              <Button type="submit" className="!mt-10">Create account</Button>
+              <Button type="submit" loading={isLoading} className="!mt-10">Create account</Button>
             </>
           )}
         </Form>

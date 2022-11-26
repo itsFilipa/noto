@@ -1,94 +1,252 @@
 // 1. Fake network request using local storage and setTimeout
 // 2. Dispatch the success action with the user data
 // 3. Dispatch the error action with the error message
-import { faker } from '@faker-js/faker'
-import create from "zustand"
-import { DB } from "../lib/db"
-import { User, UserProfile } from "./user"
+import { faker } from "@faker-js/faker";
+import create from "zustand";
+import { DB } from "../lib/db";
+import { DatabaseUser, User, UserProfile } from "./user";
 
 export interface AuthPayload {
-  username: string
-  password: string
-}
-
-export interface UserAuth {
-  id: string
-  username: string
-  password: string
-  user: User
+  email: string;
+  password: string;
 }
 
 interface AuthStore {
-  user: User | null
-  isLoading: boolean
-  error: string | undefined
+  user: DatabaseUser | null;
+  isLoading: boolean;
   actions: {
-    login: (payload: AuthPayload) => void
-    logout: () => void
-    register: (payload: AuthPayload) => void
-    delete: () => void
-    updateCredentials: (payload: Partial<AuthPayload>) => void
-    updateProfile: (payload: Partial<UserProfile>) => void
-  }
+    login: (payload: AuthPayload) => Promise<{ user: DatabaseUser | null; error: Error | null }>;
+    logout: () => Promise<{error: Error | null}>;
+    register: (payload: AuthPayload) => Promise<{ user: DatabaseUser | null; error: Error | null }>;
+    delete: () => Promise<{error: Error | null}>;
+    updateCredentials: (payload: Partial<AuthPayload>) => Promise<{ user: DatabaseUser | null; error: Error | null }>;
+    updateProfile: (payload: Partial<UserProfile>) => Promise<{ user: DatabaseUser | null; error: Error | null }>;
+  };
 }
 
-// const useAuthStore = create<AuthStore>((set) => ({
-//   user: null,
-//   isLoading: false,
-//   error: undefined,
-//   actions: {
-//     login: async (payload) => {
-//       set({ isLoading: true, error: undefined })
-//         try {
-//           const user = await DB.get<UserAuth>("auth");
+const useAuthStore = create<AuthStore>((set, store) => ({
+  user: null,
+  isLoading: false,
+  actions: {
+    login: async (payload) => {
+      set({ isLoading: true });
 
-//           if (user && user.username === payload.username && user.password === payload.password) {
-//             set({ user: user.user, isLoading: false })
-//           } else {
-//             set({ error: "Invalid username or password", isLoading: false })
-//           }
-//         } catch (error) {
-//           set({ isLoading: false, error: (error as Error).message })
-//         }
-//       },
-//     logout: () => {
-//       set({ user: null })
-//     },
-//     register: async (payload) => {
-//       set({ isLoading: true, error: undefined })
-//       try {
-//         const users = await DB.get<User[]>("users", 100);
-        
-//         // check if username is taken
-//         const usernameExists = users?.some((user) => user.profile.username === payload.username)
+      const { data: users, error } = await DB.get<DatabaseUser[]>("users", 150);
+      if (error || !users) {
+        // key does not exist
+        set({ isLoading: false });
+        return { user: null, error: new Error("Invalid username or password") };
+      }
 
-//         if (usernameExists) {
-//           set({ error: "User already exists", isLoading: false })
-//         } else {
-//           const id = faker.datatype.uuid()
+      const foundUser = users.find(
+        (u) => u.email === payload.email && u.password === payload.password
+      );
+      if (!foundUser) {
+        set({ isLoading: false });
+        return { user: null, error: new Error("Invalid username or password") };
+      }
 
-//           const newUser = {
-//             id: id,
-//             username: payload.username,
-//             password: payload.password,
-//             user: {
-//               id: id,
-//               profile: {
-//                 username: payload.username,
-//                 firstName: "",
-//                 lastName: "",
-//                 biography: "",
-//                 avatarUrl: faker.image.avatar(),
-//               },
-//               createdAt: new Date().toISOString(),
-//             },
-//           }
-//           await DB.set<UserAuth>("auth", newUser)
-//           set({ user: newUser.user, isLoading: false })
-//         }
-//       } catch (error) {
-//         set({ isLoading: false, error: (error as Error).message })
-//       }
-//     },
-//   }
-// }));
+      // store on auth the curret user
+      await DB.set("currentUser", foundUser);
+
+      // update the store
+      set({ user: foundUser, isLoading: false });
+
+      return { user: foundUser, error: null };
+    },
+    logout: async () => {
+      set({ isLoading: true });
+      const { error } = await DB.remove("currentUser");
+      if (error) {
+        set({ isLoading: false });
+        return { error: error };
+      }
+      set({ user: null, isLoading: false });
+      return { error: null };
+    },
+    register: async (payload) => {
+      set({ isLoading: true});
+
+      const { data: users, error } = await DB.get<DatabaseUser[]>("users", 0);
+      if (error) {
+        set({ isLoading: false });
+        return { user: null, error: error };
+      }
+
+      // check if email is taken
+      const emailExists = users?.some((user) => user.email === payload.email);
+
+      if (emailExists) {
+        set({ isLoading: false });
+        return { user: null, error: new Error("User already exists") };
+      }
+
+      const id = faker.datatype.uuid();
+
+      const newUser = {
+        id: id,
+        email: payload.email,
+        password: payload.password,
+        user: {
+          id: id,
+          profile: {
+            email: payload.email,
+            username: "",
+            firstName: "",
+            lastName: "",
+            biography: "",
+            followers: [],
+            following: [],
+            avatarUrl: faker.image.avatar(),
+          },
+          createdAt: new Date().toISOString(),
+        },
+      };
+
+      const dataToSave = Array.isArray(users) ? [...users, newUser] : [newUser];
+
+      // save the new user
+      await DB.set<DatabaseUser[]>("users", dataToSave, 0);
+
+      // store on auth the curret user
+      await DB.set<DatabaseUser>("currentUser", newUser);
+
+      set({ user: newUser, isLoading: false });
+      return { user: newUser, error: null };
+    },
+    delete: async () => {
+      set({ isLoading: true });
+
+      // remove the user from the users list
+      const { data: users, error } = await DB.get<DatabaseUser[]>("users", 0);
+
+      if (error) {
+        set({ isLoading: false });
+        return { error: error };
+      }
+
+      if (!users) {
+        return { error: new Error("User not found") };
+      }
+
+      const currentUser = store().user;
+      const updatedUsers = users?.filter((u) => u.id !== currentUser?.id);
+
+      // update the users list
+      await DB.set<DatabaseUser[]>("users", updatedUsers, 0);
+
+      const { error: authErr } = await DB.remove("currentUser");
+      if (authErr) {
+        set({ isLoading: false });
+        return { error: authErr };
+      }
+
+      set({ user: null, isLoading: false });
+      return { error: null };
+    },
+    updateCredentials: async (payload) => {
+      set({ isLoading: true });
+
+      const { data: users, error } = await DB.get<DatabaseUser[]>("users", 0);
+      if (error) {
+        set({ isLoading: false });
+        return { user: null, error: error };
+      }
+
+      if (!users) {
+        return { user: null, error: new Error("Users not found") };
+      }
+
+      const currentUser = store().user;
+      if (!currentUser) {
+        return { user: null, error: new Error("User not found") }
+      }
+
+      const updatedUser = {
+        ...currentUser,
+        email: payload.email || currentUser.email,
+        password: payload.password || currentUser.password,
+      };
+
+      // update the users array with the new user data
+      const updatedUsers = users.map((u) => {
+        if (u.id === currentUser?.id) {
+          return updatedUser;
+        }
+        return u;
+      });
+
+      // update the users list
+      await DB.set<DatabaseUser[]>("users", updatedUsers, 0);
+
+      // update the current user
+      await DB.set<DatabaseUser>("currentUser", updatedUser);
+
+      set({ user: updatedUser, isLoading: false });
+      return { user: updatedUser, error: null };
+    },
+    updateProfile: async (payload) => {
+      set({ isLoading: true });
+
+      const { data: users, error } = await DB.get<DatabaseUser[]>("users", 0);
+      if (error) {
+        set({ isLoading: false });
+        return { user: null, error: error };
+      }
+
+      if (!users) {
+        return { user: null, error: new Error("Users not found") };
+      }
+
+      const currentUser = store().user;
+      if (!currentUser) {
+        return { user: null, error: new Error("User not found") }
+      }
+
+      const updatedUser = {
+        ...currentUser,
+        user: {
+          ...currentUser.user,
+          profile: {
+            ...currentUser.user.profile,
+            ...payload,
+          },
+        },
+      };
+
+      // update the users array with the new user data
+      const updatedUsers = users.map((u) => {
+        if (u.id === currentUser?.id) {
+          return updatedUser;
+        }
+        return u;
+      });
+
+      // update the users list
+      await DB.set<DatabaseUser[]>("users", updatedUsers, 0);
+
+      // update the current user
+      await DB.set<DatabaseUser>("currentUser", updatedUser);
+
+      set({ user: updatedUser, isLoading: false });
+      return { user: updatedUser, error: null };
+    },
+  },
+}));
+
+export const useAuth = () => {
+  const user = useAuthStore((state) => state.user);
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const { login, register, updateCredentials, updateProfile, logout } =
+    useAuthStore((state) => state.actions);
+
+  return {
+    user,
+    isLoading,
+    login,
+    register,
+    updateCredentials,
+    updateProfile,
+    logout,
+  };
+};
