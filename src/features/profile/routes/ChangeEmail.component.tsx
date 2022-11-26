@@ -7,16 +7,16 @@ import { useAlert, useAuth } from "../../../store";
 import dangerIcon from "../../../assets/iconout/exclamation-triangle.svg";
 
 interface Inputs extends Record<string, unknown> {
-  oldPwd: string;
-  newPwd: string;
+  email: string;
+  password: string;
 }
 
 const schema = object({
-  oldPwd: string().min(1, "This field cannot be empty"),
-  newPwd: string().min(8, "Password must be at least 8 characters"),
+  email: string().email("Please enter a valid email"),
+  password: string().min(1, "This field cannot be empty"),
 });
 
-export const ChangePasswordPage = () => {
+export const ChangeEmailPage = () => {
   const { user, isLoading, updateCredentials } = useAuth();
   const { setAlert } = useAlert();
   const router = useIonRouter();
@@ -24,16 +24,16 @@ export const ChangePasswordPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const onSubmit = useCallback<SubmitHandler<Inputs>>(
-    async ({ oldPwd, newPwd }) => {
+    async ({ email, password }) => {
       const { error } = await updateCredentials({
-        email: oldPwd,
-        password: newPwd,
+        email: email,
+        password: password,
       });
       if (error) {
         console.error(error);
         setErrorMessage(error.message);
       } else {
-        setAlert({ success: true, message: "Password updated successfully" });
+        setAlert({ success: true, message: "Email updated successfully" });
         router.push("/profile", "back");
       }
     },
@@ -42,7 +42,7 @@ export const ChangePasswordPage = () => {
 
   return (
     <IonPage>
-      <GenericHeader title="Change Password" backBtn="/profile" />
+      <GenericHeader title="Change Email" backBtn="/profile" />
       <IonContent>
         <Form<Inputs, typeof schema>
           schema={schema}
@@ -53,17 +53,17 @@ export const ChangePasswordPage = () => {
             <>
               <ControlledInput
                 control={control}
-                label="Current password"
-                name="oldPwd"
-                placeholder="Write your current password here"
-                errorText={formState.errors.oldPwd?.message}
+                label="New email"
+                name="email"
+                placeholder="Write your new email here"
+                errorText={formState.errors.email?.message}
               />
               <ControlledInput
                 control={control}
-                label="New password"
-                name="newPwd"
-                placeholder="Write your new password here"
-                errorText={formState.errors.newPwd?.message}
+                label="Confirm with your password"
+                name="password"
+                placeholder="Write your password here"
+                errorText={formState.errors.password?.message}
               />
               <Button type="submit" loading={isLoading} className="!mt-12">Save Changes</Button>
             </>

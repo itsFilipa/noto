@@ -1,6 +1,10 @@
-import { IonPage, IonContent } from "@ionic/react";
+import { IonPage, IonContent, useIonRouter } from "@ionic/react";
+import { useCallback, useState } from "react";
 import { object, string } from "zod";
-import { Form, ControlledInput, Button } from "../../../components";
+import { Form, ControlledInput, Button, Note } from "../../../components";
+import { useAuth } from "../../../store";
+import dangerIcon from "../../../assets/iconout/exclamation-triangle.svg";
+import { SubmitHandler } from "react-hook-form";
 
 const schema = object({
   firstName: string()
@@ -24,11 +28,30 @@ interface Inputs extends Record<string, unknown> {
   description: string;
 }
 
-const submitTest = () => {
-  console.log("submit");
-};
-
 export const ProfileCompletionPage = () => {
+  const { user, isLoading, updateProfile } = useAuth();
+  const router = useIonRouter();
+
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const onSubmit = useCallback<SubmitHandler<Inputs>>(
+    async ({ firstName, lastName, username, description }) => {
+      const { error } = await updateProfile({
+        firstName,
+        lastName,
+        username,
+        biography: description,
+      });
+      if (error) {
+        console.error(error);
+        setErrorMessage(error.message);
+      } else {
+        router.push("/discover", "forward");
+      }
+    },
+    [updateProfile, router]
+  );
+
   return (
     <IonPage>
       <IonContent className="[--background:white]">
@@ -40,7 +63,7 @@ export const ProfileCompletionPage = () => {
         </p>
 
         <Form<Inputs, typeof schema>
-          onSubmit={submitTest}
+          onSubmit={onSubmit}
           schema={schema}
           className="mt-8"
         >
@@ -74,12 +97,18 @@ export const ProfileCompletionPage = () => {
                 label="Description"
                 errorText={formState.errors.description?.message}
               />
-              <Button type="submit" className="!mt-10">
+              <Button type="submit" loading={isLoading} className="!mt-10">
                 Continue
               </Button>
             </>
           )}
         </Form>
+
+        {errorMessage && (
+          <Note color="error" icon={dangerIcon} className="mt-4">
+            {errorMessage}
+          </Note>
+        )}
       </IonContent>
     </IonPage>
   );

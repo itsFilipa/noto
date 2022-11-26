@@ -1,6 +1,7 @@
 import { IonRouterOutlet } from "@ionic/react";
 import { Route } from "react-router";
 import { Tabs } from "../../../components/Tabs";
+import { ChangeEmailPage } from "./ChangeEmail.component";
 import { ChangePasswordPage } from "./ChangePassword.component";
 import { FaqPage } from "./Faq.component";
 import { PrivacyPolicyPage } from "./PrivacyPolicy.component";
@@ -21,6 +22,9 @@ export const ProfileRoutes = () => {
           </Route>
           <Route exact path="/profile/change-password">
             <ChangePasswordPage />
+          </Route>
+          <Route exact path="/profile/change-email">
+            <ChangeEmailPage />
           </Route>
           <Route exact path="/profile/terms-of-service">
             <TermsOfServicePage />

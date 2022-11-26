@@ -2,6 +2,7 @@ import { IonRouterOutlet } from "@ionic/react"
 import { Route } from "react-router"
 import { DiscoverRoutes } from "../features/discover"
 import { FilterRoutes } from "../features/filter"
+import { NewNotecardPage } from "../features/notecard"
 import { NotecardsRoutes } from "../features/notecards"
 import { ProfileRoutes } from "../features/profile"
 import { PublicRoutes } from "./public"
@@ -25,6 +26,10 @@ export const AppRoutes = () => {
 
       <Route path="/discover">
         <DiscoverRoutes />
+      </Route>
+
+      <Route exact path="/new">
+        <NewNotecardPage />
       </Route>
     </IonRouterOutlet>
   )

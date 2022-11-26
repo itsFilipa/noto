@@ -1,4 +1,4 @@
-import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
+import { IonApp, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
 import { AppRoutes } from "./routes";
 
@@ -24,6 +24,7 @@ import "./theme/tailwind.css";
 import "./theme/ionic.css";
 import { DB } from "./lib/db";
 import { useEffect, useState } from "react";
+import { useAuth } from "./store";
 
 setupIonicReact();
 
@@ -37,20 +38,23 @@ const setupTables = async () => {
   DB.createTable("users", []);
   DB.createTable("notes", []);
   DB.createTable("trash", []);
+  DB.createTable("alert", {});
 };
 
 const App: React.FC = () => {
+  
+  const {setCurrentUser} = useAuth();
+
   // create the database tables if they don't exist
   useEffect(() => {
     setupTables();
-  }, []);
+    setCurrentUser();
+  }, [setCurrentUser]);
 
   return (
     <IonApp>
       <IonReactRouter>
-        {/* <IonRouterOutlet> */}
         <AppRoutes />
-        {/* </IonRouterOutlet> */}
       </IonReactRouter>
     </IonApp>
   );

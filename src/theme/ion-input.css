@@ -25,3 +25,8 @@
   border: 1px solid theme("colors.red.500");
   background-color: theme("colors.red.100");
 }
+
+.fullpage {
+  --background: theme("colors.neutral.800");
+  height: 100vh;
+}

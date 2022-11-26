@@ -1,7 +1,6 @@
 import {
   IonContent,
   IonHeader,
-  IonIcon,
   IonModal,
   IonPage,
   IonToolbar,
@@ -17,6 +16,7 @@ import hashtagIcon from "../../../assets/iconout/hashtag.svg";
 import cardsIcon from "../../../assets/iconout/cards.svg";
 import chevronRight from "../../../assets/iconout/chevron-right.svg";
 import userIcon from "../../../assets/iconout/user.svg";
+import { useAuth } from "../../../store";
 
 const searchFilters = [
   {
@@ -46,6 +46,8 @@ export const DiscoverPage = () => {
   const day = date.getDate();
   const mon = date.toLocaleString("default", { month: "short" });
   const month = mon.charAt(0).toUpperCase() + mon.slice(1, 3);
+
+  const {user} = useAuth();
 
   const modal = useRef<HTMLIonModalElement>(null);
   const page = useRef(null);
@@ -81,7 +83,7 @@ export const DiscoverPage = () => {
           <p className="font-display font-bold text-[40px]">
             {day} {month}
           </p>
-          <p className="font-display text-xl">Hey Jane</p>
+          <p className="font-display text-xl">Hey {user?.user.profile.firstName}</p>
         </div>
 
         <p className="font-display font-bold text-lg mt-8 mb-4">Discover</p>

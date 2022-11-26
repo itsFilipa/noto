@@ -61,7 +61,7 @@ export const Tabs = ({ children }: TabsProps) => {
               key={tab.tab}
               tab={tab.tab}
               href={tab.href}
-              selected={router.routeInfo.pathname.includes("/" + tab.href)}
+              selected={router.routeInfo.pathname.includes(tab.href)}
               // onClick={() => router.push(tab.href)}
             >
               {tab.icon}

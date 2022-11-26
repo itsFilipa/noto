@@ -1,32 +1,38 @@
-import { IonContent, IonItem, IonLabel, IonPage } from "@ionic/react";
-import { Button } from "../../../components/Button";
+import { IonContent, IonItem, IonLabel, IonPage, IonToast } from "@ionic/react";
+import { useEffect, useState } from "react";
+import { ProfileHeader } from "../components";
+import { Icon } from "../../../components";
+import { useAlert, useAuth } from "../../../store";
 
 import userIcon from "../../../assets/iconout/user.svg";
 import usersIcon from "../../../assets/iconout/users.svg";
 
-import user from "../user.json";
-import { ProfileHeader } from "../components";
-import { Icon } from "../../../components";
-
-export type User = {
-  avatar?: string;
-  name: string;
-  username: string;
-  description: string;
-  followers: number;
-  following: number;
-};
-
 export const ProfilePage = () => {
+  
+  const { user } = useAuth();
+  const { alert, getAlert, deleteAlert } = useAlert();
+
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+
+  useEffect(() => {
+    if (alert) {
+      getAlert();
+      setToastMessage(alert.message);
+      setShowToast(true);
+      deleteAlert();
+    }
+  }, [alert, deleteAlert, getAlert]);
+
   return (
     <IonPage>
       <ProfileHeader />
       <IonContent>
         <div className="mt-6 flex items-center gap-3">
           <div className="w-16 h-16 border border-neutral-200 rounded-full">
-            {user.avatar ? (
+            {user?.user.profile.avatarUrl ? (
               <img
-                src={user.avatar}
+                src={user.user.profile.avatarUrl}
                 alt="portrait of the user"
                 className="h-full w-full object-cover rounded-full"
               />
@@ -35,23 +41,25 @@ export const ProfilePage = () => {
             )}
           </div>
           <div className="col gap-px">
-            <p className="font-display text-lg font-medium">{user.firstName} {user.lastName}</p>
-            <p className="text-neutral-500 ">@{user.username}</p>
+            <p className="font-display text-lg font-medium">
+              {user?.user.profile.firstName} {user?.user.profile.lastName}
+            </p>
+            <p className="text-neutral-500 ">@{user?.user.profile.username}</p>
           </div>
         </div>
 
         <div className="mt-3">
-          <p className="font-medium">{user.description}</p>
+          <p className="font-medium">{user?.user.profile.biography}</p>
         </div>
 
         <div className="mt-5 flex gap-1 items-center">
           <Icon icon={usersIcon} className="text-neutral-400" />
           <p className="font-medium text-sm text-neutral-500">
-            {user.followers}
+            {user?.user.profile.followers.length}
           </p>
           <p className="font-medium text-sm text-neutral-400">followers •</p>
           <p className="font-medium text-sm text-neutral-500">
-            {user.following}
+            {user?.user.profile.following.length}
           </p>
           <p className="font-medium text-sm text-neutral-400">following</p>
         </div>
@@ -70,10 +78,10 @@ export const ProfilePage = () => {
           </IonItem>
         </div>
 
-        <div className="mt-8 item-single">
-          {/* <IonItem routerLink="profile/change-email" routerDirection="forward">
+        <div className="mt-8 item-mul">
+          <IonItem routerLink="profile/change-email" routerDirection="forward">
             <IonLabel>Change Email</IonLabel>
-          </IonItem> */}
+          </IonItem>
           <IonItem
             routerLink="profile/change-password"
             lines="none"
@@ -117,6 +125,14 @@ export const ProfilePage = () => {
             <IonLabel>Delete Account</IonLabel>
           </IonItem>
         </div>
+
+        <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message={toastMessage}
+          duration={2000}
+          color="success"
+        />
       </IonContent>
     </IonPage>
   );

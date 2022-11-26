@@ -21,6 +21,7 @@ interface AuthStore {
     delete: () => Promise<{error: Error | null}>;
     updateCredentials: (payload: Partial<AuthPayload>) => Promise<{ user: DatabaseUser | null; error: Error | null }>;
     updateProfile: (payload: Partial<UserProfile>) => Promise<{ user: DatabaseUser | null; error: Error | null }>;
+    setCurrentUser: () => void;
   };
 }
 
@@ -56,11 +57,7 @@ const useAuthStore = create<AuthStore>((set, store) => ({
     },
     logout: async () => {
       set({ isLoading: true });
-      const { error } = await DB.remove("currentUser");
-      if (error) {
-        set({ isLoading: false });
-        return { error: error };
-      }
+      await DB.set("currentUser", {});
       set({ user: null, isLoading: false });
       return { error: null };
     },
@@ -195,12 +192,20 @@ const useAuthStore = create<AuthStore>((set, store) => ({
       }
 
       if (!users) {
+        set({ isLoading: false });
         return { user: null, error: new Error("Users not found") };
       }
 
       const currentUser = store().user;
       if (!currentUser) {
+        set({ isLoading: false });
         return { user: null, error: new Error("User not found") }
+      }
+      
+      const usernameExists = users.some((u) => u.user.profile.username === payload.username);
+      if(usernameExists && payload.username !== currentUser.user.profile.username) {
+        set({ isLoading: false });
+        return { user: null, error: new Error("Username already taken") };
       }
 
       const updatedUser = {
@@ -231,13 +236,23 @@ const useAuthStore = create<AuthStore>((set, store) => ({
       set({ user: updatedUser, isLoading: false });
       return { user: updatedUser, error: null };
     },
+    setCurrentUser: async () => {
+      set({ isLoading: true });
+      const { data: user } = await DB.get<DatabaseUser>("currentUser", 0);
+      if (user) {
+        set({ user: user, isLoading: false });
+        return { user: user, error: null };
+      }
+      set({ isLoading: false });
+      return { user: null, error: new Error("No user with current session") };
+    },
   },
 }));
 
 export const useAuth = () => {
   const user = useAuthStore((state) => state.user);
   const isLoading = useAuthStore((state) => state.isLoading);
-  const { login, register, updateCredentials, updateProfile, logout } =
+  const { login, register, updateCredentials, updateProfile, logout, setCurrentUser } =
     useAuthStore((state) => state.actions);
 
   return {
@@ -247,6 +262,7 @@ export const useAuth = () => {
     register,
     updateCredentials,
     updateProfile,
+    setCurrentUser,
     logout,
   };
 };

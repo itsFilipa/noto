@@ -98,7 +98,7 @@ export const InputInstance: ForwardRefRenderFunction<Ref, InputCustomProps> = (
           color="error"
           label={errorText}
           onClick={handleFocus}
-          icon={<Icon icon={dangerIcon} className="!w-4 !h-4 text-error" />}
+          icon={dangerIcon}
         />
       )}
     </div>

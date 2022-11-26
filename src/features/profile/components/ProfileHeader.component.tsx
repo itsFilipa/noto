@@ -1,10 +1,27 @@
-import { IonHeader, IonToolbar, IonButtons, useIonAlert } from "@ionic/react";
+import { IonHeader, IonToolbar, IonButtons, useIonAlert, useIonRouter } from "@ionic/react";
 import { Button, Icon } from "../../../components";
 import powerIcon from "../../../assets/iconout/power.svg";
+import { useAuth } from "../../../store";
 
 export const ProfileHeader = () => {
 
+  const {user, logout} = useAuth();
   const [presentAlert] = useIonAlert();
+  const router = useIonRouter();
+
+  const onLogout = async () => {
+    const {error} = await logout();
+    if (error) {
+      console.log(error);
+      presentAlert({
+        header: "Error",
+        message: "There was an error logging out",
+        buttons: ["OK"],
+      });
+    } else {
+      router.push("/sign-in", "none", "replace");
+    }
+  };
 
   return (
     <IonHeader>
@@ -30,7 +47,7 @@ export const ProfileHeader = () => {
                     text: "Yes",
                     role: "confirm",
                     handler: () => {
-                      console.log("Logged out")
+                      onLogout();
                     },
                   },
                 ],

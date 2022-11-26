@@ -12,7 +12,7 @@ export const FollowingPage = () => {
         <div className="mt-8">
           {users.map((user, index) => (
             <>
-              <UsersList user={user as User} />
+              {/* <UsersList user={user as User} /> */}
               {index !== users.length - 1 && <hr className="my-4" />}
             </>
           ))}

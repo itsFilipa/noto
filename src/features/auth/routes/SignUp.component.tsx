@@ -1,13 +1,17 @@
-import { IonPage, IonContent } from "@ionic/react";
-import { useCallback } from "react";
+import { IonPage, IonContent, useIonRouter } from "@ionic/react";
+import { useCallback, useState } from "react";
 import { SubmitHandler } from "react-hook-form";
 import { object, string } from "zod";
-import { Form, ControlledInput, Button } from "../../../components";
+import { Form, ControlledInput, Button, Note } from "../../../components";
 import { useAuth } from "../../../store";
 import logo from "../assets/logo.svg";
+import dangerIcon from "../../../assets/iconout/exclamation-triangle.svg";
 
 export const SignUpPage = () => {
   const { user, isLoading, register } = useAuth();
+  const router = useIonRouter();
+
+  const [errorMessage, setErrorMessage] = useState("");
 
   const schema = object({
     email: string().email("Please enter a valid email"),
@@ -24,11 +28,13 @@ export const SignUpPage = () => {
      
         const { error } = await register({ email, password });
         if (error) {
-          console.error(error)
+          console.error(error);
+          setErrorMessage(error.message);
+        } else {
+          router.push("/sign-up/completion", "forward");
         }
-      
     },
-    [register]
+    [register, router]
   );
 
   return (
@@ -64,6 +70,8 @@ export const SignUpPage = () => {
             </>
           )}
         </Form>
+
+        { errorMessage && <Note color="error" icon={dangerIcon} className="mt-4">{errorMessage}</Note>}
 
         <div className="flex justify-center items-center">
           <div className="absolute bottom-12 flex justify-center gap-1">
