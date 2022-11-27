@@ -62,7 +62,6 @@ export const Tabs = ({ children }: TabsProps) => {
               tab={tab.tab}
               href={tab.href}
               selected={router.routeInfo.pathname.includes(tab.href)}
-              // onClick={() => router.push(tab.href)}
             >
               {tab.icon}
             </IonTabButton>

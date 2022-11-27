@@ -7,16 +7,15 @@ import {
 } from "@ionic/react";
 import { Button } from "../../../components/Button";
 import { DiscoverHeader, DiscoverNotecard, UserAction } from "../components";
-import notecards from "../../../fake-data/notecards.json";
-import { Note } from "../../../store/note";
+import { Note, useNotes } from "../../../store/note";
 import { useEffect, useRef, useState } from "react";
 import { DiscoverChip, Icon, Searchbar } from "../../../components";
+import { useAuth } from "../../../store";
 
 import hashtagIcon from "../../../assets/iconout/hashtag.svg";
 import cardsIcon from "../../../assets/iconout/cards.svg";
 import chevronRight from "../../../assets/iconout/chevron-right.svg";
 import userIcon from "../../../assets/iconout/user.svg";
-import { useAuth } from "../../../store";
 
 const searchFilters = [
   {
@@ -47,7 +46,8 @@ export const DiscoverPage = () => {
   const mon = date.toLocaleString("default", { month: "short" });
   const month = mon.charAt(0).toUpperCase() + mon.slice(1, 3);
 
-  const {user} = useAuth();
+  const { user } = useAuth();
+  const { notes, listNotes, isLoading } = useNotes();
 
   const modal = useRef<HTMLIonModalElement>(null);
   const page = useRef(null);
@@ -83,7 +83,9 @@ export const DiscoverPage = () => {
           <p className="font-display font-bold text-[40px]">
             {day} {month}
           </p>
-          <p className="font-display text-xl">Hey {user?.user.profile.firstName}</p>
+          <p className="font-display text-xl">
+            Hey {user?.user.profile.firstName}
+          </p>
         </div>
 
         <p className="font-display font-bold text-lg mt-8 mb-4">Discover</p>
@@ -123,9 +125,21 @@ export const DiscoverPage = () => {
 
         <p className="font-display font-bold text-lg mt-8 mb-4">Activity</p>
 
-        <UserAction />
+        {notes ? (
+          <></>
+        ) : (
+          <div className="col gap-2 items-center mt-12">
+            <p className="font-medium text-neutral-500">
+              There's nothing to show here
+            </p>
+            <p className="font-medium text-neutral-500">
+              Discover and follow people
+            </p>
+          </div>
+        )}
+        {/* <UserAction />
 
-        <DiscoverNotecard notecard={notecards[0] as Note} />
+        <DiscoverNotecard notecard={notecards[0] as Note} /> */}
 
         <IonModal
           ref={modal}

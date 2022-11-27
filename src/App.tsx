@@ -38,6 +38,7 @@ const setupTables = async () => {
   DB.createTable("users", []);
   DB.createTable("notes", []);
   DB.createTable("trash", []);
+  DB.createTable("tags", []);
   DB.createTable("alert", {});
 };
 
