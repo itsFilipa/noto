@@ -40,12 +40,11 @@ export const NewNotecardPage = () => {
   const [valueTitle, setvalueTitle] = useState("Untitled");
   const [valueContent, setvalueContent] = useState("");
   const [noteTags, setNoteTags] = useState<Tag[]>(note?.tags || []);
+  const [filteredTags, setFilteredTags] = useState<Tag[]>(tags || []);
 
   const [showModal, setShowModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-
-  console.log(noteTags);
 
   useEffect(() => {
     createNote();
@@ -54,6 +53,14 @@ export const NewNotecardPage = () => {
 
   const handleSearch = (e: any) => {
     setSearchQuery(e.target.value);
+    if (e.target.value.length > 0) {
+      const filtered = tags?.filter((tag) =>
+        tag.name.toLowerCase().includes(e.target.value.toLowerCase())
+      );
+      setFilteredTags(filtered ? filtered : []);
+    } else {
+      setFilteredTags(tags ? tags : []);
+    }
   };
 
   const clearSearch = () => {
@@ -64,15 +71,33 @@ export const NewNotecardPage = () => {
     const { tag, error } = await createTag(searchQuery);
     if (tag) {
       const tagsToSave = Array.isArray(noteTags) ? [...noteTags, tag] : [tag];
-      const { note: noteUpdated } = await updateNote({
-        ...note,
-        tags: tagsToSave,
-      });
       clearSearch();
-      setNoteTags(noteUpdated?.tags ? noteUpdated.tags : []);
+      setNoteTags(tagsToSave);
     } else {
       console.log(error);
     }
+  };
+
+  const onCloseModal = async () => {
+    await updateNote({
+      ...note,
+      tags: noteTags,
+    });
+  };
+
+  const removeTag = (tag: Tag) => {
+    const tagsToSave = noteTags.filter((t) => t.id !== tag.id);
+    setNoteTags(tagsToSave);
+  };
+
+  const addTag = (tag: Tag) => {
+    if(noteTags.find(t => t.id === tag.id)) {
+      clearSearch();
+      return;
+    }
+    const tagsToSave = Array.isArray(noteTags) ? [...noteTags, tag] : [tag];
+    setNoteTags(tagsToSave);
+    clearSearch();
   };
 
   const publishNote = async () => {
@@ -259,7 +284,10 @@ export const NewNotecardPage = () => {
                 <Button
                   variant="clear"
                   size="small"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => {
+                    setShowModal(false);
+                    onCloseModal();
+                  }}
                 >
                   Close
                 </Button>
@@ -281,8 +309,13 @@ export const NewNotecardPage = () => {
                   {searchQuery}
                 </Button>
                 <IonList>
-                  {tags?.map((tag) => (
-                    <IonItem key={tag.id} button detail={false}>
+                  {filteredTags?.map((tag) => (
+                    <IonItem
+                      key={tag.id}
+                      button
+                      detail={false}
+                      onClick={() => addTag(tag)}
+                    >
                       <IonLabel>{tag.name}</IonLabel>
                     </IonItem>
                   ))}
@@ -300,6 +333,9 @@ export const NewNotecardPage = () => {
                         detail
                         detailIcon={checkIcon}
                         className="[--detail-icon-opacity:1] [--detail-icon-color:var(--ion-color-primary)]"
+                        onClick={() => {
+                          removeTag(tag);
+                        }}
                       >
                         <IonLabel>{tag.name}</IonLabel>
                       </IonItem>
@@ -315,7 +351,7 @@ export const NewNotecardPage = () => {
           </IonContent>
         </IonModal>
         <IonLoading
-          isOpen={isLoading || tagLoading}
+          isOpen={isLoading}
           animated
           spinner="crescent"
         />

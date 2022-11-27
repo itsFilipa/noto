@@ -16,7 +16,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "../../../components";
 import tags from "../../../fake-data/tags.json";
 import notecards from "../../../fake-data/notecards.json";
-import checkIcon from "../assets/check.svg";
+import checkIcon from "../../../assets/iconout/check.svg";
 
 export const PopularTagsPage = () => {
   const modal = useRef<HTMLIonModalElement>(null);
