@@ -178,10 +178,26 @@ const useNoteStore = create<NoteStore>((set, store) => ({
         visibility: "private",
       } as Note;
 
-      const dataToSave = notes.map((n) => (n.id === noteId ? updatedNote : n));
+      //remove updated note from notes
+      const dataToSave = notes.filter((n) => n.id !== noteId);
 
-      await DB.set<Note[]>("notes", dataToSave);
-      set({ note: updatedNote, isLoading: false });
+      //get array of notes from trash and add updated note
+      const { data: trash, error: trashError } = await DB.get<Note[]>(
+        "trash",
+        0
+      );
+      if (trashError) {
+        set({ isLoading: false });
+        return { note: null, error: new Error("Something went wrong.") };
+      }
+
+      const dataToSaveToTrash = Array.isArray(trash)
+        ? [...trash, updatedNote]
+        : [updatedNote];
+
+      await DB.set<Note[]>("notes", dataToSave, 0);
+      await DB.set<Note[]>("trash", dataToSaveToTrash);
+      set({ note: updatedNote, notes: dataToSave , isLoading: false });
       return { note: updatedNote, error: null };
     },
     forkNote: async (noteId) => {
@@ -337,7 +353,7 @@ const useNoteStore = create<NoteStore>((set, store) => ({
       //filter by userId
       if (payload.userId) {
         const filteredNotes = notes.filter(
-          (n) => n.author.profile.username === payload.userId
+          (n) => n.author.id === payload.userId
         );
         result.push(...filteredNotes);
       }
@@ -373,6 +389,7 @@ export const useNotes = () => {
     unlikeNote,
     listNotes,
     query,
+    moveToTrash
   } = useNoteStore((state) => state.actions);
 
   return {
@@ -387,5 +404,6 @@ export const useNotes = () => {
     unlikeNote,
     listNotes,
     query,
+    moveToTrash
   };
 };

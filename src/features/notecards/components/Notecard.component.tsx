@@ -1,4 +1,4 @@
-import { IonIcon } from "@ionic/react";
+import { IonIcon, useIonAlert } from "@ionic/react";
 import { Button } from "../../../components/Button";
 import { NoteEntity } from "../../../types/";
 import { Icon } from "../../../components";
@@ -11,6 +11,7 @@ import calendarIcon from "../../../assets/iconout/calendar-days.svg";
 import eyeIcon from "../../../assets/iconout/eye.svg";
 import heartIcon from "../../../assets/iconout/heart.svg";
 import chartIcon from "../../../assets/iconout/chart-bar-square.svg";
+import { useNotes } from "../../../store";
 
 //Create a function to convert ISO Date to the format 'dd MMM yyyy'
 const convertDate = (date: string) => {
@@ -24,10 +25,14 @@ const convertDate = (date: string) => {
 };
 
 export const Notecard = ({ notecard }: NoteEntity) => {
+  
+  const { moveToTrash } = useNotes();
+  const [presentAlert] = useIonAlert();
+  
   let width = 0;
 
   const verifyWidth = (w: number) => {
-    if (width + w < 220){
+    if (width + w < 220) {
       width = width + w;
       return true;
     } else {
@@ -62,7 +67,15 @@ export const Notecard = ({ notecard }: NoteEntity) => {
 
         {/* Body */}
 
-        <p className="text-sm line-clamp-4 mt-3 w-[93%]">{notecard.content}</p>
+        {notecard.content ? (
+          <p className="text-sm line-clamp-4 mt-3 w-[93%]">
+            {notecard.content}
+          </p>
+        ) : (
+          <p className="text-sm mt-3 text-neutral-400">
+            Continue writing this note..
+          </p>
+        )}
 
         {/* Footer */}
 
@@ -71,11 +84,11 @@ export const Notecard = ({ notecard }: NoteEntity) => {
             <div className="flex items-center gap-1 max-w-[220px]">
               {notecard.tags.map((tag) => (
                 <>
-                {verifyWidth(tag.name.length * 7) && (
-                  <p key={tag.id} className="text-indigo-500 text-xs">
-                    #{tag.name}
-                  </p>
-                )}
+                  {verifyWidth(tag.name.length * 7) && (
+                    <p key={tag.id} className="text-indigo-500 text-xs">
+                      #{tag.name}
+                    </p>
+                  )}
                 </>
               ))}
             </div>
@@ -96,6 +109,25 @@ export const Notecard = ({ notecard }: NoteEntity) => {
               iconOnly
               prefix={
                 <Icon icon={trashIcon} className="!w-5 !h-5 text-neutral-400" />
+              }
+              onClick={() =>
+                presentAlert({
+                  header: "Delete note",
+                  message: "Are you sure you want to delete this note?",
+                  buttons: [
+                    {
+                      text: "Cancel",
+                      role: "cancel",
+                    },
+                    {
+                      text: "Delete",
+                      role: "destructive",
+                      handler: () => {
+                        moveToTrash(notecard.id);
+                      },
+                    },
+                  ],
+                })
               }
             />
           </div>
