@@ -1,4 +1,4 @@
-import { IonInput } from "@ionic/react";
+import { IonTextarea } from "@ionic/react";
 import {
   ComponentPropsWithoutRef,
   ForwardRefRenderFunction,
@@ -7,17 +7,17 @@ import {
 } from "react";
 import { mergeRefs } from "react-merge-refs";
 
-export type FullPageInputProps = ComponentPropsWithoutRef<typeof IonInput>;
+export type FullPageInputProps = ComponentPropsWithoutRef<typeof IonTextarea>;
 
-type Ref = HTMLIonInputElement;
+type Ref = HTMLIonTextareaElement;
 
 export const FullPageInputInstance: ForwardRefRenderFunction<
   Ref,
   FullPageInputProps
 > = ({ ...rest }, ref) => {
-  const inputRef = useRef<HTMLIonInputElement>(null);
+  const inputRef = useRef<HTMLIonTextareaElement>(null);
 
-  return <IonInput className="full-page" {...rest} ref={mergeRefs([inputRef, ref])} />;
+  return <IonTextarea {...rest} ref={mergeRefs([inputRef, ref])} />;
 };
 
 export const FullPageInput = forwardRef(FullPageInputInstance);

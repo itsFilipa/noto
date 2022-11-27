@@ -15,11 +15,26 @@ import chartIcon from "../../../assets/iconout/chart-bar-square.svg";
 //Create a function to convert ISO Date to the format 'dd MMM yyyy'
 const convertDate = (date: string) => {
   const newDate = new Date(date);
-  const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "short", day: "numeric" };
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  };
   return newDate.toLocaleDateString("en-GB", options);
 };
 
 export const Notecard = ({ notecard }: NoteEntity) => {
+  let width = 0;
+
+  const verifyWidth = (w: number) => {
+    if (width + w < 220){
+      width = width + w;
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <>
       <div className="w-full bg-white col rounded-xl py-3 px-4 mt-4">
@@ -39,7 +54,9 @@ export const Notecard = ({ notecard }: NoteEntity) => {
             size="default"
             variant="outline"
             iconOnly
-            prefix={<Icon icon={pencilIcon} className="!w-5 !h-5 text-neutral-400" />}
+            prefix={
+              <Icon icon={pencilIcon} className="!w-5 !h-5 text-neutral-400" />
+            }
           />
         </div>
 
@@ -49,13 +66,17 @@ export const Notecard = ({ notecard }: NoteEntity) => {
 
         {/* Footer */}
 
-        <div className="flex items-center justify-between mt-4 truncate">
+        <div className="flex items-center justify-between mt-4">
           {notecard.tags && (
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 max-w-[220px]">
               {notecard.tags.map((tag) => (
-                <p key={tag.id} className="text-indigo-500 text-xs">
-                  #{tag.name}
-                </p>
+                <>
+                {verifyWidth(tag.name.length * 7) && (
+                  <p key={tag.id} className="text-indigo-500 text-xs">
+                    #{tag.name}
+                  </p>
+                )}
+                </>
               ))}
             </div>
           )}
@@ -73,7 +94,9 @@ export const Notecard = ({ notecard }: NoteEntity) => {
               size="default"
               variant="outline"
               iconOnly
-              prefix={<Icon icon={trashIcon} className="!w-5 !h-5 text-neutral-400" />}
+              prefix={
+                <Icon icon={trashIcon} className="!w-5 !h-5 text-neutral-400" />
+              }
             />
           </div>
         </div>

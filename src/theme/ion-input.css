@@ -26,7 +26,30 @@
   background-color: theme("colors.red.100");
 }
 
-.fullpage {
-  --background: theme("colors.neutral.800");
-  height: 100vh;
+ion-textarea.fullpage {
+  --background: theme("colors.white");
+  height: calc(100vh - 150px);
+  border-radius: 0px 0px 12px 12px;
+  margin: 0px;
+  font-size: 14px;
+  font-weight: theme("fontWeight.medium");
 }
+
+ion-textarea.fullpage textarea {
+  height: calc(100vh - 150px);
+  padding: 0px 20px 12px 20px !important;
+}
+
+ion-textarea.fullpage-title {
+  --background: theme("colors.white");
+  border-radius: 12px 12px 0px 0px;
+  font-family: theme("fontFamily.display");
+  font-size: 18px;
+  font-weight: theme("fontWeight.semibold");
+  --color: theme("colors.neutral.500");
+}
+
+ion-textarea.fullpage-title textarea {
+  padding: 16px 64px 0px 20px !important;
+}
+
