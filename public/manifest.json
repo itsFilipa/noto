@@ -29,7 +29,7 @@
     }
   ],
   "id": "/?source=pwa",
-  "start_url": "/discover",
+  "start_url": "/sign-up",
   "display": "fullscreen",
   "theme_color": "#6366F1",
   "scope": "/",
