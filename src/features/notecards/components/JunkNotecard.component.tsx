@@ -1,11 +1,11 @@
 import { NoteEntity } from "../../../types/";
 import trashIcon from "../../../assets/iconout/trash.svg";
 import trashOutIcon from "../../../assets/iconout/trash-out.svg";
-import { useIonActionSheet, useIonAlert } from "@ionic/react";
+import { IonLoading, useIonActionSheet, useIonAlert } from "@ionic/react";
 import { useTrash } from "../../../store";
 
 export const JunkNotecard = ({ notecard }: NoteEntity) => {
-  const { restoreNote, deleteNote } = useTrash();
+  const { restoreNote, deleteNote, isLoading } = useTrash();
   
   const [presentActionSheet] = useIonActionSheet();
   const [presentAlert] = useIonAlert();
@@ -90,6 +90,7 @@ export const JunkNotecard = ({ notecard }: NoteEntity) => {
           <p className="text-sm mt-3 text-neutral-400">No content available</p>
         )}
       </div>
+      <IonLoading isOpen={isLoading} animated spinner="crescent" />
     </>
   );
 };

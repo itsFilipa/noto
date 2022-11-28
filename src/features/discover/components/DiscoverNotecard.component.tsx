@@ -24,7 +24,15 @@ export const DiscoverNotecard = ({ notecard }: NoteEntity) => {
 
       {/* Body */}
 
-      <p className="text-sm line-clamp-4 mt-3 w-[93%]">{notecard.content}</p>
+      {notecard.content ? (
+          <p className="text-sm line-clamp-4 mt-3 w-[93%]">
+            {notecard.content}
+          </p>
+        ) : (
+          <p className="text-sm mt-3 text-neutral-400">
+            Continue writing this note..
+          </p>
+        )}
 
       {/* Footer */}
 
@@ -57,7 +65,7 @@ export const DiscoverNotecard = ({ notecard }: NoteEntity) => {
         />
       </div>
 
-      {notecard.tags && (
+      {notecard.tags && notecard.tags.length > 0 && (
         <div className="flex items-center gap-1 border border-transparent border-t-neutral-200 mt-2 pt-1 truncate">
           {notecard.tags.map((tag) => (
             <p key={tag.id} className="text-indigo-500 text-xs">

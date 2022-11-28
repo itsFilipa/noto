@@ -56,19 +56,36 @@ export const DiscoverPage = () => {
     useState<HTMLElement | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterArray, setFilterArray] = useState(searchFilters);
-  const [likedNotes, setLikedNotes] = useState<Note[]>([]);
-  const [forkedNotes, setForkedNotes] = useState<Note[]>([]);
+  const [filter, setFilter] = useState("Best results");
+  const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
 
   useEffect(() => {
     setPresentingElement(page.current);
-  }, []);
+    listNotes({});
+  }, [listNotes]);
 
   const handleSearch = (e: any) => {
     setSearchQuery(e.target.value);
+    if (e.target.value.length > 0) {
+      if (filter === "Best results" || filter === "Cards") {
+        const filtered = notes?.filter((note) =>
+          note.title.toLowerCase().includes(e.target.value.toLowerCase()) && note.visibility === "public"
+        );
+        setFilteredNotes(filtered ? filtered : []);
+      } if( filter === "Tags") {
+        const filtered = notes?.filter((note) =>
+          note.tags?.some((tag) => tag.name.toLowerCase().includes(e.target.value.toLowerCase())) && note.visibility === "public"
+        );
+        setFilteredNotes(filtered ? filtered : []);
+      }
+    } else {
+      setFilteredNotes([]);
+    }
   };
 
   const clearSearch = () => {
     setSearchQuery("");
+    setFilteredNotes([]);
   };
 
   const dismissModal = () => {
@@ -174,6 +191,7 @@ export const DiscoverPage = () => {
                           filterArray.map((item) => {
                             if (item.id === filter.id) {
                               item.checked = true;
+                              setFilter(item.label);
                             } else {
                               item.checked = false;
                             }
@@ -188,7 +206,17 @@ export const DiscoverPage = () => {
             )}
           </IonHeader>
 
-          <IonContent>Hello</IonContent>
+          <IonContent>
+            {filteredNotes.length > 0 ? (
+              <>
+                {filteredNotes.map((note) => (
+                  <DiscoverNotecard key={note.id} notecard={note} />
+                ))}
+              </>
+            ) : (
+              <p className="mt-12 font-medium text-sm text-neutral-500 w-fit mx-auto">No results</p>
+            )}
+          </IonContent>
         </IonModal>
       </IonContent>
     </IonPage>

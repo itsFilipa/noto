@@ -356,6 +356,8 @@ const useNoteStore = create<NoteStore>((set, store) => ({
           (n) => n.author.id === payload.userId
         );
         result.push(...filteredNotes);
+      } else {
+        result.push(...notes);
       }
 
       set({ notes: result, isLoading: false });
