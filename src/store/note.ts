@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import Fuse from "fuse.js";
 import create from "zustand";
 import { DB } from "../lib/db";
 import { Tag } from "./tag";
@@ -45,8 +46,11 @@ interface NoteStore {
       noteId: string
     ) => Promise<{ note: Note | null; error: Error | null }>;
     listNotes: (payload: {
+      public: boolean;
       userId?: string;
       tagId?: string[];
+      tag?: Tag;
+      tags?: Tag[];
       forked?: boolean;
       liked?: boolean;
       sortBy?: {
@@ -333,32 +337,57 @@ const useNoteStore = create<NoteStore>((set, store) => ({
         return { notes: [], error: new Error("Something went wrong.") };
       }
 
-      const result: Note[] = [];
-
-      // const filteredNotes = notes.filter((n) => {
-      //   if(payload.userId) {
-      //     return n.author.profile.username === payload.userId;
-      //   }
-      //   if(payload.forked){
-      //     return n.forks.length > 0;
-      //   }
-      //   if(payload.liked){
-      //     return n.likes.length > 0;
-      //   }
-      //   if(payload.tagId){
-      //     //for each tag in tagIds, check if it is in the note's tagIds and
-      //   }
-      // });
+      let result: Note[] = [];
 
       //filter by userId
       if (payload.userId) {
-        const filteredNotes = notes.filter(
-          (n) => n.author.id === payload.userId
-        );
+        const fuseUser = new Fuse(notes, {
+          keys: ["author.id"],
+          threshold: 0.0
+        });
+      //   const filteredNotes = notes.filter(
+      //     (n) => n.author.id === payload.userId
+      //   );
+      //   result.push(...filteredNotes);
+      // } else {
+      //   result.push(...notes);
+        const fuseResult = fuseUser.search(payload.userId);
+        const filteredNotes = fuseResult.map((r) => r.item);
         result.push(...filteredNotes);
-      } else {
-        result.push(...notes);
       }
+      if(payload.tag) {
+        const fuseTag = new Fuse(notes, {
+          keys: ["tags.name"],
+          threshold: 0.0
+        });
+        const fuseResult = fuseTag.search(payload.tag.name);
+        const filteredNotes = fuseResult.map((r) => r.item);
+        result.push(...filteredNotes);
+      }
+      if(payload.tags) {
+        const fuseTag = new Fuse(notes, {
+          keys: ["tags.name"],
+          threshold: 0.0
+        });
+
+        // let fuseResult = [];
+        payload.tags.forEach((tag) => {
+          const results = fuseTag.search(tag.name).map((r) => r.item);
+          result.push(...results);
+        })
+
+      }
+
+      if(payload.public){
+        const fusePublic = new Fuse(result, {
+          keys: ["visibility"],
+          threshold: 0.0,
+        });
+  
+        const fuseResult = fusePublic.search("public");
+        result = fuseResult.map((r) => r.item);
+      }
+
 
       set({ notes: result, isLoading: false });
       return { notes: result, error: null };

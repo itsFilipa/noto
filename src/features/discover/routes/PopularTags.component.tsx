@@ -9,18 +9,20 @@ import {
   IonHeader,
   IonToolbar,
   IonTitle,
+  IonLoading,
+  IonSpinner,
 } from "@ionic/react";
 import { DiscoverNotecard, PopularTagsHeader, UserAction } from "../components";
-import { Note, Tag } from "../../../store";
+import { Note, Tag, useNotes, useTags } from "../../../store";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../../../components";
-import tags from "../../../fake-data/tags.json";
-import notecards from "../../../fake-data/notecards.json";
 import checkIcon from "../../../assets/iconout/check.svg";
 
 export const PopularTagsPage = () => {
   const modal = useRef<HTMLIonModalElement>(null);
   const page = useRef(null);
+  const { notes, listNotes, isLoading: noteLoading } = useNotes();
+  const { tags, tagLoading } = useTags();
 
   const [presentingElement, setPresentingElement] =
     useState<HTMLElement | null>(null);
@@ -30,6 +32,13 @@ export const PopularTagsPage = () => {
     setPresentingElement(page.current);
   }, []);
 
+  useEffect(() => {
+    async function fetchNotes() {
+      await listNotes({public: true});
+    }
+    fetchNotes();
+  }, [listNotes]);
+
   const dismissModal = () => {
     modal.current?.dismiss();
   };
@@ -37,6 +46,7 @@ export const PopularTagsPage = () => {
   const chooseFilterTag = (tag: Tag) => {
     dismissModal();
     setFilterTag(tag);
+    listNotes({tag: tag, public: true});
   };
 
   const clearFilterTag = () => {
@@ -49,8 +59,20 @@ export const PopularTagsPage = () => {
       <PopularTagsHeader tag={filterTag?.name} clearTag={clearFilterTag} />
       <IonContent>
         <div className="mt-5">
-          <UserAction />
-          <DiscoverNotecard notecard={notecards[0] as Note} />
+
+          {noteLoading && <IonSpinner name="crescent" />}
+          {notes && notes.length > 0 ? (
+            <>
+              {notes.map((note: Note) => (
+                <DiscoverNotecard key={note.id} notecard={note} />
+              ))}
+            </>
+          ) : (
+            <p className="mt-12 font-medium text-neutral-500 mx-auto w-fit">
+              No results
+            </p>
+          )}
+          
         </div>
 
         <IonModal
@@ -71,7 +93,7 @@ export const PopularTagsPage = () => {
           </IonHeader>
           <IonContent>
             <IonList>
-              {tags.map((tag) => (
+              {tags?.map((tag) => (
                 <>
                   {filterTag && filterTag.id === tag.id ? (
                     <IonItem
@@ -103,6 +125,7 @@ export const PopularTagsPage = () => {
             </IonList>
           </IonContent>
         </IonModal>
+        <IonLoading isOpen={tagLoading} animated spinner="crescent" />
       </IonContent>
     </IonPage>
   );

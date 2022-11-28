@@ -3,19 +3,26 @@ import {
   IonHeader,
   IonModal,
   IonPage,
+  IonSpinner,
   IonToolbar,
+  useIonRouter,
 } from "@ionic/react";
 import { Button } from "../../../components/Button";
-import { DiscoverHeader, DiscoverNotecard, UserAction } from "../components";
+import {
+  DiscoverHeader,
+  DiscoverNotecard,
+  UsersList,
+} from "../components";
 import { Note, useNotes } from "../../../store/note";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { DiscoverChip, Icon, Searchbar } from "../../../components";
-import { useAuth } from "../../../store";
+import { useAuth, User, useUser } from "../../../store";
 
 import hashtagIcon from "../../../assets/iconout/hashtag.svg";
 import cardsIcon from "../../../assets/iconout/cards.svg";
 import chevronRight from "../../../assets/iconout/chevron-right.svg";
 import userIcon from "../../../assets/iconout/user.svg";
+import { useLocation } from "react-router-dom";
 
 const searchFilters = [
   {
@@ -40,7 +47,7 @@ const searchFilters = [
   },
 ];
 
-export const DiscoverPage = () => {
+export const DiscoverPage = memo(() => {
   const date = new Date();
   const day = date.getDate();
   const mon = date.toLocaleString("default", { month: "short" });
@@ -48,6 +55,7 @@ export const DiscoverPage = () => {
 
   const { user } = useAuth();
   const { notes, listNotes, isLoading } = useNotes();
+  const { query } = useUser();
 
   const modal = useRef<HTMLIonModalElement>(null);
   const page = useRef(null);
@@ -58,38 +66,63 @@ export const DiscoverPage = () => {
   const [filterArray, setFilterArray] = useState(searchFilters);
   const [filter, setFilter] = useState("Best results");
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
 
   useEffect(() => {
     setPresentingElement(page.current);
-    listNotes({});
+    listNotes({public: true});
   }, [listNotes]);
 
-  const handleSearch = (e: any) => {
+  const handleSearch = async (e: any) => {
     setSearchQuery(e.target.value);
     if (e.target.value.length > 0) {
       if (filter === "Best results" || filter === "Cards") {
-        const filtered = notes?.filter((note) =>
-          note.title.toLowerCase().includes(e.target.value.toLowerCase()) && note.visibility === "public"
+        const filtered = notes?.filter(
+          (note) =>
+            note.title.toLowerCase().includes(e.target.value.toLowerCase()) &&
+            note.visibility === "public"
         );
+        setFilteredUsers([]);
         setFilteredNotes(filtered ? filtered : []);
-      } if( filter === "Tags") {
-        const filtered = notes?.filter((note) =>
-          note.tags?.some((tag) => tag.name.toLowerCase().includes(e.target.value.toLowerCase())) && note.visibility === "public"
+      }
+      if (filter === "Tags") {
+        const filtered = notes?.filter(
+          (note) =>
+            note.tags?.some((tag) =>
+              tag.name.toLowerCase().includes(e.target.value.toLowerCase())
+            ) && note.visibility === "public"
         );
+        setFilteredUsers([]);
         setFilteredNotes(filtered ? filtered : []);
+      }
+      if (filter === "Users") {
+        const results = await query(e.target.value);
+        console.log(results);
+        setFilteredNotes([]);
+        setFilteredUsers(results ? results : []);
       }
     } else {
       setFilteredNotes([]);
+      setFilteredUsers([]);
     }
   };
 
   const clearSearch = () => {
     setSearchQuery("");
     setFilteredNotes([]);
+    setFilteredUsers([]);
   };
 
   const dismissModal = () => {
     modal.current?.dismiss();
+  };
+
+  const path = useLocation().pathname + "/user/";
+
+  const router = useIonRouter();
+
+  const redirect = (path: string) => {
+    router.push(path);
   };
 
   return (
@@ -142,7 +175,7 @@ export const DiscoverPage = () => {
 
         <p className="font-display font-bold text-lg mt-8 mb-4">Activity</p>
 
-        {notes ? (
+        {notes && notes.length > 0 ? (
           <></>
         ) : (
           <div className="col gap-2 items-center mt-12">
@@ -207,18 +240,34 @@ export const DiscoverPage = () => {
           </IonHeader>
 
           <IonContent>
-            {filteredNotes.length > 0 ? (
+            {isLoading && <IonSpinner name="crescent" />}
+            {filteredNotes.length === 0 && filteredUsers.length === 0 && (
+              <p className="mt-12 font-medium text-sm text-neutral-500 w-fit mx-auto">
+                No results
+              </p>
+            )}
+            {filteredNotes.length > 0 && (
               <>
                 {filteredNotes.map((note) => (
                   <DiscoverNotecard key={note.id} notecard={note} />
                 ))}
               </>
-            ) : (
-              <p className="mt-12 font-medium text-sm text-neutral-500 w-fit mx-auto">No results</p>
             )}
+
+            {filteredUsers.map((user, index) => (
+              <div
+                onClick={() => {
+                  dismissModal();
+                  redirect(path + user.id);
+                }}
+              >
+                <UsersList user={user} />
+                {index !== filteredUsers.length - 1 && <hr className="my-4" />}
+              </div>
+            ))}
           </IonContent>
         </IonModal>
       </IonContent>
     </IonPage>
   );
-};
+});

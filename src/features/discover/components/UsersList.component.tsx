@@ -1,16 +1,12 @@
-import { IonRouterLink } from "@ionic/react";
-import { useLocation } from "react-router-dom";
 import { UserEntity } from "../../../types";
 import { Icon } from "../../../components";
 import userIcon from "../../../assets/iconout/user.svg";
 
 export const UsersList = ({ user }: UserEntity) => {
 
-  const path = useLocation().pathname + "/user/" + user.id;
-
   return (
-    <IonRouterLink routerLink={path}>
-      <div className="flex gap-4">
+    // <IonRouterLink routerLink={path} routerDirection="forward">
+      <div className="flex gap-4 mt-4">
         <div className="w-[52px] h-[52px] bg-white border border-neutral-200 rounded-full flex items-center justify-center">
           {user.profile.avatarUrl ? (
             <img
@@ -37,6 +33,6 @@ export const UsersList = ({ user }: UserEntity) => {
           )}
         </div>
       </div>
-    </IonRouterLink>
+    // </IonRouterLink>
   );
 };

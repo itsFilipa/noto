@@ -31,6 +31,9 @@ export const DiscoverRoutes = () => {
         <Route exact path="/discover/*/user/:id">
           <UserProfilePage />
         </Route>
+        <Route exact path="/discover/user/:id">
+          <UserProfilePage />
+        </Route>
       </IonRouterOutlet>
     </Tabs>
   )

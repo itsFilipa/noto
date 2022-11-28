@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { useEffect } from "react";
 import create from "zustand";
 import { DB } from "../lib/db";
 import { useNotes } from "./";
@@ -17,24 +18,26 @@ interface TagStore {
   tags: Tag[] | null;
   tagLoading: boolean;
   actions: {
-    getAllTags: () => Promise< {tags: Tag[] | null; error: Error | null} >;
+    setLoading: (tagLoading: boolean) => void;
+    setTags: (tags: Tag[]) => void;
     getTagByUserId: (userId: string) => Promise< {tags: Tag[] | null; error: Error | null} >;
     getTag: (id: string) => Promise< {tag: Tag | null; error: Error | null} >;
     createTag: (payload: string) => Promise< {tag: Tag | null; error: Error | null} >;
   }
 }
 
+const getAllTags = async () => {
+  const {data: tags} = await DB.get<Tag[]>('tags');
+  return tags;
+};
+
 const useTagStore = create<TagStore>((set, get) => ({
   tag: null,
   tags: null,
   tagLoading: false,
   actions: {
-    getAllTags: async () => {
-      set({ tagLoading: true });
-      const {data: tags, error} = await DB.get<Tag[]>('tags');
-      set({ tags, tagLoading: false });
-      return { tags, error };
-  },
+    setLoading: (tagLoading: boolean) => set({ tagLoading }),
+    setTags: (tags: Tag[]) => set({ tags }),
     getTagByUserId: async (userId: string) => {
       set({ tagLoading: true });
       const {data: tags, error} = await DB.get<Tag[]>("tags");
@@ -88,15 +91,27 @@ export const useTags = () => {
   const tag = useTagStore((state) => state.tag);
   const tags = useTagStore((state) => state.tags);
   const tagLoading = useTagStore((state) => state.tagLoading);
-  const { getAllTags, getTagByUserId, getTag, createTag } = useTagStore(
+  const { getTagByUserId, getTag, createTag, setLoading, setTags } = useTagStore(
     (state) => state.actions
   );
+
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+    getAllTags().then((tags) => {
+      if (isMounted && tags) {
+        setTags(tags);
+      }
+    }).finally(() => setLoading(false));
+    return () => {
+      isMounted = false;
+    };
+  }, [setLoading, setTags]);
 
   return{
     tag,
     tags,
     tagLoading,
-    getAllTags,
     getTagByUserId,
     getTag,
     createTag,

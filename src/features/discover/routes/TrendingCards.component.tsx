@@ -1,23 +1,35 @@
-import { IonPage, IonContent } from "@ionic/react";
+import { IonPage, IonContent, IonLoading } from "@ionic/react";
 import { GenericHeader } from "../../../components";
-import { Note } from "../../../store";
-import { UserAction, DiscoverNotecard } from "../components";
-import notecards from "../../../fake-data/notecards.json";
+import { Note, useNotes } from "../../../store";
+import { DiscoverNotecard } from "../components";
+import { useEffect } from "react";
 
 export const TrendingCardsPage = () => {
+  const { notes, listNotes, isLoading } = useNotes();
+
+  useEffect(() => {
+    async function fetchNotes() {
+      await listNotes({public: true});
+    }
+    fetchNotes();
+  }, [listNotes]);
+
   return (
     <IonPage>
       <GenericHeader title="Trending Cards" backBtn="/discover" />
       <IonContent>
-        <div className="mt-5">
-          <UserAction />
-          <DiscoverNotecard notecard={notecards[0] as Note} />
-        </div>
-
-        <div className="my-5">
-          <UserAction />
-          <DiscoverNotecard notecard={notecards[1] as Note} />
-        </div>
+        {notes && notes.length > 0 ? (
+          <>
+            {notes.map((note: Note) => (
+              <DiscoverNotecard key={note.id} notecard={note} />
+            ))}
+          </>
+        ) : (
+          <p className="mt-12 font-medium text-neutral-500 mx-auto w-fit">
+            There are no notes to show you
+          </p>
+        )}
+        <IonLoading isOpen={isLoading} spinner="crescent" animated />
       </IonContent>
     </IonPage>
   );

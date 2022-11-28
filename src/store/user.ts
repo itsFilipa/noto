@@ -1,3 +1,5 @@
+import Fuse from "fuse.js";
+import { useEffect } from "react";
 import create from "zustand";
 import { DB } from "../lib/db";
 
@@ -33,40 +35,37 @@ export interface DatabaseUser {
 }
 
 interface UserStore {
+  user: User | null;
   users: User[];
   isLoading: boolean;
   actions: {
-    listUsers: () => Promise<User[] | undefined>;
+    setLoading: (isLoading: boolean) => void;
+    setUsers: (users: User[]) => void;
     follow: (userId: string) => void;
     unfollow: (userId: string) => void;
     // query against username and firstName plus lastName
     query: (query: string) => Promise<User[]>;
+    getUser: (userId: string) => Promise<{user: User | null, error: Error | null}>;
   };
 }
 
+const listUsers = async () => {
+  const { data: users, error } = await DB.get<DatabaseUser[]>("users");
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const usersList = users?.map((u) => u.user);
+  return usersList;
+};
+
 const useUserStore = create<UserStore>((set, store) => ({
+  user: null,
   users: [],
   isLoading: false,
   actions: {
-    listUsers: async () => {
-      // const cachedUsers = store().users;
-      // if (cachedUsers.length > 0) {
-      //   return cachedUsers;
-      // }
-      set({ isLoading: true});
-      try {
-        const { data: users } = await DB.get<DatabaseUser[]>("users");
-        if (users) {
-          const usersList = users.map((u) => u.user);
-          set({ users: usersList, isLoading: false });
-          return usersList;
-        } else {
-          set({ isLoading: false });
-        }
-      } catch (error) {
-        set({ isLoading: false });
-      }
-    },
+    setLoading: (isLoading: boolean) => set({ isLoading }),
+    setUsers: (users: User[]) => set({ users }),
     follow: async (userId) => {
       set({ isLoading: true });
       //get current user from currentUser
@@ -79,7 +78,7 @@ const useUserStore = create<UserStore>((set, store) => ({
         return;
       }
       //get the user from userId
-      if (store().users.length === 0) {
+      if (store().users.length !== 0) {
         const userToFollow = store().users.find((u) => u.id === userId);
         if (userToFollow) {
           //add current user to userToFollow.followers
@@ -128,7 +127,7 @@ const useUserStore = create<UserStore>((set, store) => ({
         return;
       }
       //get the user from userId
-      if (store().users.length === 0) {
+      if (store().users.length !== 0) {
         const userToUnfollow = store().users.find((u) => u.id === userId);
         if (userToUnfollow) {
           //remove current user from userToUnfollow.followers
@@ -179,56 +178,81 @@ const useUserStore = create<UserStore>((set, store) => ({
     },
     query: async (query) => {
       set({ isLoading: true });
-      const users = store().users;
-      if (users.length === 0) {
-        const { data: users } = await DB.get<DatabaseUser[]>("users");
-        if (!users) {
-          set({ isLoading: false });
-          return [];
-        }
-        const filteredUsers = users.filter((u) => {
-          const username = u.user.profile.username.toLowerCase();
-          const firstName = u.user.profile.firstName.toLowerCase();
-          const lastName = u.user.profile.lastName.toLowerCase();
-          const queryLower = query.toLowerCase();
-          return (
-            username.includes(queryLower) ||
-            firstName.includes(queryLower) ||
-            lastName.includes(queryLower)
-          );
-        });
-        set({ isLoading: false });
-        return filteredUsers.map((u) => u.user);
-      } else {
-        const filteredUsers = users.filter((u) => {
-          const username = u.profile.username.toLowerCase();
-          const firstName = u.profile.firstName.toLowerCase();
-          const lastName = u.profile.lastName.toLowerCase();
-          const queryLower = query.toLowerCase();
-          return (
-            username.includes(queryLower) ||
-            firstName.includes(queryLower) ||
-            lastName.includes(queryLower)
-          );
-        });
-        set({ isLoading: false });
-        return filteredUsers;
+
+      const { data: dbusers } = await DB.get<DatabaseUser[]>("users", 0);
+
+      const users = dbusers?.map((u) => u.user);
+
+      if (!users) {
+        return [];
       }
+
+      const search = new Fuse(users, {
+        keys: ["profile.username", "profile.firstName", "profile.lastName"],
+      });
+      const results = search.search(query);
+      const usersList = results.map((r) => r.item);
+
+      set({ isLoading: false });
+
+      return usersList;
+    },
+    getUser: async (userId) => {
+      set({ isLoading: true });
+
+      const { data: dbusers } = await DB.get<DatabaseUser[]>("users", 0);
+
+      const users = dbusers?.map((u) => u.user);
+
+      if (!users) {
+        set({ isLoading: false });
+        return { user: null, error: new Error("No users found") };
+      }
+
+      const user = users.find((u) => u.id === userId);
+
+      if(!user) {
+        set({ isLoading: false });
+        return { user: null , error: new Error("User not found") };
+      }
+
+      set({ isLoading: false, user: user });
+
+      return {user: user, error: null};
     },
   },
 }));
 
 export const useUser = () => {
+  const user = useUserStore((state) => state.user);
   const users = useUserStore((state) => state.users);
   const isLoading = useUserStore((state) => state.isLoading);
-  const { listUsers, follow, unfollow, query } = useUserStore((state) => state.actions);
+  const { follow, unfollow, query, setLoading, setUsers, getUser } = useUserStore(
+    (state) => state.actions
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+    listUsers()
+      .then((users) => {
+        if (isMounted && users) {
+          setUsers(users);
+        }
+      })
+      .finally(() => setLoading(false));
+    return () => {
+      isMounted = false;
+    };
+  }, [setLoading, setUsers]);
 
   return {
+    user,
     users,
-    listUsers,
     isLoading,
     follow,
     unfollow,
     query,
+    getUser,
   };
-}
+};

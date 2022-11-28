@@ -29,13 +29,13 @@ export const NotecardsPage = () => {
   const { user } = useAuth();
 
   const handleRefresh = async (e: CustomEvent<RefresherEventDetail>) => {
-    await listNotes({ userId: user?.id });
+    await listNotes({ userId: user?.id, public: false });
     e.detail.complete();
-  }
+  };
 
   useEffect(() => {
     if (user) {
-      listNotes({ userId: user.id });
+      listNotes({ userId: user.id, public: false });
     }
   }, [listNotes, user]);
 
@@ -43,14 +43,19 @@ export const NotecardsPage = () => {
     <IonPage>
       <NotecardHeader />
       <IonContent>
-
-      <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent></IonRefresherContent>
         </IonRefresher>
 
-        {notes?.map((notecard) => (
-          <Notecard key={notecard.id} notecard={notecard as Note} />
-        ))}
+        {notes && notes.length > 0 ? (
+          notes.map((notecard) => (
+            <Notecard key={notecard.id} notecard={notecard as Note} />
+          ))
+        ) : (
+          <p className="mt-12 font-medium text-neutral-500 mx-auto w-fit">
+            There are no notes to show you
+          </p>
+        )}
 
         <IonPopover trigger="sort" className="[--width:235px] ">
           <IonContent className="popover">
