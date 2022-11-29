@@ -12,7 +12,8 @@ import graphIcon from "../assets/graph-icon.svg";
 
 import inboxStackIcon from "../../../assets/iconout/inbox-stack.svg";
 import heartIcon from "../../../assets/iconout/heart-full.svg";
-import { Icon } from "../../../components";
+import { Button, Icon } from "../../../components";
+import { LandingHeader } from "../components";
 
 export const LandingPage = () => {
   return (
@@ -20,26 +21,8 @@ export const LandingPage = () => {
       <IonContent className="no-padding">
         <div className="snap-y snap-mandatory overflow-y-scroll max-h-screen">
           <div className="h-screen bg-white px-16 pt-5 col justify-between snap-start">
-            <div className="flex justify-between items-center">
-              <img src={logo} alt="logo for noto" />
-              <div className="flex justify-between items-center gap-8">
-                <a href="#" className="text-neutral-500 font-medium">
-                  What's new
-                </a>
-                <a href="#" className="text-neutral-500 font-medium">
-                  Features
-                </a>
-                <a href="#" className="text-neutral-500 font-medium">
-                  Download
-                </a>
-                <a href="#" className="text-neutral-500 font-medium">
-                  Docs
-                </a>
-              </div>
-              <IonButton className="rounded-xl shadow-[0_4px_10px_0_rgba(99,102,241,0.5)]">
-                Download here
-              </IonButton>
-            </div>
+           
+            <LandingHeader />
 
             <div>
               <p className="font-display font-semibold text-[48px] w-fit mx-auto">
@@ -88,9 +71,12 @@ export const LandingPage = () => {
             </div>
 
             <div className="flex gap-3 items-center">
-              <p className="font-sm font-semibold text-indigo-600">
+              <a
+                className="font-sm font-semibold text-indigo-600"
+                href="/download"
+              >
                 Try it now
-              </p>
+              </a>
               <IonIcon icon={chevronRight} />
             </div>
           </div>
@@ -110,7 +96,10 @@ export const LandingPage = () => {
                 </p>
 
                 <div className="flex gap-3 mb-20">
-                  <Icon icon={inboxStackIcon} className="!h-6 !w-6 text-indigo-500" />
+                  <Icon
+                    icon={inboxStackIcon}
+                    className="!h-6 !w-6 text-indigo-500"
+                  />
                   <p className="font-display font-semibold">
                     Effortless organization
                   </p>
@@ -136,7 +125,10 @@ export const LandingPage = () => {
                 </p>
 
                 <div className="flex gap-3 mb-16 w-[60%]">
-                  <Icon icon={heartIcon} className="!h-6 !w-6 text-indigo-500" />
+                  <Icon
+                    icon={heartIcon}
+                    className="!h-6 !w-6 text-indigo-500"
+                  />
                   <p className="font-display font-semibold">
                     Sharing is caring
                   </p>
@@ -189,69 +181,73 @@ export const LandingPage = () => {
               </div>
             </div>
           </div>
-        
 
-        <div className="bg-white col items-center py-16 snap-start">
-          <p className="font-display font-semibold text-5xl">
-            Get Nōto for free
-          </p>
+          <div className="bg-white col items-center py-16 snap-start">
+            <p className="font-display font-semibold text-5xl">
+              Get Nōto for free
+            </p>
 
-          <div className="my-6">
-            <p className="font-medium text-center">Download the app now</p>
-            <p className="font-medium text-neutr">
-              Only available to iOS and Android
+            <div className="my-6">
+              <p className="font-medium text-center">Download the app now</p>
+              <p className="font-medium text-neutr">
+                Only available to iOS and Android
+              </p>
+            </div>
+
+            <Button className="my-7" routerLink="/download">
+              Download now
+            </Button>
+
+            <p className="text-sm text-neutral-500 font-medium">
+              No ads. No trials.
             </p>
           </div>
 
-          <IonButton className="rounded-xl shadow-[0_4px_10px_0_rgba(99,102,241,0.5)] my-7">
-            Download now
-          </IonButton>
+          <div className="border-y border-neutral-200 grid grid-cols-4 px-16 py-9 bg-white snap-start">
+            <div>
+              <img src={logo} alt="logo for noto" />
+            </div>
+            <div className="col items-center gap-6">
+              <p className="font-display font-semibold">Product</p>
+              <div className="col gap-3 items-center">
+                <p className="font-medium">Features</p>
+                <a className="font-medium" href="/download">
+                  Download
+                </a>
+                <a className="font-medium" href="/changelog">
+                  Changelog
+                </a>
+              </div>
+            </div>
 
-          <p className="text-sm text-neutral-500 font-medium">
-            No ads. No trials.
-          </p>
-        </div>
+            <div className="col items-center gap-6">
+              <p className="font-display font-semibold">Resources</p>
+              <div className="col gap-3 items-center">
+                <p className="font-medium">Help</p>
+                <p className="font-medium">Docs</p>
+              </div>
+            </div>
 
-        <div className="border-y border-neutral-200 grid grid-cols-4 px-16 py-9 bg-white snap-start">
-          <div>
-            <img src={logo} alt="logo for noto" />
-          </div>
-          <div className="col items-center gap-6">
-            <p className="font-display font-semibold">Product</p>
-            <div className="col gap-3 items-center">
-              <p className="font-medium">Features</p>
-              <p className="font-medium">Download</p>
-              <p className="font-medium">Changelog</p>
+            <div className="col items-center gap-6">
+              <p className="font-display font-semibold">Company</p>
+              <div className="col gap-3 items-center">
+                <p className="font-medium">About</p>
+                <a className="font-medium" href="/download">
+                  Download
+                </a>
+              </div>
             </div>
           </div>
 
-          <div className="col items-center gap-6">
-            <p className="font-display font-semibold">Resources</p>
-            <div className="col gap-3 items-center">
-              <p className="font-medium">Help</p>
-              <p className="font-medium">Docs</p>
+          <footer className="bg-white flex justify-between px-16 snap-start">
+            <div className="col gap-1 items-center justify-center">
+              <p className="font-bold text-xl">Enjoy taking notes</p>
+              <p>Join thousands of users</p>
             </div>
-          </div>
-
-          <div className="col items-center gap-6">
-            <p className="font-display font-semibold">Company</p>
-            <div className="col gap-3 items-center">
-              <p className="font-medium">About</p>
-              <p className="font-medium">Download</p>
-            </div>
-          </div>
-        </div>
-
-        <footer className="bg-white flex justify-between px-16 snap-start">
-          <div className="col gap-1 items-center justify-center">
-            <p className="font-bold text-xl">Enjoy taking notes</p>
-            <p>Join thousands of users</p>
-          </div>
-          <IonButton className="rounded-xl shadow-[0_4px_10px_0_rgba(99,102,241,0.5)] my-7">
-            Download now
-          </IonButton>
-        </footer>
-
+            <Button className="my-7" routerLink="/download">
+              Download now
+            </Button>
+          </footer>
         </div>
       </IonContent>
     </IonPage>
