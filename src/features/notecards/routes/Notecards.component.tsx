@@ -5,10 +5,10 @@ import {
   IonList,
   IonPopover,
   IonLabel,
-  IonLoading,
   IonRefresher,
   IonRefresherContent,
   RefresherEventDetail,
+  IonSpinner,
 } from "@ionic/react";
 import { Icon } from "../../../components";
 import { NotecardHeader } from "../components";
@@ -48,7 +48,7 @@ export const NotecardsPage = () => {
         </IonRefresher>
 
         {notes && notes.length > 0 ? (
-          notes.map((notecard) => (
+          notes.map((notecard: Note) => (
             <Notecard key={notecard.id} notecard={notecard as Note} />
           ))
         ) : (
@@ -57,6 +57,9 @@ export const NotecardsPage = () => {
           </p>
         )}
 
+        {isLoading && (
+          <IonSpinner name="crescent" className="w-fit mx-auto mt-4" />
+        )}
         <IonPopover trigger="sort" className="[--width:235px] ">
           <IonContent className="popover">
             <div className="flex justify-between">
@@ -123,7 +126,6 @@ export const NotecardsPage = () => {
             </IonList>
           </IonContent>
         </IonPopover>
-        <IonLoading isOpen={isLoading} animated spinner="crescent" />
       </IonContent>
     </IonPage>
   );

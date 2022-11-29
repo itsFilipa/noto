@@ -1,4 +1,4 @@
-import { IonIcon, useIonAlert } from "@ionic/react";
+import { IonIcon, useIonAlert, useIonRouter } from "@ionic/react";
 import { Button } from "../../../components/Button";
 import { NoteEntity } from "../../../types/";
 import { Icon } from "../../../components";
@@ -28,6 +28,7 @@ export const Notecard = ({ notecard }: NoteEntity) => {
   
   const { moveToTrash } = useNotes();
   const [presentAlert] = useIonAlert();
+  const router = useIonRouter();
   
   let width = 0;
 
@@ -40,9 +41,13 @@ export const Notecard = ({ notecard }: NoteEntity) => {
     }
   };
 
+  const redirect = () => {
+    router.push(`/notecards/${notecard.id}`);
+  }
+
   return (
     <>
-      <div className="w-full bg-white col rounded-xl py-3 px-4 mt-4">
+      <div className="w-full bg-white col rounded-xl py-3 px-4 mt-4" onClick={redirect}>
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -62,6 +67,7 @@ export const Notecard = ({ notecard }: NoteEntity) => {
             prefix={
               <Icon icon={pencilIcon} className="!w-5 !h-5 text-neutral-400" />
             }
+            onClick={redirect}
           />
         </div>
 
