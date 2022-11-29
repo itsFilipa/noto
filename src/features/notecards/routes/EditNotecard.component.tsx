@@ -32,7 +32,7 @@ import checkIcon from "../../../assets/iconout/check.svg";
 export const EditNotecardPage = () => {
   const [presentActionSheet] = useIonActionSheet();
   const [presentAlert] = useIonAlert();
-  const { note, createNote, updateNote, isLoading } = useNotes();
+  const { note, updateNote, isLoading } = useNotes();
   const { tags, tag, createTag, getTagByUserId, tagLoading } = useTags();
   const { user } = useAuth();
 
@@ -47,9 +47,8 @@ export const EditNotecardPage = () => {
   const [toastMessage, setToastMessage] = useState("");
 
   useEffect(() => {
-    createNote();
     if (user) getTagByUserId(user.id);
-  }, [createNote, getTagByUserId, user]);
+  }, [getTagByUserId, user]);
 
   const handleSearch = (e: any) => {
     setSearchQuery(e.target.value);

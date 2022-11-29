@@ -25,11 +25,17 @@ import "./theme/ionic.css";
 import { DB } from "./lib/db";
 import { useEffect, useState } from "react";
 import { useAuth } from "./store";
+import { createFakeNotes, createFakeTags, createFakeUsers } from "./utils/fakedata";
 
 setupIonicReact();
 
 const populateFakeData = () => {
-  // create fake data
+  const users = createFakeUsers(10);
+  const tags = createFakeTags(14, users);
+  const notes = createFakeNotes(20, users, tags);
+  DB.set("users", users, 0);
+  DB.set("tags", tags, 0);
+  DB.set("notes", notes, 0);
 };
 
 
@@ -49,6 +55,7 @@ const App: React.FC = () => {
   // create the database tables if they don't exist
   useEffect(() => {
     setupTables();
+    populateFakeData();
     setCurrentUser();
   }, [setCurrentUser]);
 

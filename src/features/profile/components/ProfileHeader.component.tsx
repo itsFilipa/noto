@@ -31,7 +31,7 @@ export const ProfileHeader = () => {
             variant="outline"
             iconOnly
             size="large"
-            suffix={
+            prefix={
               <Icon icon={powerIcon} className="!w-6 !h-6 text-neutral-400" />
             }
             onClick={() =>
