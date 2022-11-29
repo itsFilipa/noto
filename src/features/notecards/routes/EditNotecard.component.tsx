@@ -28,16 +28,19 @@ import tagIcon from "../../../assets/iconout/hashtag.svg";
 import shareIcon from "../../../assets/iconout/cloud-arrow-up.svg";
 import unshareIcon from "../../../assets/iconout/cloud-arrow-down.svg";
 import checkIcon from "../../../assets/iconout/check.svg";
+import { useParams } from "react-router";
 
 export const EditNotecardPage = () => {
+  const { id: noteId } = useParams<{ id: string }>();
+
   const [presentActionSheet] = useIonActionSheet();
   const [presentAlert] = useIonAlert();
-  const { note, updateNote, isLoading } = useNotes();
+  const { note, updateNote, isLoading, getNote } = useNotes();
   const { tags, tag, createTag, getTagByUserId, tagLoading } = useTags();
   const { user } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [valueTitle, setvalueTitle] = useState("Untitled");
+  const [valueTitle, setvalueTitle] = useState("");
   const [valueContent, setvalueContent] = useState("");
   const [noteTags, setNoteTags] = useState<Tag[]>(note?.tags || []);
   const [filteredTags, setFilteredTags] = useState<Tag[]>(tags || []);
@@ -47,8 +50,22 @@ export const EditNotecardPage = () => {
   const [toastMessage, setToastMessage] = useState("");
 
   useEffect(() => {
-    if (user) getTagByUserId(user.id);
-  }, [getTagByUserId, user]);
+    // const fetchNote = async () => {
+    //   return await getNote(noteId);
+    // };
+
+    if (user) {
+      getTagByUserId(user.id);
+      getNote(noteId).then(({ note }) => {
+        console.log(note);
+        if (note) {
+          setvalueTitle(note.title);
+          setvalueContent(note.content);
+          setNoteTags(note.tags || []);
+        }
+      });
+    }
+  }, []);
 
   const handleSearch = (e: any) => {
     setSearchQuery(e.target.value);
@@ -90,7 +107,7 @@ export const EditNotecardPage = () => {
   };
 
   const addTag = (tag: Tag) => {
-    if(noteTags.find(t => t.id === tag.id)) {
+    if (noteTags.find((t) => t.id === tag.id)) {
       clearSearch();
       return;
     }
@@ -228,8 +245,8 @@ export const EditNotecardPage = () => {
     <IonPage>
       <EditNotecardHeader
         backBtn="/notecards"
-        valueTitle={valueTitle}
-        valueContent={valueContent}
+        valueTitle={valueTitle ? valueTitle : ""}
+        valueContent={valueContent ? valueContent : ""}
       />
       <IonContent>
         <FullPageInput
@@ -237,8 +254,9 @@ export const EditNotecardPage = () => {
           placeholder="Untitled"
           debounce={0}
           onIonChange={(e) =>
-            setvalueTitle(e.detail.value ? e.detail.value : "Untitled")
+            setvalueTitle(e.detail.value ? e.detail.value : valueTitle)
           }
+          value={valueTitle}
         />
         <FullPageInput
           className="fullpage"
@@ -246,8 +264,9 @@ export const EditNotecardPage = () => {
           placeholder="Write your notes here..."
           debounce={500}
           onIonChange={(e) =>
-            setvalueContent(e.detail.value ? e.detail.value : "")
+            setvalueContent(e.detail.value ? e.detail.value : valueContent)
           }
+          value={valueContent}
         />
 
         <IonFab
@@ -349,11 +368,7 @@ export const EditNotecardPage = () => {
             )}
           </IonContent>
         </IonModal>
-        <IonLoading
-          isOpen={isLoading}
-          animated
-          spinner="crescent"
-        />
+        <IonLoading isOpen={isLoading} animated spinner="crescent" />
       </IonContent>
 
       <IonToast
