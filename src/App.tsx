@@ -55,7 +55,7 @@ const App: React.FC = () => {
   // create the database tables if they don't exist
   useEffect(() => {
     setupTables();
-    populateFakeData();
+    // populateFakeData();
     setCurrentUser();
   }, [setCurrentUser]);
 
