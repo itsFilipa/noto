@@ -11,6 +11,7 @@ import { Button } from "../../../components/Button";
 import {
   DiscoverHeader,
   DiscoverNotecard,
+  UserAction,
   UsersList,
 } from "../components";
 import { Note, useNotes } from "../../../store/note";
@@ -70,7 +71,7 @@ export const DiscoverPage = memo(() => {
 
   useEffect(() => {
     setPresentingElement(page.current);
-    listNotes({public: true});
+    listNotes({ allPublic: true });
   }, [listNotes]);
 
   const handleSearch = async (e: any) => {
@@ -176,7 +177,14 @@ export const DiscoverPage = memo(() => {
         <p className="font-display font-bold text-lg mt-8 mb-4">Activity</p>
 
         {notes && notes.length > 0 ? (
-          <></>
+          <>
+            {notes.map((note) => (
+              <div key={note.id} className="mt-5">
+                <UserAction />
+                <DiscoverNotecard notecard={note} />
+              </div>
+            ))}
+          </>
         ) : (
           <div className="col gap-2 items-center mt-12">
             <p className="font-medium text-neutral-500">

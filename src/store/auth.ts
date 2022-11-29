@@ -78,6 +78,8 @@ const useAuthStore = create<AuthStore>((set, store) => ({
         return { user: null, error: new Error("User already exists") };
       }
 
+      const allUsers = users?.map((user) => user.user) || [];
+
       const id = faker.datatype.uuid();
 
       const newUser = {
@@ -93,7 +95,7 @@ const useAuthStore = create<AuthStore>((set, store) => ({
             lastName: "",
             biography: "",
             followers: [],
-            following: [],
+            following: allUsers,
             avatarUrl: faker.image.avatar(),
           },
           createdAt: new Date().toISOString(),

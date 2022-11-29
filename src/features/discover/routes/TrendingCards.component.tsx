@@ -9,10 +9,12 @@ export const TrendingCardsPage = () => {
 
   useEffect(() => {
     async function fetchNotes() {
-      await listNotes({public: true});
+      await listNotes({allPublic: true});
     }
     fetchNotes();
   }, [listNotes]);
+
+  console.log(notes);
 
   return (
     <IonPage>

@@ -4,7 +4,7 @@ const randomTime = (time?: number) => {
   }
 
   // 150ms to 1 seconds
-  return Math.floor(Math.random() * 1000) + 150
+  return Math.floor(Math.random() * 500) + 150
 };
 
 // Examples:

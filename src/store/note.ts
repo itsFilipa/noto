@@ -46,7 +46,8 @@ interface NoteStore {
       noteId: string
     ) => Promise<{ note: Note | null; error: Error | null }>;
     listNotes: (payload: {
-      public: boolean;
+      allPublic?: boolean;
+      public?: boolean;
       userId?: string;
       tagId?: string[];
       tag?: Tag;
@@ -379,6 +380,7 @@ const useNoteStore = create<NoteStore>((set, store) => ({
       }
 
       if(payload.public){
+
         const fusePublic = new Fuse(result, {
           keys: ["visibility"],
           threshold: 0.0,
@@ -388,6 +390,15 @@ const useNoteStore = create<NoteStore>((set, store) => ({
         result = fuseResult.map((r) => r.item);
       }
 
+      if(payload.allPublic) {
+        const fusePublic = new Fuse(notes, {
+          keys: ["visibility"],
+          threshold: 0.0,
+        });
+  
+        const fuseResult = fusePublic.search("public");
+        result = fuseResult.map((r) => r.item);
+      }
 
       set({ notes: result, isLoading: false });
       return { notes: result, error: null };

@@ -1,7 +1,17 @@
+import { faker } from "@faker-js/faker";
 import userIcon  from "../../../assets/iconout/user.svg";
 import { Icon } from "../../../components";
 
 export const UserAction = () => {
+
+  const time = faker.date.recent(5).getDate();
+
+  const now = new Date().getDate();
+
+  console.log(time, now);
+
+  const days = now - time;
+
   return (
     <div className="flex justify-between items-center">
       <div className="flex gap-2 items-center">
@@ -10,7 +20,7 @@ export const UserAction = () => {
         </div>
         <p className="font-medium">User posted a new note</p>
       </div>
-      <p className="font-sm font-medium text-neutral-500">12h ago</p>
+      <p className="font-sm font-medium text-neutral-500">1{days} days ago</p>
     </div>
   );
 };

@@ -10,7 +10,7 @@ export const PickedForYouPage = () => {
 
   useEffect(() => {
     async function fetchNotes() {
-      await listNotes({public: true});
+      await listNotes({allPublic: true});
     }
     fetchNotes();
   }, [listNotes]);

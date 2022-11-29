@@ -29,17 +29,29 @@ import { createFakeNotes, createFakeTags, createFakeUsers } from "./utils/fakeda
 
 setupIonicReact();
 
-const populateFakeData = () => {
+const populateFakeData = async () => {
+
+
+  const {data: isPopulated} = await DB.get("isPopulated", 0);
+
+  if(isPopulated) {
+    return;
+  }
+
   const users = createFakeUsers(10);
-  const tags = createFakeTags(14, users);
-  const notes = createFakeNotes(20, users, tags);
-  DB.set("users", users, 0);
-  DB.set("tags", tags, 0);
-  DB.set("notes", notes, 0);
+  const tags = createFakeTags(10, users);
+  const notes = createFakeNotes(10, users, tags);
+  // DB.createTable("users", users);
+  // DB.createTable("tags", tags);
+  // DB.createTable("notes", notes);
+  await DB.set("users", users, 0);
+  await DB.set("tags", tags, 0);
+  await DB.set("notes", notes, 0);
+  DB.createTable("isPopulated", true);
 };
 
 
-const setupTables = async () => {
+const setupTables = () => {
   DB.createTable("currentUser", {});
   DB.createTable("users", []);
   DB.createTable("notes", []);
@@ -52,10 +64,9 @@ const App: React.FC = () => {
   
   const {setCurrentUser} = useAuth();
 
-  // create the database tables if they don't exist
   useEffect(() => {
     setupTables();
-    // populateFakeData();
+    populateFakeData();
     setCurrentUser();
   }, [setCurrentUser]);
 
