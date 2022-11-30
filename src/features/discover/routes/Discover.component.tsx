@@ -98,7 +98,6 @@ export const DiscoverPage = memo(() => {
       }
       if (filter === "Users") {
         const results = await query(e.target.value);
-        console.log(results);
         setFilteredNotes([]);
         setFilteredUsers(results ? results : []);
       }
@@ -195,9 +194,6 @@ export const DiscoverPage = memo(() => {
             </p>
           </div>
         )}
-        {/* <UserAction />
-
-        <DiscoverNotecard notecard={notecards[0] as Note} /> */}
 
         <IonModal
           ref={modal}
@@ -264,6 +260,7 @@ export const DiscoverPage = memo(() => {
 
             {filteredUsers.map((user, index) => (
               <div
+                key={index}
                 onClick={() => {
                   dismissModal();
                   redirect(path + user.id);

@@ -8,8 +8,6 @@ export const UserAction = () => {
 
   const now = new Date().getDate();
 
-  console.log(time, now);
-
   const days = now - time;
 
   return (

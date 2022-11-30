@@ -67,7 +67,7 @@ export const Notecard = ({ notecard }: NoteEntity) => {
             prefix={
               <Icon icon={pencilIcon} className="!w-5 !h-5 text-neutral-400" />
             }
-            onClick={redirect}
+            onClick={(e) => {redirect(); e.stopPropagation()}}
           />
         </div>
 
@@ -116,7 +116,8 @@ export const Notecard = ({ notecard }: NoteEntity) => {
               prefix={
                 <Icon icon={trashIcon} className="!w-5 !h-5 text-neutral-400" />
               }
-              onClick={() =>
+              onClick={(e) =>
+                {
                 presentAlert({
                   header: "Delete note",
                   message: "Are you sure you want to delete this note?",
@@ -133,7 +134,9 @@ export const Notecard = ({ notecard }: NoteEntity) => {
                       },
                     },
                   ],
-                })
+                });
+              e.stopPropagation();
+              }
               }
             />
           </div>
