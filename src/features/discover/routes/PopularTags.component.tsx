@@ -12,7 +12,7 @@ import {
   IonLoading,
   IonSpinner,
 } from "@ionic/react";
-import { DiscoverNotecard, PopularTagsHeader, UserAction } from "../components";
+import { DiscoverNotecard, PopularTagsHeader } from "../components";
 import { Note, Tag, useNotes, useTags } from "../../../store";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../../../components";
@@ -21,38 +21,35 @@ import checkIcon from "../../../assets/iconout/check.svg";
 export const PopularTagsPage = () => {
   const modal = useRef<HTMLIonModalElement>(null);
   const page = useRef(null);
-  const { notes, listNotes, isLoading: noteLoading } = useNotes();
+  const { listNotes, isLoading: noteLoading } = useNotes();
   const { tags, tagLoading } = useTags();
 
+  const [filterTag, setFilterTag] = useState<Tag | null>(null);
   const [presentingElement, setPresentingElement] =
     useState<HTMLElement | null>(null);
-  const [filterTag, setFilterTag] = useState<Tag | null>(null);
+
+  const [result, setResult] = useState<Note[]>([]);
 
   useEffect(() => {
     setPresentingElement(page.current);
   }, []);
 
-  useEffect(() => {
-    async function fetchNotes() {
-      await listNotes({public: true});
-    }
-    fetchNotes();
-  }, [listNotes]);
-
   const dismissModal = () => {
     modal.current?.dismiss();
   };
 
-  const chooseFilterTag = (tag: Tag) => {
+  const chooseFilterTag = async (tag: Tag) => {
     dismissModal();
     setFilterTag(tag);
-    listNotes({tag: tag, public: true});
+    const { notes } = await listNotes({ tag: tag });
+    setResult(notes ? notes : []);
   };
 
   const clearFilterTag = () => {
     dismissModal();
     setFilterTag(null);
-  }
+    setResult([]);
+  };
 
   return (
     <IonPage ref={page}>
@@ -60,10 +57,17 @@ export const PopularTagsPage = () => {
       <IonContent>
         <div className="mt-5">
 
-          {noteLoading && <IonSpinner name="crescent" />}
-          {notes && notes.length > 0 ? (
+          {/* {noteLoading && (
+            <div className="mt-3 flex justify-center items-center">
+              <IonSpinner
+                name="crescent"
+              />
+            </div>
+          )} */}
+
+          {result && result.length > 0 ? (
             <>
-              {notes.map((note: Note) => (
+              {result.map((note: Note) => (
                 <DiscoverNotecard key={note.id} notecard={note} />
               ))}
             </>
@@ -72,7 +76,6 @@ export const PopularTagsPage = () => {
               No results
             </p>
           )}
-          
         </div>
 
         <IonModal
@@ -125,7 +128,7 @@ export const PopularTagsPage = () => {
             </IonList>
           </IonContent>
         </IonModal>
-        <IonLoading isOpen={tagLoading} animated spinner="crescent" />
+        <IonLoading isOpen={noteLoading} animated spinner="crescent" />
       </IonContent>
     </IonPage>
   );

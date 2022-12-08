@@ -55,7 +55,7 @@ export const DiscoverPage = memo(() => {
   const month = mon.charAt(0).toUpperCase() + mon.slice(1, 3);
 
   const { user } = useAuth();
-  const { notes, listNotes, isLoading } = useNotes();
+  const { notes, isLoading, listNotes } = useNotes();
   const { query } = useUser();
 
   const modal = useRef<HTMLIonModalElement>(null);
@@ -71,30 +71,37 @@ export const DiscoverPage = memo(() => {
 
   useEffect(() => {
     setPresentingElement(page.current);
-    listNotes({ allPublic: true });
-  }, [listNotes]);
+  }, []);
 
   const handleSearch = async (e: any) => {
     setSearchQuery(e.target.value);
     if (e.target.value.length > 0) {
       if (filter === "Best results" || filter === "Cards") {
-        const filtered = notes?.filter(
-          (note) =>
-            note.title.toLowerCase().includes(e.target.value.toLowerCase()) &&
-            note.visibility === "public"
-        );
+        
+        const {notes: result} = await listNotes({query: e.target.value});
+        
+        // const filtered = notes?.filter(
+        //   (note) =>
+        //     note.title.toLowerCase().includes(e.target.value.toLowerCase()) &&
+        //     note.visibility === "public"
+        // );
         setFilteredUsers([]);
-        setFilteredNotes(filtered ? filtered : []);
+        //setFilteredNotes(filtered ? filtered : []);
+        setFilteredNotes(result ? result : []);
       }
       if (filter === "Tags") {
-        const filtered = notes?.filter(
-          (note) =>
-            note.tags?.some((tag) =>
-              tag.name.toLowerCase().includes(e.target.value.toLowerCase())
-            ) && note.visibility === "public"
-        );
+        // const filtered = notes?.filter(
+        //   (note) =>
+        //     note.tags?.some((tag) =>
+        //       tag.name.toLowerCase().includes(e.target.value.toLowerCase())
+        //     ) && note.visibility === "public"
+        // );
+
+        const {notes: result} = await listNotes({tagName: e.target.value});
+
         setFilteredUsers([]);
-        setFilteredNotes(filtered ? filtered : []);
+        //setFilteredNotes(filtered ? filtered : []);
+        setFilteredNotes(result ? result : []);
       }
       if (filter === "Users") {
         const results = await query(e.target.value);
@@ -179,7 +186,7 @@ export const DiscoverPage = memo(() => {
           <>
             {notes.map((note) => (
               <div key={note.id} className="mt-5">
-                <UserAction />
+                <UserAction user={note.author} />
                 <DiscoverNotecard notecard={note} />
               </div>
             ))}
@@ -244,7 +251,7 @@ export const DiscoverPage = memo(() => {
           </IonHeader>
 
           <IonContent>
-            {isLoading && <IonSpinner name="crescent" />}
+            {isLoading && <IonSpinner name="crescent" className="mx-auto w-fit mt-3" />}
             {filteredNotes.length === 0 && filteredUsers.length === 0 && (
               <p className="mt-12 font-medium text-sm text-neutral-500 w-fit mx-auto">
                 No results

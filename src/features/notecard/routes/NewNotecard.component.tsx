@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import { Button, Icon, Searchbar } from "../../../components";
 import { NewNotecardHeader } from "../components";
 import { FullPageInput } from "../../../components/Input/FullPageInput.component";
-import { Tag, useAuth, useNotes, useTags } from "../../../store";
+import { Tag, useAuth, useTags, useUserNotes } from "../../../store";
 
 import eyeIcon from "../../../assets/iconout/eye.svg";
 import plusIcon from "../../../assets/iconout/plus-small.svg";
@@ -32,7 +32,7 @@ import checkIcon from "../../../assets/iconout/check.svg";
 export const NewNotecardPage = () => {
   const [presentActionSheet] = useIonActionSheet();
   const [presentAlert] = useIonAlert();
-  const { note, createNote, updateNote, isLoading } = useNotes();
+  const { note, createNote, updateNote, isLoading, moveToTrash } = useUserNotes();
   const { tags, tag, createTag, getTagByUserId, tagLoading } = useTags();
   const { user } = useAuth();
 

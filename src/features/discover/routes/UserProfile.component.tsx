@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   IonPage,
   IonContent,
@@ -9,25 +9,30 @@ import {
 import { useLocation, useParams } from "react-router";
 import { Button, GenericHeader, Icon } from "../../../components";
 import { DiscoverNotecard } from "../components";
-import { Note, useNotes, useUser } from "../../../store";
+import { Note, useNotes, User, useUser } from "../../../store";
 import plusIcon from "../../../assets/iconout/plus-small.svg";
 import userIcon from "../../../assets/iconout/user.svg";
 import usersIcon from "../../../assets/iconout/users.svg";
 import cardsIcon from "../../../assets/iconout/cards.svg";
 
 export const UserProfilePage = () => {
-  const { getUser, isLoading, user, follow, unfollow } = useUser();
-  const { notes, listNotes, isLoading: loadingNotes } = useNotes();
+  const { getUser, isLoading, follow, unfollow } = useUser();
+  const { listNotes, isLoading: loadingNotes } = useNotes();
 
   const location = useLocation().pathname;
-
   const path = location.substring(0, location.lastIndexOf("/user/"));
+
   const { id } = useParams<{ id: string }>();
+
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [user, setUser] = useState<User>();
 
   useEffect(() => {
     async function fetchData() {
-      await getUser(id);
-      await listNotes({ userId: id, public: true});
+      const {user} = await getUser(id);
+      setUser(user? user : undefined);
+      const { notes } = await listNotes({ userId: id });
+      setNotes(notes ? notes : []);
     }
     fetchData();
   }, [getUser, id, listNotes]);
@@ -37,7 +42,7 @@ export const UserProfilePage = () => {
       <GenericHeader backBtn={path} />
       <IonContent>
         {!user ? (
-          <p>User not found</p>
+          !isLoading && <p className="inset-center text-sm">User not found</p>
         ) : (
           <>
             <div className="mt-8 flex gap-3 items-center">
@@ -102,7 +107,9 @@ export const UserProfilePage = () => {
 
             <div className="mt-4">
               {loadingNotes && (
-                <IonSpinner name="crescent" className="mx-auto w-fit mt-3" />
+                <div className="mt-3 flex justify-center items-center">
+                  <IonSpinner name="crescent" />
+                </div>
               )}
               {!notes && !loadingNotes && (
                 <p className="text-center text-neutral-500">

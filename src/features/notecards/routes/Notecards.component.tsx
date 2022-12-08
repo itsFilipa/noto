@@ -9,43 +9,35 @@ import {
   IonRefresherContent,
   RefresherEventDetail,
   IonSpinner,
+  IonLoading,
 } from "@ionic/react";
 import { Icon } from "../../../components";
 import { NotecardHeader } from "../components";
 import { Notecard } from "../components/Notecard.component";
-import { Note, useNotes } from "../../../store/note";
 import { Toggle } from "../../../components/Toggle";
+import { Note, useUserNotes } from "../../../store";
 
 import aaIcon from "../../../assets/iconout/Aa.svg";
 import calendarIcon from "../../../assets/iconout/calendar-days.svg";
 import clockIcon from "../../../assets/iconout/clock.svg";
 import graphIcon from "../../../assets/iconout/graph.svg";
 import trashIcon from "../../../assets/iconout/trash.svg";
-import { useEffect } from "react";
-import { useAuth } from "../../../store";
 
 export const NotecardsPage = () => {
-  const { notes, listNotes, isLoading } = useNotes();
-  const { user } = useAuth();
+  const { notes, isLoading } = useUserNotes();
 
   const handleRefresh = async (e: CustomEvent<RefresherEventDetail>) => {
-    await listNotes({ userId: user?.id, public: false });
+    // await listNotes({ userId: user?.id, public: false });
     e.detail.complete();
   };
-
-  useEffect(() => {
-    if (user) {
-      listNotes({ userId: user.id, public: false });
-    }
-  }, [listNotes, user]);
 
   return (
     <IonPage>
       <NotecardHeader />
       <IonContent>
-        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+        {/* <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent></IonRefresherContent>
-        </IonRefresher>
+        </IonRefresher> */}
 
         {notes && notes.length > 0 ? (
           notes.map((notecard: Note) => (
@@ -57,9 +49,11 @@ export const NotecardsPage = () => {
           </p>
         )}
 
-        {isLoading && (
-          <IonSpinner name="crescent" className="w-fit mx-auto mt-4" />
-        )}
+        {/* {isLoading && (
+          <div className="mt-3 flex justify-center items-center">
+            <IonSpinner name="crescent" />
+          </div>
+        )} */}
         <IonPopover trigger="sort" className="[--width:235px] ">
           <IonContent className="popover">
             <div className="flex justify-between">
@@ -126,6 +120,7 @@ export const NotecardsPage = () => {
             </IonList>
           </IonContent>
         </IonPopover>
+        <IonLoading isOpen={isLoading} animated spinner="crescent" />
       </IonContent>
     </IonPage>
   );

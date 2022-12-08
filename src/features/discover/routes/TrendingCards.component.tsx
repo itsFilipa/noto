@@ -2,19 +2,9 @@ import { IonPage, IonContent, IonLoading } from "@ionic/react";
 import { GenericHeader } from "../../../components";
 import { Note, useNotes } from "../../../store";
 import { DiscoverNotecard } from "../components";
-import { useEffect } from "react";
 
 export const TrendingCardsPage = () => {
-  const { notes, listNotes, isLoading } = useNotes();
-
-  useEffect(() => {
-    async function fetchNotes() {
-      await listNotes({allPublic: true});
-    }
-    fetchNotes();
-  }, [listNotes]);
-
-  console.log(notes);
+  const { notes, isLoading } = useNotes();
 
   return (
     <IonPage>

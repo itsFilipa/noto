@@ -11,7 +11,7 @@ import calendarIcon from "../../../assets/iconout/calendar-days.svg";
 import eyeIcon from "../../../assets/iconout/eye.svg";
 import heartIcon from "../../../assets/iconout/heart.svg";
 import chartIcon from "../../../assets/iconout/chart-bar-square.svg";
-import { useNotes } from "../../../store";
+import { useUserNotes } from "../../../store";
 
 //Create a function to convert ISO Date to the format 'dd MMM yyyy'
 const convertDate = (date: string) => {
@@ -26,7 +26,7 @@ const convertDate = (date: string) => {
 
 export const Notecard = ({ notecard }: NoteEntity) => {
   
-  const { moveToTrash } = useNotes();
+  const { moveToTrash } = useUserNotes();
   const [presentAlert] = useIonAlert();
   const router = useIonRouter();
   

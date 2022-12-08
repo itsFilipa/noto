@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import Fuse from "fuse.js";
+import { useEffect } from "react";
 import create from "zustand";
 import { DB } from "../lib/db";
 import { Tag } from "./tag";
@@ -16,7 +17,7 @@ export interface Note {
   forks: User[];
   visibility: NoteVisibility;
   author: User;
-  inlineLinks: Note[];
+  inlineLinks: string[];
   createdAt: string;
   lastModifiedAt: string;
 }
@@ -26,14 +27,9 @@ interface NoteStore {
   notes: Note[] | null;
   isLoading: boolean;
   actions: {
+    setLoading: (isLoading: boolean) => void;
+    setNotes: (notes: Note[]) => void;
     getNote: (
-      noteId: string
-    ) => Promise<{ note: Note | null; error: Error | null }>;
-    createNote: () => Promise<{ note: Note | null; error: Error | null }>;
-    updateNote: (
-      payload: Partial<Note>
-    ) => Promise<{ note: Note | null; error: Error | null }>;
-    moveToTrash: (
       noteId: string
     ) => Promise<{ note: Note | null; error: Error | null }>;
     forkNote: (
@@ -46,9 +42,11 @@ interface NoteStore {
       noteId: string
     ) => Promise<{ note: Note | null; error: Error | null }>;
     listNotes: (payload: {
+      query?: string;
       allPublic?: boolean;
       public?: boolean;
       userId?: string;
+      tagName?: string;
       tagId?: string[];
       tag?: Tag;
       tags?: Tag[];
@@ -72,6 +70,8 @@ const useNoteStore = create<NoteStore>((set, store) => ({
   notes: null,
   isLoading: false,
   actions: {
+    setLoading: (isLoading: boolean) => set({ isLoading }),
+    setNotes: (notes: Note[]) => set({ notes }),
     getNote: async (noteId) => {
       set({ isLoading: true });
       // get note from db
@@ -91,127 +91,18 @@ const useNoteStore = create<NoteStore>((set, store) => ({
 
       return { note: note, error: null };
     },
-    createNote: async () => {
-      set({ isLoading: true });
-
-      const { data: user, error: userError } = await DB.get<User>(
-        "currentUser",
-        0
-      );
-      if (userError || !user) {
-        set({ isLoading: false });
-        return { note: null, error: new Error("Something went wrong.") };
-      }
-
-      const { data: notes, error: notesError } = await DB.get<Note[]>(
-        "notes",
-        0
-      );
-      if (notesError) {
-        set({ isLoading: false });
-        return { note: null, error: new Error("Something went wrong.") };
-      }
-
-      const date = new Date().toISOString();
-
-      const newNote = {
-        id: faker.datatype.uuid(),
-        title: "Untitled",
-        content: "",
-        tags: [],
-        likes: [],
-        forks: [],
-        visibility: "private",
-        author: user,
-        inlineLinks: [],
-        createdAt: date,
-        lastModifiedAt: date,
-      } as Note;
-
-      const dataToSave = Array.isArray(notes) ? [...notes, newNote] : [newNote];
-
-      await DB.set<Note[]>("notes", dataToSave);
-      set({ note: newNote, isLoading: false });
-      return { note: newNote, error: null };
-    },
-    updateNote: async (payload) => {
-      set({ isLoading: true });
-      const { data: notes, error: notesError } = await DB.get<Note[]>(
-        "notes",
-        0
-      );
-      if (notesError || !notes) {
-        set({ isLoading: false });
-        return { note: null, error: new Error("Something went wrong.") };
-      }
-
-      const note = notes.find((n) => n.id === payload.id);
-      if(!note) {
-        set({ isLoading: false });
-        return { note: null, error: new Error("Something went wrong.") };
-      }
-
-      const date = new Date().toISOString();
-
-      const updatedNote = {
-        ...note,
-        ...payload,
-        lastModifiedAt: date,
-      };
-
-      const dataToSave = notes.map((n) =>
-        n.id === payload.id ? updatedNote : n
-      );
-
-      await DB.set<Note[]>("notes", dataToSave, 0);
-      set({ note: updatedNote, isLoading: false });
-      return { note: updatedNote, error: null };
-    },
-    moveToTrash: async (noteId) => {
-      set({ isLoading: true });
-      const { data: notes, error: notesError } = await DB.get<Note[]>(
-        "notes",
-        0
-      );
-      if (notesError || !notes) {
-        set({ isLoading: false });
-        return { note: null, error: new Error("Something went wrong.") };
-      }
-
-      const updatedNote = {
-        ...notes.find((n) => n.id === noteId),
-        visibility: "private",
-      } as Note;
-
-      //remove updated note from notes
-      const dataToSave = notes.filter((n) => n.id !== noteId);
-
-      //get array of notes from trash and add updated note
-      const { data: trash, error: trashError } = await DB.get<Note[]>(
-        "trash",
-        0
-      );
-      if (trashError) {
-        set({ isLoading: false });
-        return { note: null, error: new Error("Something went wrong.") };
-      }
-
-      const dataToSaveToTrash = Array.isArray(trash)
-        ? [...trash, updatedNote]
-        : [updatedNote];
-
-      await DB.set<Note[]>("notes", dataToSave, 0);
-      await DB.set<Note[]>("trash", dataToSaveToTrash);
-      set({ note: updatedNote, notes: dataToSave , isLoading: false });
-      return { note: updatedNote, error: null };
-    },
     forkNote: async (noteId) => {
       set({ isLoading: true });
       const { data: notes, error: notesError } = await DB.get<Note[]>(
         "notes",
         0
       );
-      if (notesError || !notes) {
+
+      const { data: usernotes, error: userNotesError } = await DB.get<Note[]>(
+        "usernotes",
+        0
+      );
+      if (notesError || !notes || userNotesError) {
         set({ isLoading: false });
         return { note: null, error: new Error("Something went wrong.") };
       }
@@ -248,8 +139,14 @@ const useNoteStore = create<NoteStore>((set, store) => ({
 
       const array = notes.map((n) => (n.id === noteId ? forkedNote : n));
 
-      const dataToSave = [...array, newNote];
-      await DB.set<Note[]>("notes", dataToSave);
+      await DB.set<Note[]>("notes", array, 0);
+
+      if (!usernotes) {
+        await DB.set<Note[]>("usernotes", [newNote], 0);
+      } else {
+        await DB.set<Note[]>("usernotes", [...usernotes, newNote], 0);
+      }
+
       set({ note: newNote, isLoading: false });
       return { note: newNote, error: null };
     },
@@ -340,67 +237,85 @@ const useNoteStore = create<NoteStore>((set, store) => ({
 
       let result: Note[] = [];
 
+      if(payload.query) {
+        const fuse = new Fuse(notes, {
+          keys: ["title", "content"],
+          threshold: 0.3
+        });
+        const fuseResult = fuse.search(payload.query);
+        const filteredNotes = fuseResult.map((r) => r.item);
+        result.push(...filteredNotes);
+      }
+
       //filter by userId
       if (payload.userId) {
         const fuseUser = new Fuse(notes, {
           keys: ["author.id"],
-          threshold: 0.0
+          threshold: 0.0,
         });
-      //   const filteredNotes = notes.filter(
-      //     (n) => n.author.id === payload.userId
-      //   );
-      //   result.push(...filteredNotes);
-      // } else {
-      //   result.push(...notes);
+        //   const filteredNotes = notes.filter(
+        //     (n) => n.author.id === payload.userId
+        //   );
+        //   result.push(...filteredNotes);
+        // } else {
+        //   result.push(...notes);
         const fuseResult = fuseUser.search(payload.userId);
         const filteredNotes = fuseResult.map((r) => r.item);
         result.push(...filteredNotes);
       }
-      if(payload.tag) {
+      if(payload.tagName) {
         const fuseTag = new Fuse(notes, {
           keys: ["tags.name"],
           threshold: 0.0
+        });
+        const fuseResult = fuseTag.search(payload.tagName);
+        const filteredNotes = fuseResult.map((r) => r.item);
+        result.push(...filteredNotes);
+      }
+      if (payload.tag) {
+        const fuseTag = new Fuse(notes, {
+          keys: ["tags.name"],
+          threshold: 0.0,
         });
         const fuseResult = fuseTag.search(payload.tag.name);
         const filteredNotes = fuseResult.map((r) => r.item);
         result.push(...filteredNotes);
       }
-      if(payload.tags) {
+      if (payload.tags) {
         const fuseTag = new Fuse(notes, {
           keys: ["tags.name"],
-          threshold: 0.0
+          threshold: 0.0,
         });
 
         // let fuseResult = [];
         payload.tags.forEach((tag) => {
           const results = fuseTag.search(tag.name).map((r) => r.item);
           result.push(...results);
-        })
-
+        });
       }
 
-      if(payload.public){
-
+      if (payload.public) {
         const fusePublic = new Fuse(result, {
           keys: ["visibility"],
           threshold: 0.0,
         });
-  
+
         const fuseResult = fusePublic.search("public");
         result = fuseResult.map((r) => r.item);
       }
 
-      if(payload.allPublic) {
+      if (payload.allPublic) {
         const fusePublic = new Fuse(notes, {
           keys: ["visibility"],
           threshold: 0.0,
         });
-  
+
         const fuseResult = fusePublic.search("public");
         result = fuseResult.map((r) => r.item);
       }
 
-      set({ notes: result, isLoading: false });
+      //set({ notes: result, isLoading: false })
+      set({ isLoading: false });
       return { notes: result, error: null };
     },
     query: async (query) => {
@@ -418,34 +333,48 @@ const useNoteStore = create<NoteStore>((set, store) => ({
   },
 }));
 
+const fetchNotes = async () => {
+  const { data: notes, error } = await DB.get<Note[]>("notes", 0);
+  if (error || !notes) {
+    return [];
+  }
+  return notes;
+}
+
 export const useNotes = () => {
   const note = useNoteStore((state) => state.note);
   const notes = useNoteStore((state) => state.notes);
   const isLoading = useNoteStore((state) => state.isLoading);
-  const {
-    createNote,
-    getNote,
-    updateNote,
-    forkNote,
-    likeNote,
-    unlikeNote,
-    listNotes,
-    query,
-    moveToTrash
-  } = useNoteStore((state) => state.actions);
+  const { setLoading, setNotes, getNote, forkNote, likeNote, unlikeNote, listNotes, query } =
+    useNoteStore((state) => state.actions);
+
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+    fetchNotes()
+      .then((notes) => {
+        if (isMounted) {
+          setNotes(notes);
+          setLoading(false);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [setLoading, setNotes]);
 
   return {
     note,
     notes,
     isLoading,
-    createNote,
     getNote,
-    updateNote,
     forkNote,
     likeNote,
     unlikeNote,
     listNotes,
     query,
-    moveToTrash
   };
 };

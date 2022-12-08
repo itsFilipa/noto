@@ -1,19 +1,10 @@
 import { IonPage, IonContent, IonLoading } from "@ionic/react";
 import { GenericHeader } from "../../../components";
 import { Note, useNotes } from "../../../store";
-import { UserAction, DiscoverNotecard } from "../components";
-import notecards from "../../../fake-data/notecards.json";
-import { useEffect } from "react";
+import { DiscoverNotecard } from "../components";
 
 export const PickedForYouPage = () => {
-  const { notes, listNotes, isLoading } = useNotes();
-
-  useEffect(() => {
-    async function fetchNotes() {
-      await listNotes({allPublic: true});
-    }
-    fetchNotes();
-  }, [listNotes]);
+  const { notes, isLoading } = useNotes();
 
   return (
     <IonPage>
@@ -24,6 +15,7 @@ export const PickedForYouPage = () => {
             {notes.map((note: Note) => (
               <DiscoverNotecard key={note.id} notecard={note} />
             ))}
+            <div className="mb-4" />
           </>
         ) : (
           <p className="mt-12 font-medium text-neutral-500 mx-auto w-fit">

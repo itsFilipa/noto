@@ -17,8 +17,8 @@ export interface UserProfile {
   lastName: string;
   biography: string;
   avatarUrl: string; // generate from https://avatars.dicebear.com/
-  followers: User[];
-  following: User[];
+  followers: string[];
+  following: string[];
 }
 
 export interface User {
@@ -82,9 +82,9 @@ const useUserStore = create<UserStore>((set, store) => ({
         const userToFollow = store().users.find((u) => u.id === userId);
         if (userToFollow) {
           //add current user to userToFollow.followers
-          userToFollow.profile.followers.push(currentUser.user);
+          userToFollow.profile.followers.push(currentUser.user.id);
           //add userToFollow to currentUser.following
-          currentUser.user.profile.following.push(userToFollow);
+          currentUser.user.profile.following.push(userToFollow.id);
           //update the userToFollow
           const users = store().users.splice(
             store().users.indexOf(userToFollow),
@@ -102,9 +102,9 @@ const useUserStore = create<UserStore>((set, store) => ({
         const userToFollow = users.find((u) => u.id === userId);
         if (userToFollow) {
           //add current user to userToFollow.followers
-          userToFollow.user.profile.followers.push(currentUser.user);
+          userToFollow.user.profile.followers.push(currentUser.user.id);
           //add userToFollow to currentUser.following
-          currentUser.user.profile.following.push(userToFollow.user);
+          currentUser.user.profile.following.push(userToFollow.user.id);
           //replace the userToFollow in the users array using splice
           users.splice(users.indexOf(userToFollow), 1, userToFollow);
           await DB.set("users", users, 0);
@@ -132,12 +132,12 @@ const useUserStore = create<UserStore>((set, store) => ({
         if (userToUnfollow) {
           //remove current user from userToUnfollow.followers
           userToUnfollow.profile.followers.splice(
-            userToUnfollow.profile.followers.indexOf(currentUser.user),
+            userToUnfollow.profile.followers.indexOf(currentUser.user.id),
             1
           );
           //remove userToUnfollow from currentUser.following
           currentUser.user.profile.following.splice(
-            currentUser.user.profile.following.indexOf(userToUnfollow),
+            currentUser.user.profile.following.indexOf(userToUnfollow.id),
             1
           );
           //update the userToUnfollow
@@ -158,12 +158,12 @@ const useUserStore = create<UserStore>((set, store) => ({
         if (userToUnfollow) {
           //remove current user from userToUnfollow.followers
           userToUnfollow.user.profile.followers.splice(
-            userToUnfollow.user.profile.followers.indexOf(currentUser.user),
+            userToUnfollow.user.profile.followers.indexOf(currentUser.user.id),
             1
           );
           //remove userToUnfollow from currentUser.following
           currentUser.user.profile.following.splice(
-            currentUser.user.profile.following.indexOf(userToUnfollow.user),
+            currentUser.user.profile.following.indexOf(userToUnfollow.user.id),
             1
           );
           //replace the userToUnfollow in the users array using splice
@@ -189,6 +189,7 @@ const useUserStore = create<UserStore>((set, store) => ({
 
       const search = new Fuse(users, {
         keys: ["profile.username", "profile.firstName", "profile.lastName"],
+        threshold: 0.2,
       });
       const results = search.search(query);
       const usersList = results.map((r) => r.item);

@@ -41,6 +41,18 @@ export const createFakeUsers = (count: number) => {
   //   })
   // });
 
+  //add a couple of followers for each user
+  users.forEach(user => {
+    const followers = users.filter(u => u.id !== user.id);
+    const randomFollowers = faker.helpers.shuffle(followers).slice(0, 2);
+    user.user.profile.followers = randomFollowers.map(f => f.user.id);
+
+    //for each follower, add the user to their following list
+    randomFollowers.forEach(follower => {
+      follower.user.profile.following.push(user.user.id);
+    })
+  });
+
   return users;
 };
 
