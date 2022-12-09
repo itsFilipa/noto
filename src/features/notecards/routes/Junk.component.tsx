@@ -1,28 +1,30 @@
-import { IonPage, IonContent, useIonActionSheet, useIonAlert, IonLoading } from "@ionic/react"
-import { useEffect } from "react";
-import { GenericHeader } from "../../../components"
+import {
+  IonPage,
+  IonContent,
+  IonLoading,
+} from "@ionic/react";
+import { GenericHeader } from "../../../components";
 import { useTrash } from "../../../store";
 import { JunkNotecard } from "../components";
 
 export const JunkPage = () => {
-
-  const { trash, isLoading, listNotes } = useTrash();
-
-  useEffect(() => {
-    listNotes();
-  }, [listNotes]);
+  const { trash, isLoading } = useTrash();
 
   return (
     <IonPage>
       <GenericHeader title="Junk Folder" backBtn="/notecards" />
       <IonContent>
-        {
-          trash?.map((notecard) => (
-              <JunkNotecard key={notecard.id} notecard={notecard} />
+        {trash ? (
+          trash.map((notecard) => (
+            <JunkNotecard key={notecard.id} notecard={notecard} />
           ))
-        }
+        ) : (
+          <p className="mt-12 font-medium text-neutral-500 mx-auto w-fit">
+            Your junk folder is empty
+          </p>
+        )}
         <IonLoading isOpen={isLoading} animated spinner="crescent" />
       </IonContent>
     </IonPage>
-  )
-}
+  );
+};

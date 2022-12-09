@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import create from "zustand";
 import { DB } from "../lib/db";
 import { Note } from "./note";
@@ -7,13 +8,14 @@ interface TrashStore {
   trash: Note[] | null;
   isLoading: boolean;
   actions: {
+    setLoading: (isLoading: boolean) => void;
+    setTrash: (notes: Note[]) => void;
     restoreNote: (
       noteId: string
     ) => Promise<{ note: Note | null; error: Error | null }>;
     deleteNote: (
       noteId: string
     ) => Promise<{ note: Note | null; error: Error | null }>;
-    listNotes: () => Promise<{ notes: Note[] | null; error: Error | null }>;
   };
 }
 
@@ -22,6 +24,12 @@ const useTrashStore = create<TrashStore>((set, get) => ({
   trash: null,
   isLoading: false,
   actions: {
+    setLoading: (isLoading: boolean) => {
+      set({ isLoading });
+    },
+    setTrash: (notes: Note[]) => {
+      set({ trash: notes });
+    },
     restoreNote: async (noteId: string) => {
       set({ isLoading: true });
       const { data: junk } = await DB.get<Note[]>("trash", 0);
@@ -74,21 +82,41 @@ const useTrashStore = create<TrashStore>((set, get) => ({
       set({ trash: newTrash, isLoading: false });
       return { note, error: null };
     },
-    listNotes: async () => {
-      set({ isLoading: true });
-      const { data: notes, error } = await DB.get<Note[]>("trash", 0);
-      set({ trash: notes, isLoading: false });
-      return { notes, error };
-    },
   },
 }));
+
+const fetchTrash = async () => {
+  const { data: notes, error } = await DB.get<Note[]>("trash", 0);
+  if (error || !notes) {
+    return [];
+  }
+  return notes;
+};
 
 export const useTrash = () => {
   const trash = useTrashStore((state) => state.trash);
   const trashNote = useTrashStore((state) => state.trashNote);
   const isLoading = useTrashStore((state) => state.isLoading);
-  const { restoreNote, deleteNote, listNotes } = useTrashStore(
-    (state) => state.actions
-  );
-  return { trash, trashNote, isLoading, restoreNote, deleteNote, listNotes };
+  const { setLoading, setTrash, restoreNote, deleteNote } =
+    useTrashStore((state) => state.actions);
+
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+    fetchTrash()
+      .then((notes) => {
+        if (isMounted) {
+          setTrash(notes);
+          setLoading(false);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [setLoading, setTrash]);
+
+  return { trash, trashNote, isLoading, restoreNote, deleteNote };
 };

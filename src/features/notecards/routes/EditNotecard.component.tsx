@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import { Button, Icon, Searchbar } from "../../../components";
 import { EditNotecardHeader } from "../components";
 import { FullPageInput } from "../../../components/Input/FullPageInput.component";
-import { Tag, useAuth, useNotes, useTags } from "../../../store";
+import { Tag, useAuth, useTags, useUserNotes } from "../../../store";
 
 import eyeIcon from "../../../assets/iconout/eye.svg";
 import plusIcon from "../../../assets/iconout/plus-small.svg";
@@ -35,7 +35,7 @@ export const EditNotecardPage = () => {
 
   const [presentActionSheet] = useIonActionSheet();
   const [presentAlert] = useIonAlert();
-  const { note, updateNote, isLoading, getNote } = useNotes();
+  const { note, updateNote, isLoading, getNote } = useUserNotes();
   const { tags, tag, createTag, getTagByUserId, tagLoading } = useTags();
   const { user } = useAuth();
 
@@ -50,10 +50,6 @@ export const EditNotecardPage = () => {
   const [toastMessage, setToastMessage] = useState("");
 
   useEffect(() => {
-    // const fetchNote = async () => {
-    //   return await getNote(noteId);
-    // };
-
     if (user) {
       getTagByUserId(user.id);
       getNote(noteId).then(({ note }) => {
@@ -65,7 +61,7 @@ export const EditNotecardPage = () => {
         }
       });
     }
-  }, []);
+  }, [getNote, getTagByUserId, noteId, user]);
 
   const handleSearch = (e: any) => {
     setSearchQuery(e.target.value);

@@ -5,7 +5,11 @@ import chevronDownIcon from "../../../assets/iconout/chevron-down.svg";
 import ellipsisHorizontalIcon from "../../../assets/iconout/ellipsis-horizontal.svg";
 import { Icon } from "../../../components";
 
-export const NotecardHeader = () => {
+type ActionSheet = {
+  showActionSheet: () => void;
+}
+
+export const NotecardHeader = ({showActionSheet}: ActionSheet) => {
 
   return (
     
@@ -32,8 +36,9 @@ export const NotecardHeader = () => {
               iconOnly
               size="large"
               variant="outline"
-              id="options"
+              // id="options"
               prefix={<Icon icon={ellipsisHorizontalIcon} className="!h-5 !w-5 text-neutral-400" />}
+              onClick={showActionSheet}
             ></Button>
             {/* <Button
               iconOnly

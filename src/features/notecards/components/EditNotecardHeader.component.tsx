@@ -1,6 +1,6 @@
 import { IonHeader, IonToolbar, IonButtons, IonTitle } from "@ionic/react";
 import { Button, Icon } from "../../../components";
-import { Note, useNotes } from "../../../store";
+import { useUserNotes } from "../../../store";
 import chevronLeftIcon from "../../../assets/iconout/chevron-left.svg";
 
 
@@ -12,7 +12,7 @@ export interface EditNotecardHeaderProps {
 
 export const EditNotecardHeader = ({ backBtn, valueTitle, valueContent}: EditNotecardHeaderProps) => {
 
-  const {note, updateNote} = useNotes();
+  const {note, updateNote} = useUserNotes();
 
   return (
   <IonHeader>

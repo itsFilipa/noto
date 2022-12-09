@@ -10,6 +10,8 @@ import {
   RefresherEventDetail,
   IonSpinner,
   IonLoading,
+  useIonRouter,
+  useIonActionSheet,
 } from "@ionic/react";
 import { Icon } from "../../../components";
 import { NotecardHeader } from "../components";
@@ -25,15 +27,46 @@ import trashIcon from "../../../assets/iconout/trash.svg";
 
 export const NotecardsPage = () => {
   const { notes, isLoading } = useUserNotes();
+  const router = useIonRouter();
+  const [presentActionSheet] = useIonActionSheet();
 
   const handleRefresh = async (e: CustomEvent<RefresherEventDetail>) => {
     // await listNotes({ userId: user?.id, public: false });
     e.detail.complete();
   };
 
+  const showActionSheet = () => {
+    presentActionSheet({
+      header: "Go to",
+      buttons: [
+        {
+          text: "Connection graph",
+          icon: graphIcon,
+          handler: () => {
+            
+          },
+        },
+        {
+          text: "Junk folder",
+          icon: trashIcon,
+          handler: () => {
+            router.push("/notecards/junk", "forward");
+          },
+        },
+        {
+          text: "Cancel",
+          role: "cancel",
+          data: {
+            action: "cancel",
+          },
+        },
+      ],
+    });
+  };
+
   return (
     <IonPage>
-      <NotecardHeader />
+      <NotecardHeader showActionSheet={showActionSheet} />
       <IonContent>
         {/* <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent></IonRefresherContent>
@@ -111,8 +144,12 @@ export const NotecardsPage = () => {
                 detail={false}
                 lines="none"
                 className="[--padding-start:0px]"
-                routerLink="/notecards/junk"
-                routerDirection="forward"
+                // routerLink="/notecards/junk"
+                // routerDirection="forward"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push("/notecards/junk", "forward");
+                }}
               >
                 <Icon icon={trashIcon} className="mr-3" />
                 <IonLabel className="!text-sm">Junk folder</IonLabel>
