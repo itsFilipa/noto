@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import { Button, Icon, Searchbar } from "../../../components";
 import { NewNotecardHeader } from "../components";
 import { FullPageInput } from "../../../components/Input/FullPageInput.component";
-import { Tag, useAuth, useTags, useUserNotes } from "../../../store";
+import { Tag, useAuth, useTags, useUserNotes, useUserTags } from "../../../store";
 
 import eyeIcon from "../../../assets/iconout/eye.svg";
 import plusIcon from "../../../assets/iconout/plus-small.svg";
@@ -32,26 +32,26 @@ import checkIcon from "../../../assets/iconout/check.svg";
 export const NewNotecardPage = () => {
   const [presentActionSheet] = useIonActionSheet();
   const [presentAlert] = useIonAlert();
-  const { note, createNote, updateNote, isLoading, moveToTrash } = useUserNotes();
-  const { tags, tag, createTag, getTagByUserId, tagLoading } = useTags();
-  const { user } = useAuth();
+  const { note, createNote, updateNote, isLoading } = useUserNotes();
+  const { tags, createTag, isLoading: tagLoading } = useUserTags();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [valueTitle, setvalueTitle] = useState("Untitled");
   const [valueContent, setvalueContent] = useState("");
-  const [noteTags, setNoteTags] = useState<Tag[]>(note?.tags || []);
+  const [noteTags, setNoteTags] = useState<Tag[]>([]);
   const [filteredTags, setFilteredTags] = useState<Tag[]>(tags || []);
 
   const [showModal, setShowModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
+  console.log(noteTags);
+
   useEffect(() => {
     createNote();
-    if (user) getTagByUserId(user.id);
-  }, [createNote, getTagByUserId, user]);
+  }, [createNote]);
 
-  const handleSearch = (e: any) => {
+  const searchTags = (e: any) => {
     setSearchQuery(e.target.value);
     if (e.target.value.length > 0) {
       const filtered = tags?.filter((tag) =>
@@ -278,7 +278,7 @@ export const NewNotecardPage = () => {
                   className="!p-0"
                   placeholder="Find/create tags..."
                   value={searchQuery}
-                  onIonInput={handleSearch}
+                  onIonInput={searchTags}
                   onIonClear={clearSearch}
                 />
                 <Button

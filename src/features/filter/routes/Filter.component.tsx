@@ -11,17 +11,21 @@ import {
 import { Checkbox } from "../../../components/Checkbox";
 import { FilterHeader } from "../components";
 import { Chip } from "../../../components/Chip";
-import { Tag, useTags } from "../../../store/tag";
+import { Tag } from "../../../store/tag";
 import { useEffect, useState } from "react";
-import { Note, useAuth, useNotes } from "../../../store";
+import { Note, useUserNotes, useUserTags } from "../../../store";
 import { Notecard } from "../../notecards";
 
 export const FilterPage = () => {
-  const { user } = useAuth();
-  const { getTagByUserId, tagLoading } = useTags();
-  const { notes, listNotes, isLoading } = useNotes();
+  const { tags, isLoading: tagLoading } = useUserTags();
+  const { notes, isLoading, filterNotes } = useUserNotes();
   const [topTags, setTopTags] = useState<Tag[]>([]);
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [resultNotes, setResultNotes] = useState<Note[]>([]);
+
+  const [checkMine, setCheckMine] = useState(true);
+  const [checkLiked, setCheckLiked] = useState(true);
+  const [checkForked, setCheckForked] = useState(true);
 
   const getTopTags = (tags: Tag[]) => {
     const sortedTags = tags.sort((a, b) => b.count - a.count);
@@ -29,26 +33,14 @@ export const FilterPage = () => {
   };
 
   useEffect(() => {
-    async function fetchTags() {
-      if (!user) return;
-      return await getTagByUserId(user.id);
-    }
-    if (user) {
-      fetchTags().then((tags) => {
-        if (tags?.tags) getTopTags(tags.tags);
-      });
-    }
-  }, [getTagByUserId, user]);
+    if (tags) getTopTags(tags);
+    if(notes) setResultNotes(notes);
+  }, [tags, notes]);
 
   useEffect(() => {
-    async function fetchNotes() {
-      await listNotes({public: false, tags: selectedTags});
-    }
-    fetchNotes();
-  }, [listNotes, selectedTags]);
-
-  // const topTags = getTopTags(tags);
-
+    const { notes } = filterNotes({ tags: selectedTags, mine: checkMine, forked: checkForked });
+    if (notes) setResultNotes(notes);
+  }, [checkForked, checkMine, filterNotes, selectedTags]);
 
   const addSelectedTag = (tag: Tag) => {
     setSelectedTags([...selectedTags, tag]);
@@ -93,22 +85,39 @@ export const FilterPage = () => {
           ))}
         </div>
 
-        <div className="mt-5">
+        {/* <div className="mt-5">
           {isLoading && (
-            <IonSpinner name="crescent" className="w-fit mx-auto" />
+            <div className="mt-3 flex justify-center items-center">
+              <IonSpinner name="crescent" />
+            </div>
           )}
-          {notes && notes.length > 0 ? (
-            <>
-              {notes.map((note: Note) => (
-                <Notecard key={note.id} notecard={note} />
-              ))}
-            </>
-          ) : (
-            <p className="text-center text-gray-500">
-              No notes found
-            </p>
-          )}
-        </div>
+        </div> */}
+
+        {/* {selectedTags.length === 0 &&
+          notes &&
+          notes.length > 0 &&
+          notes.map((note: Note) => <Notecard key={note.id} notecard={note} />)} */}
+
+        { !notes && (
+          <div className="mt-3 flex justify-center items-center gap-2">
+            <p className="text-sm text-gray-500">You have no notecards</p>
+            <p className="text-sm text-gray-500">Create your first one on the plus icon below</p>
+          </div>
+        )}
+
+        {resultNotes.length > 0 && (
+          <>
+            {resultNotes.map((note: Note) => (
+              <Notecard key={note.id} notecard={note} />
+            ))}
+          </>
+        )}
+
+        {resultNotes.length === 0 && (
+          <div className="mt-3 flex justify-center items-center">
+            <p className="text-sm text-gray-500">No cards found</p>
+          </div>
+        )}
 
         <IonPopover trigger="filter">
           <IonContent className="popover">
@@ -120,7 +129,10 @@ export const FilterPage = () => {
                 lines="full"
                 className="[--padding-start:0px]"
               >
-                <Checkbox checked />
+                <Checkbox
+                  checked={checkMine}
+                  onIonChange={() => setCheckMine(!checkMine)}
+                />
                 <IonLabel className="!text-sm m-0">Mine</IonLabel>
               </IonItem>
               <IonItem
@@ -129,7 +141,10 @@ export const FilterPage = () => {
                 lines="full"
                 className="[--padding-start:0px]"
               >
-                <Checkbox checked />
+                <Checkbox
+                  checked={checkLiked}
+                  onIonChange={() => setCheckLiked(!checkLiked)}
+                />
                 <IonLabel className="!text-sm">Liked</IonLabel>
               </IonItem>
               <IonItem
@@ -138,12 +153,16 @@ export const FilterPage = () => {
                 lines="none"
                 className="[--padding-start:0px]"
               >
-                <Checkbox checked />
+                <Checkbox
+                  checked={checkForked}
+                  onIonChange={() => setCheckForked(!checkForked)}
+                />
                 <IonLabel className="!text-sm">Forked</IonLabel>
               </IonItem>
             </IonList>
           </IonContent>
         </IonPopover>
+
         <IonLoading isOpen={tagLoading} animated spinner="crescent" />
       </IonContent>
     </IonPage>

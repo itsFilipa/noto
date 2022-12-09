@@ -1,9 +1,10 @@
 import { faker } from "@faker-js/faker";
 import { useEffect } from "react";
 import create from "zustand";
-import { Note, User } from ".";
+import { Note, Tag, useAuthStore, User } from ".";
 import { DB } from "../lib/db";
 import { sort } from "fast-sort";
+import Fuse from "fuse.js";
 
 interface UserNoteStore {
   note: Note | null;
@@ -25,7 +26,15 @@ interface UserNoteStore {
     forkNote: (
       noteId: string
     ) => Promise<{ note: Note | null; error: Error | null }>;
-    sortNotes: (order: "asc" | "desc", sortBy: "alphabetical" | "createdAt" | "lastModifiedAt") => void;
+    sortNotes: (
+      order: "asc" | "desc",
+      sortBy: "alphabetical" | "createdAt" | "lastModifiedAt"
+    ) => void;
+    filterNotes: (payload: {
+      tags: Tag[] | [];
+      mine: boolean;
+      forked: boolean;
+    }) => { notes: Note[] | null; error: Error | null };
   };
 }
 
@@ -81,9 +90,9 @@ export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
     },
     getNote: async (noteId) => {
       //if the note is already in the store, return it
-      if (get().note?.id === noteId){
+      if (get().note?.id === noteId) {
         return { note: get().note, error: null };
-      };
+      }
 
       set({ isLoading: true });
 
@@ -106,7 +115,7 @@ export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
     },
     updateNote: async (payload) => {
       set({ isLoading: true });
-      
+
       const { data: notes, error: notesError } = await DB.get<Note[]>(
         "usernotes",
         0
@@ -236,17 +245,15 @@ export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
       return { note: newNote, error: null };
     },
     sortNotes: (order, sortBy) => {
-
       console.log("entered");
 
       const notes = get().notes;
-      if(!notes) 
-        return;
+      if (!notes) return;
 
-      switch(sortBy) {
+      switch (sortBy) {
         case "alphabetical":
           console.log("entered alphabetical");
-          if(order === "asc") {
+          if (order === "asc") {
             const sortedNotes = sort(notes).asc((n) => n.title);
             set({ notes: sortedNotes });
           } else {
@@ -255,7 +262,7 @@ export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
           }
           break;
         case "createdAt":
-          if(order === "asc") {
+          if (order === "asc") {
             const sortedNotes = sort(notes).asc((n) => n.createdAt);
             set({ notes: sortedNotes });
           } else {
@@ -263,8 +270,8 @@ export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
             set({ notes: sortedNotes });
           }
           break;
-        case "lastModifiedAt": 
-          if(order === "asc") {
+        case "lastModifiedAt":
+          if (order === "asc") {
             const sortedNotes = sort(notes).asc((n) => n.lastModifiedAt);
             set({ notes: sortedNotes });
           } else {
@@ -272,9 +279,120 @@ export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
             set({ notes: sortedNotes });
           }
           break;
-        default: return;
+        default:
+          return;
       }
-    }
+    },
+    filterNotes: (payload) => {
+      const notes = get().notes;
+      if (!notes)
+        return { notes: null, error: new Error("Something went wrong.") };
+
+      let filteredNotes: Note[] = [];
+
+      if (payload.tags.length > 0) {
+        const fuseTag = new Fuse(notes, {
+          keys: ["tags.name"],
+          threshold: 0.0,
+        });
+
+        payload.tags.forEach((tag) => {
+          const result = fuseTag.search(tag.name).map((r) => r.item);
+          filteredNotes.push(...result);
+        });
+
+        if (payload.mine) {
+          const user = useAuthStore.getState().user;
+
+          if (!user)
+            return { notes: null, error: new Error("Something went wrong.") };
+
+          const fuseMine = new Fuse(filteredNotes, {
+            keys: ["author.id"],
+            threshold: 0.0,
+          });
+
+          if (payload.mine === true) {
+            const result = fuseMine.search(user.id).map((r) => r.item);
+            //if the note is already in the filtered notes, don't add it again
+            result.forEach((r) => {
+              if (!filteredNotes.includes(r)) filteredNotes.push(r);
+            });
+          } else {
+            const result = fuseMine.search(user.id).map((r) => r.item);
+            filteredNotes = filteredNotes.filter((n) => !result.includes(n));
+          }
+        }
+
+        if (payload.forked) {
+          const user = useAuthStore.getState().user;
+
+          if (!user)
+            return { notes: null, error: new Error("Something went wrong.") };
+
+          if (payload.forked) {
+            //add all the notes that the author id is not the same as the current user id
+            const result = filteredNotes.filter((n) => n.author.id !== user.id);
+            //if the note is already in the filtered notes, don't add it again
+            result.forEach((r) => {
+              if (!filteredNotes.includes(r)) filteredNotes.push(r);
+            });
+          } else {
+            //remove all the notes that the author id is not the same as the current user id
+            filteredNotes = filteredNotes.filter(
+              (n) => n.author.id !== user.id
+            );
+          }
+        }
+      } else if(payload.tags.length === 0) {
+        if (payload.mine) {
+          const user = useAuthStore.getState().user;
+
+          if (!user)
+            return { notes: null, error: new Error("Something went wrong.") };
+
+          const fuseMine = new Fuse(notes, {
+            keys: ["author.id"],
+            threshold: 0.0,
+          });
+
+          if (payload.mine === true) {
+            const result = fuseMine.search(user.id).map((r) => r.item);
+            //if the note is already in the filtered notes, don't add it again
+            result.forEach((r) => {
+              if (!filteredNotes.includes(r)) filteredNotes.push(r);
+            });
+          } else {
+            const result = fuseMine.search(user.id).map((r) => r.item);
+            //TODO: check this
+            filteredNotes = filteredNotes.filter((n) => !result.includes(n));
+          }
+        }
+
+        if (payload.forked) {
+          const user = useAuthStore.getState().user;
+
+          if (!user)
+            return { notes: null, error: new Error("Something went wrong.") };
+
+          if (payload.forked) {
+            //add all the notes that the author id is not the same as the current user id
+            const result = notes.filter((n) => n.author.id !== user.id);
+            //if the note is already in the filtered notes, don't add it again
+            result.forEach((r) => {
+              if (!filteredNotes.includes(r)) filteredNotes.push(r);
+            });
+          } else {
+            //remove all the notes that the author id is not the same as the current user id
+            filteredNotes = filteredNotes.filter(
+              (n) => n.author.id !== user.id
+            );
+          }
+        }
+      }
+
+      return { notes: filteredNotes, error: null };
+    },
   },
 }));
 
@@ -293,7 +411,16 @@ export const useUserNotes = () => {
   const note = useUserNotesStore((state) => state.note);
   const notes = useUserNotesStore((state) => state.notes);
   const isLoading = useUserNotesStore((state) => state.isLoading);
-  const { setLoading, setNotes, createNote, getNote, updateNote, moveToTrash, sortNotes } = useUserNotesStore((state) => state.actions);
+  const {
+    setLoading,
+    setNotes,
+    createNote,
+    getNote,
+    updateNote,
+    moveToTrash,
+    sortNotes,
+    filterNotes,
+  } = useUserNotesStore((state) => state.actions);
 
   useEffect(() => {
     let isMounted = true;
@@ -320,5 +447,6 @@ export const useUserNotes = () => {
     updateNote,
     moveToTrash,
     sortNotes,
+    filterNotes,
   };
 };

@@ -25,7 +25,7 @@ interface AuthStore {
   };
 }
 
-const useAuthStore = create<AuthStore>((set, store) => ({
+export const useAuthStore = create<AuthStore>((set, store) => ({
   user: null,
   isLoading: false,
   actions: {

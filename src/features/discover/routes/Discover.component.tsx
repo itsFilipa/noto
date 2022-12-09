@@ -136,16 +136,16 @@ export const DiscoverPage = memo(() => {
     <IonPage ref={page}>
       <DiscoverHeader />
       <IonContent>
-        <div className="mt-8 ml-8">
+        {/* <div className="mt-8 ml-8">
           <p className="font-display font-bold text-[40px]">
             {day} {month}
           </p>
           <p className="font-display text-xl">
             Hey {user?.user.profile.firstName}
           </p>
-        </div>
+        </div> */}
 
-        <p className="font-display font-bold text-lg mt-8 mb-4">Discover</p>
+        <p className="font-display font-bold text-lg mt-6 mb-4">Discover</p>
 
         <div className="col gap-1/2">
           <Button
@@ -190,6 +190,7 @@ export const DiscoverPage = memo(() => {
                 <DiscoverNotecard notecard={note} />
               </div>
             ))}
+            <div className="mb-3" />
           </>
         ) : (
           <div className="col gap-2 items-center mt-12">

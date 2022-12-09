@@ -57,6 +57,7 @@ const setupTables = () => {
   DB.createTable("notes", []);
   DB.createTable("usernotes", []);
   DB.createTable("trash", []);
+  DB.createTable("usertags", []);
   DB.createTable("tags", []);
   DB.createTable("alert", {});
 };

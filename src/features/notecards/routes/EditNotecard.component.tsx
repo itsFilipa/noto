@@ -7,7 +7,6 @@ import {
   IonItem,
   IonLabel,
   IonList,
-  IonPopover,
   useIonActionSheet,
   useIonAlert,
   IonModal,
@@ -20,7 +19,7 @@ import { useEffect, useState } from "react";
 import { Button, Icon, Searchbar } from "../../../components";
 import { EditNotecardHeader } from "../components";
 import { FullPageInput } from "../../../components/Input/FullPageInput.component";
-import { Tag, useAuth, useTags, useUserNotes } from "../../../store";
+import { Tag, useAuth, useUserNotes, useUserTags } from "../../../store";
 
 import eyeIcon from "../../../assets/iconout/eye.svg";
 import plusIcon from "../../../assets/iconout/plus-small.svg";
@@ -36,7 +35,7 @@ export const EditNotecardPage = () => {
   const [presentActionSheet] = useIonActionSheet();
   const [presentAlert] = useIonAlert();
   const { note, updateNote, isLoading, getNote } = useUserNotes();
-  const { tags, tag, createTag, getTagByUserId, tagLoading } = useTags();
+  const { tags, createTag, isLoading: tagLoading } = useUserTags();
   const { user } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -51,7 +50,6 @@ export const EditNotecardPage = () => {
 
   useEffect(() => {
     if (user) {
-      getTagByUserId(user.id);
       getNote(noteId).then(({ note }) => {
         console.log(note);
         if (note) {
@@ -61,7 +59,7 @@ export const EditNotecardPage = () => {
         }
       });
     }
-  }, [getNote, getTagByUserId, noteId, user]);
+  }, [getNote, noteId, user]);
 
   const handleSearch = (e: any) => {
     setSearchQuery(e.target.value);
