@@ -15,7 +15,7 @@ export const NotecardsRoutes = () => {
         <Route exact path="/notecards/junk">
           <JunkPage />
         </Route>
-        <Route exact path="/notecards/:id">
+        <Route exact path="/notecards/id/:id">
           <EditNotecardPage />
         </Route>
       </IonRouterOutlet>

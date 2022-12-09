@@ -24,74 +24,52 @@ import calendarIcon from "../../../assets/iconout/calendar-days.svg";
 import clockIcon from "../../../assets/iconout/clock.svg";
 import graphIcon from "../../../assets/iconout/graph.svg";
 import trashIcon from "../../../assets/iconout/trash.svg";
+import { useRef, useState } from "react";
 
 export const NotecardsPage = () => {
-  const { notes, isLoading } = useUserNotes();
+  const { notes, isLoading, sortNotes } = useUserNotes();
   const router = useIonRouter();
-  const [presentActionSheet] = useIonActionSheet();
 
-  const handleRefresh = async (e: CustomEvent<RefresherEventDetail>) => {
-    // await listNotes({ userId: user?.id, public: false });
-    e.detail.complete();
-  };
+  const popover = useRef<HTMLIonPopoverElement>(null);
+  const [showPopover, setShowPopover] = useState(false);
+  const [sortToggle, setSortToggle] = useState(false);
 
-  const showActionSheet = () => {
-    presentActionSheet({
-      header: "Go to",
-      buttons: [
-        {
-          text: "Connection graph",
-          icon: graphIcon,
-          handler: () => {
-            
-          },
-        },
-        {
-          text: "Junk folder",
-          icon: trashIcon,
-          handler: () => {
-            router.push("/notecards/junk", "forward");
-          },
-        },
-        {
-          text: "Cancel",
-          role: "cancel",
-          data: {
-            action: "cancel",
-          },
-        },
-      ],
-    });
+  const openPopover = (e: any) => {
+    popover.current!.event = e;
+    setShowPopover(true);
   };
 
   return (
     <IonPage>
-      <NotecardHeader showActionSheet={showActionSheet} />
+      <NotecardHeader openPopover={openPopover} />
       <IonContent>
-        {/* <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
-          <IonRefresherContent></IonRefresherContent>
-        </IonRefresher> */}
-
         {notes && notes.length > 0 ? (
-          notes.map((notecard: Note) => (
-            <Notecard key={notecard.id} notecard={notecard as Note} />
-          ))
+          <>
+            {notes.map((notecard: Note) => (
+              <Notecard key={notecard.id} notecard={notecard as Note} />
+            ))}
+            <div className="mb-3" />
+          </>
         ) : (
           <p className="mt-12 font-medium text-neutral-500 mx-auto w-fit">
             There are no notes to show you
           </p>
         )}
-
-        {/* {isLoading && (
-          <div className="mt-3 flex justify-center items-center">
-            <IonSpinner name="crescent" />
-          </div>
-        )} */}
-        <IonPopover trigger="sort" className="[--width:235px] ">
+        <IonPopover
+          ref={popover}
+          isOpen={showPopover}
+          onDidDismiss={() => setShowPopover(false)}
+          className="[--width:235px]"
+        >
           <IonContent className="popover">
             <div className="flex justify-between">
               <p className="font-display font-semibold">Sort Cards</p>
-              <Toggle size="sm" icon />
+              <Toggle
+                size="sm"
+                icon
+                checked={sortToggle}
+                onIonChange={() => setSortToggle(!sortToggle)}
+              />
             </div>
 
             <IonList>
@@ -100,6 +78,11 @@ export const NotecardsPage = () => {
                 detail={false}
                 lines="full"
                 className="[--padding-start:0px]"
+                onClick={() => {
+                  sortNotes(sortToggle ? "desc" : "asc", "alphabetical");
+                  console.log("sorting");
+                  setShowPopover(false);
+                }}
               >
                 <Icon icon={aaIcon} slot="start" className="mr-3 m-0" />
                 <IonLabel className="!text-sm m-0">Alphabetical</IonLabel>
@@ -109,6 +92,11 @@ export const NotecardsPage = () => {
                 detail={false}
                 lines="full"
                 className="[--padding-start:0px]"
+                onClick={() => {
+                  sortNotes(sortToggle ? "desc" : "asc", "createdAt");
+                  console.log("sorting");
+                  setShowPopover(false);
+                }}
               >
                 <Icon icon={calendarIcon} className="mr-3" />
                 <IonLabel className="!text-sm">Creation date</IonLabel>
@@ -118,6 +106,11 @@ export const NotecardsPage = () => {
                 detail={false}
                 lines="none"
                 className="[--padding-start:0px]"
+                onClick={() => {
+                  sortNotes(sortToggle ? "desc" : "asc", "lastModifiedAt");
+                  console.log("sorting");
+                  setShowPopover(false);
+                }}
               >
                 <Icon icon={clockIcon} className="mr-3" />
                 <IonLabel className="!text-sm">Last modified</IonLabel>
@@ -144,12 +137,8 @@ export const NotecardsPage = () => {
                 detail={false}
                 lines="none"
                 className="[--padding-start:0px]"
-                // routerLink="/notecards/junk"
-                // routerDirection="forward"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  router.push("/notecards/junk", "forward");
-                }}
+                routerLink="/notecards/junk"
+                routerDirection="forward"
               >
                 <Icon icon={trashIcon} className="mr-3" />
                 <IonLabel className="!text-sm">Junk folder</IonLabel>

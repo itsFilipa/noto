@@ -42,7 +42,7 @@ export const Notecard = ({ notecard }: NoteEntity) => {
   };
 
   const redirect = () => {
-    router.push(`/notecards/${notecard.id}`);
+    router.push(`/notecards/id/${notecard.id}`);
   }
 
   return (

@@ -1,8 +1,4 @@
-import {
-  IonPage,
-  IonContent,
-  IonLoading,
-} from "@ionic/react";
+import { IonPage, IonContent, IonLoading } from "@ionic/react";
 import { GenericHeader } from "../../../components";
 import { useTrash } from "../../../store";
 import { JunkNotecard } from "../components";
@@ -19,10 +15,15 @@ export const JunkPage = () => {
             <JunkNotecard key={notecard.id} notecard={notecard} />
           ))
         ) : (
-          <p className="mt-12 font-medium text-neutral-500 mx-auto w-fit">
-            Your junk folder is empty
-          </p>
+          <>
+            {!isLoading && (
+              <p className="mt-12 font-medium text-neutral-500 mx-auto w-fit">
+                Your junk folder is empty
+              </p>
+            )}
+          </>
         )}
+        <div className="mb-3" />
         <IonLoading isOpen={isLoading} animated spinner="crescent" />
       </IonContent>
     </IonPage>

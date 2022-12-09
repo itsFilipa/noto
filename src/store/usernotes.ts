@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import create from "zustand";
 import { Note, User } from ".";
 import { DB } from "../lib/db";
+import { sort } from "fast-sort";
 
 interface UserNoteStore {
   note: Note | null;
@@ -24,11 +25,11 @@ interface UserNoteStore {
     forkNote: (
       noteId: string
     ) => Promise<{ note: Note | null; error: Error | null }>;
-    
+    sortNotes: (order: "asc" | "desc", sortBy: "alphabetical" | "createdAt" | "lastModifiedAt") => void;
   };
 }
 
-const useUserNotesStore = create<UserNoteStore>((set, get) => ({
+export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
   note: null,
   notes: null,
   isLoading: false,
@@ -234,6 +235,46 @@ const useUserNotesStore = create<UserNoteStore>((set, get) => ({
       set({ note: newNote, isLoading: false });
       return { note: newNote, error: null };
     },
+    sortNotes: (order, sortBy) => {
+
+      console.log("entered");
+
+      const notes = get().notes;
+      if(!notes) 
+        return;
+
+      switch(sortBy) {
+        case "alphabetical":
+          console.log("entered alphabetical");
+          if(order === "asc") {
+            const sortedNotes = sort(notes).asc((n) => n.title);
+            set({ notes: sortedNotes });
+          } else {
+            const sortedNotes = sort(notes).desc((n) => n.title);
+            set({ notes: sortedNotes });
+          }
+          break;
+        case "createdAt":
+          if(order === "asc") {
+            const sortedNotes = sort(notes).asc((n) => n.createdAt);
+            set({ notes: sortedNotes });
+          } else {
+            const sortedNotes = sort(notes).desc((n) => n.createdAt);
+            set({ notes: sortedNotes });
+          }
+          break;
+        case "lastModifiedAt": 
+          if(order === "asc") {
+            const sortedNotes = sort(notes).asc((n) => n.lastModifiedAt);
+            set({ notes: sortedNotes });
+          } else {
+            const sortedNotes = sort(notes).desc((n) => n.lastModifiedAt);
+            set({ notes: sortedNotes });
+          }
+          break;
+        default: return;
+      }
+    }
   },
 }));
 
@@ -252,7 +293,7 @@ export const useUserNotes = () => {
   const note = useUserNotesStore((state) => state.note);
   const notes = useUserNotesStore((state) => state.notes);
   const isLoading = useUserNotesStore((state) => state.isLoading);
-  const { setLoading, setNotes, createNote, getNote, updateNote, moveToTrash } = useUserNotesStore((state) => state.actions);
+  const { setLoading, setNotes, createNote, getNote, updateNote, moveToTrash, sortNotes } = useUserNotesStore((state) => state.actions);
 
   useEffect(() => {
     let isMounted = true;
@@ -273,9 +314,11 @@ export const useUserNotes = () => {
     note,
     notes,
     isLoading,
+    setNotes,
     createNote,
     getNote,
     updateNote,
     moveToTrash,
+    sortNotes,
   };
 };

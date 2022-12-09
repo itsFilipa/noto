@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import create from "zustand";
+import create, { useStore } from "zustand";
+import { useUserNotes, useUserNotesStore } from ".";
 import { DB } from "../lib/db";
 import { Note } from "./note";
 
@@ -44,7 +45,7 @@ const useTrashStore = create<TrashStore>((set, get) => ({
       }
       set({ trashNote: note, isLoading: false });
 
-      const { data: notes } = await DB.get<Note[]>("notes", 0);
+      const { data: notes } = await DB.get<Note[]>("usernotes", 0);
 
       //add note to notes
       const newNotes = Array.isArray(notes) ? [...notes, note] : [note];
@@ -53,8 +54,18 @@ const useTrashStore = create<TrashStore>((set, get) => ({
       const newTrash = junk.filter((note) => note.id !== noteId);
 
       //update notes and trash
-      await DB.set("notes", newNotes, 0);
+      await DB.set("usernotes", newNotes, 0);
       await DB.set("trash", newTrash);
+
+      //set the state for the usernotes store
+      const usernotes = useUserNotesStore.getState().notes;
+      console.log(usernotes);
+      console.log(note);
+      const newUserNotes = Array.isArray(usernotes)
+        ? [...usernotes, note]
+        : [note];
+
+      useUserNotesStore.getState().actions.setNotes(newUserNotes);
 
       set({ trash: newTrash, isLoading: false });
       return { note, error: null };
