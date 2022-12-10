@@ -6,7 +6,6 @@ import {
   IonList,
   IonPopover,
   IonLoading,
-  IonSpinner,
 } from "@ionic/react";
 import { Checkbox } from "../../../components/Checkbox";
 import { FilterHeader } from "../components";
@@ -17,8 +16,8 @@ import { Note, useUserNotes, useUserTags } from "../../../store";
 import { Notecard } from "../../notecards";
 
 export const FilterPage = () => {
-  const { tags, isLoading: tagLoading } = useUserTags();
-  const { notes, isLoading, filterNotes } = useUserNotes();
+  const { tags, isLoading } = useUserTags();
+  const { notes, filterNotes } = useUserNotes();
   const [topTags, setTopTags] = useState<Tag[]>([]);
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [resultNotes, setResultNotes] = useState<Note[]>([]);
@@ -85,19 +84,6 @@ export const FilterPage = () => {
           ))}
         </div>
 
-        {/* <div className="mt-5">
-          {isLoading && (
-            <div className="mt-3 flex justify-center items-center">
-              <IonSpinner name="crescent" />
-            </div>
-          )}
-        </div> */}
-
-        {/* {selectedTags.length === 0 &&
-          notes &&
-          notes.length > 0 &&
-          notes.map((note: Note) => <Notecard key={note.id} notecard={note} />)} */}
-
         { !notes && (
           <div className="mt-3 flex justify-center items-center gap-2">
             <p className="text-sm text-gray-500">You have no notecards</p>
@@ -110,6 +96,7 @@ export const FilterPage = () => {
             {resultNotes.map((note: Note) => (
               <Notecard key={note.id} notecard={note} />
             ))}
+            <div className="mb-3" />
           </>
         )}
 
@@ -163,7 +150,7 @@ export const FilterPage = () => {
           </IonContent>
         </IonPopover>
 
-        <IonLoading isOpen={tagLoading} animated spinner="crescent" />
+        <IonLoading isOpen={isLoading} animated spinner="crescent" />
       </IonContent>
     </IonPage>
   );

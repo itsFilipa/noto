@@ -14,7 +14,7 @@
 }
 
 .custom-input.has-focus {
-  border: 1px solid theme("colors.indigo.500");
+  border: 1px solid theme("colors.indigo.500") !important;
 }
 
 .custom-input.has-value {

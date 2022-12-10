@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import { useEffect } from "react";
 import create from "zustand";
 import { Note, Tag, useAuthStore, User } from ".";
+import type { NoteVisibility } from ".";
 import { DB } from "../lib/db";
 import { sort } from "fast-sort";
 import Fuse from "fuse.js";
@@ -221,6 +222,7 @@ export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
       const newNote = {
         ...noteToBeForked,
         id: faker.datatype.uuid(),
+        visibility: "private" as NoteVisibility,
         forks: [],
         likes: [],
       };
@@ -364,7 +366,6 @@ export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
             });
           } else {
             const result = fuseMine.search(user.id).map((r) => r.item);
-            //TODO: check this
             filteredNotes = filteredNotes.filter((n) => !result.includes(n));
           }
         }
@@ -420,6 +421,7 @@ export const useUserNotes = () => {
     moveToTrash,
     sortNotes,
     filterNotes,
+    forkNote
   } = useUserNotesStore((state) => state.actions);
 
   useEffect(() => {
@@ -448,5 +450,6 @@ export const useUserNotes = () => {
     moveToTrash,
     sortNotes,
     filterNotes,
+    forkNote
   };
 };

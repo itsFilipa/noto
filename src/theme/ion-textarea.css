@@ -1,0 +1,23 @@
+.custom-textarea {
+  border-radius: 12px;
+  --padding-start: 10px !important;
+  border: 1px solid theme("colors.neutral.400");
+  background-color: theme("colors.white");
+}
+
+.custom-textarea.textarea--color-default {
+  border: 1px solid theme("colors.neutral.400");
+}
+
+.custom-textarea.has-focus {
+  border: 1px solid theme("colors.indigo.500") !important;
+}
+
+.custom-textarea.has-value {
+  border: 1px solid theme("colors.warmblack");
+}
+
+.custom-textarea.textarea--color-error{
+  border: 1px solid theme("colors.red.500");
+  background-color: theme("colors.red.100");
+}

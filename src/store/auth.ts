@@ -4,7 +4,7 @@
 import { faker } from "@faker-js/faker";
 import create from "zustand";
 import { DB } from "../lib/db";
-import { DatabaseUser, User, UserProfile } from "./user";
+import { DatabaseUser, User, UserProfile, UserSimplified } from "./user";
 
 export interface AuthPayload {
   email: string;
@@ -15,12 +15,20 @@ interface AuthStore {
   user: DatabaseUser | null;
   isLoading: boolean;
   actions: {
-    login: (payload: AuthPayload) => Promise<{ user: DatabaseUser | null; error: Error | null }>;
-    logout: () => Promise<{error: Error | null}>;
-    register: (payload: AuthPayload) => Promise<{ user: DatabaseUser | null; error: Error | null }>;
-    delete: () => Promise<{error: Error | null}>;
-    updateCredentials: (payload: Partial<AuthPayload>) => Promise<{ user: DatabaseUser | null; error: Error | null }>;
-    updateProfile: (payload: Partial<UserProfile>) => Promise<{ user: DatabaseUser | null; error: Error | null }>;
+    login: (
+      payload: AuthPayload
+    ) => Promise<{ user: DatabaseUser | null; error: Error | null }>;
+    logout: () => Promise<{ error: Error | null }>;
+    register: (
+      payload: AuthPayload
+    ) => Promise<{ user: DatabaseUser | null; error: Error | null }>;
+    delete: () => Promise<{ error: Error | null }>;
+    updateCredentials: (
+      payload: Partial<AuthPayload>
+    ) => Promise<{ user: DatabaseUser | null; error: Error | null }>;
+    updateProfile: (
+      payload: Partial<UserProfile>, complete?: boolean 
+    ) => Promise<{ user: DatabaseUser | null; error: Error | null }>;
     setCurrentUser: () => void;
   };
 }
@@ -32,7 +40,7 @@ export const useAuthStore = create<AuthStore>((set, store) => ({
     login: async (payload) => {
       set({ isLoading: true });
 
-      const { data: users, error } = await DB.get<DatabaseUser[]>("users", 150);
+      const { data: users, error } = await DB.get<DatabaseUser[]>("users", 0);
       if (error || !users) {
         // key does not exist
         set({ isLoading: false });
@@ -62,7 +70,7 @@ export const useAuthStore = create<AuthStore>((set, store) => ({
       return { error: null };
     },
     register: async (payload) => {
-      set({ isLoading: true});
+      set({ isLoading: true });
 
       const { data: users, error } = await DB.get<DatabaseUser[]>("users", 0);
       if (error) {
@@ -78,7 +86,17 @@ export const useAuthStore = create<AuthStore>((set, store) => ({
         return { user: null, error: new Error("User already exists") };
       }
 
-      const allUsers = users?.map((user) => user.user) || [];
+      const allUsers: UserSimplified[] =
+        users?.map((user) => {
+          return {
+            id: user.id,
+            avatar: user.user.profile.avatarUrl,
+            firstName: user.user.profile.firstName,
+            lastName: user.user.profile.lastName,
+            username: user.user.profile.username,
+            biography: user.user.profile.biography,
+          };
+        }) || [];
 
       const id = faker.datatype.uuid();
 
@@ -158,7 +176,7 @@ export const useAuthStore = create<AuthStore>((set, store) => ({
 
       const currentUser = store().user;
       if (!currentUser) {
-        return { user: null, error: new Error("User not found") }
+        return { user: null, error: new Error("User not found") };
       }
 
       const updatedUser = {
@@ -184,7 +202,7 @@ export const useAuthStore = create<AuthStore>((set, store) => ({
       set({ user: updatedUser, isLoading: false });
       return { user: updatedUser, error: null };
     },
-    updateProfile: async (payload) => {
+    updateProfile: async (payload, complete) => {
       set({ isLoading: true });
 
       const { data: users, error } = await DB.get<DatabaseUser[]>("users", 0);
@@ -201,11 +219,16 @@ export const useAuthStore = create<AuthStore>((set, store) => ({
       const currentUser = store().user;
       if (!currentUser) {
         set({ isLoading: false });
-        return { user: null, error: new Error("User not found") }
+        return { user: null, error: new Error("User not found") };
       }
-      
-      const usernameExists = users.some((u) => u.user.profile.username === payload.username);
-      if(usernameExists && payload.username !== currentUser.user.profile.username) {
+
+      const usernameExists = users.some(
+        (u) => u.user.profile.username === payload.username
+      );
+      if (
+        usernameExists &&
+        payload.username !== currentUser.user.profile.username
+      ) {
         set({ isLoading: false });
         return { user: null, error: new Error("Username already taken") };
       }
@@ -225,9 +248,24 @@ export const useAuthStore = create<AuthStore>((set, store) => ({
       const updatedUsers = users.map((u) => {
         if (u.id === currentUser?.id) {
           return updatedUser;
+        } else {
+            return u;
         }
-        return u;
       });
+
+      if(complete) {
+        //update the updatedUsers array where the following array is pushed with the updatedUser
+        updatedUsers.forEach((u) => {
+          u.user.profile.followers.push({
+            id: updatedUser.id,
+            avatar: updatedUser.user.profile.avatarUrl,
+            username: updatedUser.user.profile.username,
+            firstName: updatedUser.user.profile.firstName,
+            lastName: updatedUser.user.profile.lastName,
+            biography: updatedUser.user.profile.biography,
+          })
+        })
+      };
 
       // update the users list
       await DB.set<DatabaseUser[]>("users", updatedUsers, 0);
@@ -254,8 +292,14 @@ export const useAuthStore = create<AuthStore>((set, store) => ({
 export const useAuth = () => {
   const user = useAuthStore((state) => state.user);
   const isLoading = useAuthStore((state) => state.isLoading);
-  const { login, register, updateCredentials, updateProfile, logout, setCurrentUser } =
-    useAuthStore((state) => state.actions);
+  const {
+    login,
+    register,
+    updateCredentials,
+    updateProfile,
+    logout,
+    setCurrentUser,
+  } = useAuthStore((state) => state.actions);
 
   return {
     user,

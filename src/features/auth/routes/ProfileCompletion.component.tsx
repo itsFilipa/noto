@@ -1,7 +1,7 @@
 import { IonPage, IonContent, useIonRouter } from "@ionic/react";
 import { useCallback, useState } from "react";
 import { object, string } from "zod";
-import { Form, ControlledInput, Button, Note } from "../../../components";
+import { Form, ControlledInput, Button, Note, ControlledTextarea } from "../../../components";
 import { useAuth } from "../../../store";
 import dangerIcon from "../../../assets/iconout/exclamation-triangle.svg";
 import { SubmitHandler } from "react-hook-form";
@@ -36,12 +36,13 @@ export const ProfileCompletionPage = () => {
 
   const onSubmit = useCallback<SubmitHandler<Inputs>>(
     async ({ firstName, lastName, username, description }) => {
+
       const { error } = await updateProfile({
         firstName,
         lastName,
         username,
         biography: description,
-      });
+      }, true);
       if (error) {
         console.error(error);
         setErrorMessage(error.message);
@@ -69,7 +70,7 @@ export const ProfileCompletionPage = () => {
         >
           {({ control, formState }) => (
             <>
-              <div className="flex gap-2">
+              <div className="flex gap-2 justify-between">
                 <ControlledInput
                   control={control}
                   name="firstName"
@@ -91,7 +92,7 @@ export const ProfileCompletionPage = () => {
                 label="Username"
                 errorText={formState.errors.username?.message}
               />
-              <ControlledInput
+              <ControlledTextarea
                 control={control}
                 name="description"
                 label="Description"

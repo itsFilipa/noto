@@ -1,27 +1,27 @@
 import { Control, Controller, Path } from "react-hook-form";
-import { Input, InputCustomProps } from ".";
+import { Textarea, TextareaCustomProps } from ".";
 
-export type ControlledInputProps<TFormValues extends Record<string, InputCustomProps["value"]>> = {
+export type ControlledTextareaProps<TFormValues extends Record<string, TextareaCustomProps["value"]>> = {
   control: Control<any> | undefined;
   name: Path<TFormValues>;
   required?: boolean;
-} & Omit<InputCustomProps, "value" | "registration" | "onChange" | "onBlur">;
+} & Omit<TextareaCustomProps, "value" | "registration" | "onChange" | "onBlur">;
 
 
-export const ControlledInput = <TFormValues extends Record<string, InputCustomProps["value"]>>({
+export const ControlledTextarea = <TFormValues extends Record<string, TextareaCustomProps["value"]>>({
   control,
   name,
   onIonChange,
   onIonBlur,
   ...inputProps
-}: ControlledInputProps<TFormValues>) => {
+}: ControlledTextareaProps<TFormValues>) => {
 
   return(
     <Controller<TFormValues>
       control={control}
       name={name}
       render={({ field: { onChange, onBlur, value, ref } }) => (
-        <Input
+        <Textarea
           {...inputProps}
           ref={ref}
           onIonChange={(e) => {

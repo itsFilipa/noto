@@ -22,7 +22,7 @@ export const PopularTagsPage = () => {
   const modal = useRef<HTMLIonModalElement>(null);
   const page = useRef(null);
   const { listNotes, isLoading: noteLoading } = useNotes();
-  const { tags, tagLoading } = useTags();
+  const { tags } = useTags();
 
   const [filterTag, setFilterTag] = useState<Tag | null>(null);
   const [presentingElement, setPresentingElement] =
@@ -56,14 +56,6 @@ export const PopularTagsPage = () => {
       <PopularTagsHeader tag={filterTag?.name} clearTag={clearFilterTag} />
       <IonContent>
         <div className="mt-5">
-
-          {/* {noteLoading && (
-            <div className="mt-3 flex justify-center items-center">
-              <IonSpinner
-                name="crescent"
-              />
-            </div>
-          )} */}
 
           {result && result.length > 0 ? (
             <>

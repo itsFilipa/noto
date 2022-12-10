@@ -9,15 +9,18 @@ import {
 import { useLocation, useParams } from "react-router";
 import { Button, GenericHeader, Icon } from "../../../components";
 import { DiscoverNotecard } from "../components";
-import { Note, useNotes, User, useUser } from "../../../store";
-import plusIcon from "../../../assets/iconout/plus-small.svg";
+import { Note, useAuth, useNotes, User, useUser } from "../../../store";
+import userPlusIcon from "../../../assets/iconout/user-plus.svg";
+import userMinusIcon from "../../../assets/iconout/user-minus.svg";
 import userIcon from "../../../assets/iconout/user.svg";
 import usersIcon from "../../../assets/iconout/users.svg";
 import cardsIcon from "../../../assets/iconout/cards.svg";
+import Fuse from "fuse.js";
 
 export const UserProfilePage = () => {
   const { getUser, isLoading, follow, unfollow } = useUser();
   const { listNotes, isLoading: loadingNotes } = useNotes();
+  const { user: auth } = useAuth();
 
   const location = useLocation().pathname;
   const path = location.substring(0, location.lastIndexOf("/user/"));
@@ -26,16 +29,28 @@ export const UserProfilePage = () => {
 
   const [notes, setNotes] = useState<Note[]>([]);
   const [user, setUser] = useState<User>();
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  console.log(isFollowing);
 
   useEffect(() => {
     async function fetchData() {
-      const {user} = await getUser(id);
-      setUser(user? user : undefined);
+      const { user } = await getUser(id);
+      setUser(user ? user : undefined);
+      if (auth && user) {
+        console.log("hereeee");
+        const fuse = new Fuse(user.profile.followers, {
+          keys: ["id"],
+          threshold: 0.0,
+        });
+        const result = fuse.search(auth.id);
+        setIsFollowing(result.length > 0 ? true : false);
+      }
       const { notes } = await listNotes({ userId: id });
       setNotes(notes ? notes : []);
     }
     fetchData();
-  }, [getUser, id, listNotes]);
+  }, [getUser, id, listNotes, auth]);
 
   return (
     <IonPage>
@@ -87,13 +102,30 @@ export const UserProfilePage = () => {
               <p className="font-medium text-sm text-neutral-400">following</p>
             </div>
 
-            <Button
-              size="small"
-              className="mt-4"
-              prefix={<Icon icon={plusIcon} className="!w-5 !h-5 text-white" />}
-            >
-              Follow
-            </Button>
+            {isFollowing ? (
+              <Button
+                size="small"
+                color="secondary"
+                className="mt-4"
+                prefix={
+                  <Icon icon={userMinusIcon} className="!w-5 !h-5 text-white" />
+                }
+                onClick={() => {unfollow(id)}}
+              >
+                Unfollow
+              </Button>
+            ) : (
+              <Button
+                size="small"
+                className="mt-4"
+                prefix={
+                  <Icon icon={userPlusIcon} className="!w-5 !h-5 text-white" />
+                }
+                onClick={() => {follow(id)}}
+              >
+                Follow
+              </Button>
+            )}
 
             <div className="flex gap-2 items-center mt-8">
               <IonIcon

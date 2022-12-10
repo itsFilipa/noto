@@ -1,9 +1,7 @@
 import { IonHeader, IonToolbar, IonButtons } from "@ionic/react";
-import { Button } from "../../../components/Button";
-import { Searchbar } from "../../../components/Searchbar";
+import { Icon, Button } from "../../../components";
 import searchIcon from "../../../assets/iconout/magnifying-glass.svg";
-import chevronDownIcon from "../../../assets/iconout/chevron-down.svg";
-import { Icon } from "../../../components";
+import filterIcon from "../../../assets/iconout/filter.svg";
 
 //TODO: animate searchbar
 //https://www.w3schools.com/howto/howto_css_animated_search.asp
@@ -27,7 +25,7 @@ export const FilterHeader = () => {
             iconOnly
             size="large"
             variant="outline"
-            prefix={<Icon icon={chevronDownIcon} className="!h-5 !w-5 text-neutral-400" />}
+            prefix={<Icon icon={filterIcon} className="!h-5 !w-5 text-neutral-400" />}
             id="filter"
           ></Button>
         </IonButtons>

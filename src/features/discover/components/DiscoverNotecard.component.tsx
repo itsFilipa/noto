@@ -6,8 +6,15 @@ import forkIcon from "../../../assets/iconout/fork.svg";
 import forkFullIcon from "../../../assets/iconout/fork-full.svg";
 import heartIcon from "../../../assets/iconout/heart.svg";
 import heartFullIcon from "../../../assets/iconout/heart-full.svg";
+import { useUserNotes } from "../../../store";
+import { useState } from "react";
 
 export const DiscoverNotecard = ({ notecard }: NoteEntity) => {
+  const [isForked, setIsForked] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+
+  const { forkNote } = useUserNotes();
+
   return (
     <div className="w-full bg-white col rounded-xl py-3 px-4 mt-4">
       {/* Header */}
@@ -25,14 +32,12 @@ export const DiscoverNotecard = ({ notecard }: NoteEntity) => {
       {/* Body */}
 
       {notecard.content ? (
-          <p className="text-sm line-clamp-4 mt-3 w-[93%]">
-            {notecard.content}
-          </p>
-        ) : (
-          <p className="text-sm mt-3 text-neutral-400">
-            Continue writing this note..
-          </p>
-        )}
+        <p className="text-sm line-clamp-4 mt-3 w-[93%]">{notecard.content}</p>
+      ) : (
+        <p className="text-sm mt-3 text-neutral-400">
+          Continue writing this note..
+        </p>
+      )}
 
       {/* Footer */}
 
@@ -42,16 +47,32 @@ export const DiscoverNotecard = ({ notecard }: NoteEntity) => {
             size="default"
             variant="outline"
             iconOnly
-            prefix={<Icon icon={heartIcon} className=" text-neutral-400" />}
-            
+            prefix={
+              isLiked ? (
+                <Icon icon={heartFullIcon} className="text-indigo-500" />
+              ) : (
+                <Icon icon={heartIcon} className=" text-neutral-400" />
+              )
+            }
+            onClick={() => {
+              setIsLiked(!isLiked);
+            }}
           />
           <Button
             size="default"
             variant="outline"
             iconOnly
             prefix={
-              <Icon icon={forkIcon} className="text-neutral-400" />
+              isForked ? (
+                <Icon icon={forkFullIcon} className="text-indigo-500" />
+              ) : (
+                <Icon icon={forkIcon} className="text-neutral-400" />
+              )
             }
+            onClick={() => {
+              forkNote(notecard.id);
+              setIsForked(!isForked);
+            }}
           />
         </div>
 
@@ -59,9 +80,7 @@ export const DiscoverNotecard = ({ notecard }: NoteEntity) => {
           size="default"
           variant="clear"
           iconOnly
-          prefix={
-            <Icon icon={infoIcon} className="text-neutral-400" />
-          }
+          prefix={<Icon icon={infoIcon} className="text-neutral-400" />}
         />
       </div>
 

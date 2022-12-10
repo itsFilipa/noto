@@ -1,14 +1,14 @@
 import { IonPage, IonContent } from "@ionic/react";
 import { GenericHeader } from "../../../components";
 import { UsersList } from "../components";
-import { useAuth, User } from "../../../store";
+import { useAuth, UserSimplified } from "../../../store";
 import { useState } from "react";
 
 export const FollowingPage = () => {
 
   const {user} = useAuth();
 
-  const [following, setFollowing] = useState<User[]>(user?.user.profile.following || []);
+  const [following, setFollowing] = useState<UserSimplified[]>(user?.user.profile.following || []);
 
   return (
     <IonPage>
@@ -17,7 +17,7 @@ export const FollowingPage = () => {
         <div className="mt-8">
           {following.map((user, index) => (
             <>
-              <UsersList user={user as User} />
+              <UsersList user={user as UserSimplified} />
               {index !== following.length - 1 && <hr className="my-4" />}
             </>
           ))}

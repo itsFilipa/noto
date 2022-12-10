@@ -1,5 +1,5 @@
 import { Control, Controller, Path } from "react-hook-form";
-import { FullPageInput, FullPageInputProps } from "./FullPageInput.component"
+import { FullPageInput, FullPageInputProps } from ".";
 
 export type ControlledFullPageInputProps<TFormValues extends Record<string, FullPageInputProps["value"]>> = {
   control: Control<any> | undefined;

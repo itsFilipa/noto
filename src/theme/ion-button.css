@@ -6,6 +6,10 @@ ion-button.md > div {
   text-transform: none;
 }
 
+ion-button[color="secondary"] {
+  --background: theme("colors.indigo.800") !important;
+}
+
 /************
 
  BUTTON VARIANTS 

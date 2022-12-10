@@ -17,7 +17,7 @@ import {
 import { Note, useNotes } from "../../../store/note";
 import { memo, useEffect, useRef, useState } from "react";
 import { DiscoverChip, Icon, Searchbar } from "../../../components";
-import { useAuth, User, useUser } from "../../../store";
+import { UserSimplified, useUser } from "../../../store";
 
 import hashtagIcon from "../../../assets/iconout/hashtag.svg";
 import cardsIcon from "../../../assets/iconout/cards.svg";
@@ -49,12 +49,6 @@ const searchFilters = [
 ];
 
 export const DiscoverPage = memo(() => {
-  const date = new Date();
-  const day = date.getDate();
-  const mon = date.toLocaleString("default", { month: "short" });
-  const month = mon.charAt(0).toUpperCase() + mon.slice(1, 3);
-
-  const { user } = useAuth();
   const { notes, isLoading, listNotes } = useNotes();
   const { query } = useUser();
 
@@ -67,40 +61,49 @@ export const DiscoverPage = memo(() => {
   const [filterArray, setFilterArray] = useState(searchFilters);
   const [filter, setFilter] = useState("Best results");
   const [filteredNotes, setFilteredNotes] = useState<Note[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<UserSimplified[]>([]);
 
   useEffect(() => {
     setPresentingElement(page.current);
   }, []);
 
+  useEffect(() => {
+    const querySearch = async () => {
+      if (searchQuery.length > 0) {
+        if (filter === "Best results" || filter === "Cards") {
+          const { notes: result } = await listNotes({ query: searchQuery });
+          setFilteredUsers([]);
+          setFilteredNotes(result ? result : []);
+        }
+        if (filter === "Tags") {
+          const { notes: result } = await listNotes({ tagName: searchQuery });
+          setFilteredUsers([]);
+          setFilteredNotes(result ? result : []);
+        }
+        if (filter === "Users") {
+          const results = await query(searchQuery);
+          setFilteredNotes([]);
+          setFilteredUsers(results ? results : []);
+        }
+      } else {
+        setFilteredNotes([]);
+        setFilteredUsers([]);
+      }
+    };
+    querySearch();
+  }, [filter]);
+
   const handleSearch = async (e: any) => {
     setSearchQuery(e.target.value);
     if (e.target.value.length > 0) {
       if (filter === "Best results" || filter === "Cards") {
-        
-        const {notes: result} = await listNotes({query: e.target.value});
-        
-        // const filtered = notes?.filter(
-        //   (note) =>
-        //     note.title.toLowerCase().includes(e.target.value.toLowerCase()) &&
-        //     note.visibility === "public"
-        // );
+        const { notes: result } = await listNotes({ query: e.target.value });
         setFilteredUsers([]);
-        //setFilteredNotes(filtered ? filtered : []);
         setFilteredNotes(result ? result : []);
       }
       if (filter === "Tags") {
-        // const filtered = notes?.filter(
-        //   (note) =>
-        //     note.tags?.some((tag) =>
-        //       tag.name.toLowerCase().includes(e.target.value.toLowerCase())
-        //     ) && note.visibility === "public"
-        // );
-
-        const {notes: result} = await listNotes({tagName: e.target.value});
-
+        const { notes: result } = await listNotes({ tagName: e.target.value });
         setFilteredUsers([]);
-        //setFilteredNotes(filtered ? filtered : []);
         setFilteredNotes(result ? result : []);
       }
       if (filter === "Users") {
@@ -136,15 +139,6 @@ export const DiscoverPage = memo(() => {
     <IonPage ref={page}>
       <DiscoverHeader />
       <IonContent>
-        {/* <div className="mt-8 ml-8">
-          <p className="font-display font-bold text-[40px]">
-            {day} {month}
-          </p>
-          <p className="font-display text-xl">
-            Hey {user?.user.profile.firstName}
-          </p>
-        </div> */}
-
         <p className="font-display font-bold text-lg mt-6 mb-4">Discover</p>
 
         <div className="col gap-1/2">
@@ -252,7 +246,11 @@ export const DiscoverPage = memo(() => {
           </IonHeader>
 
           <IonContent>
-            {isLoading && <IonSpinner name="crescent" className="mx-auto w-fit mt-3" />}
+            {isLoading && (
+              <div className="mt-3 flex justify-center items-center">
+                <IonSpinner name="crescent" />
+              </div>
+            )}
             {filteredNotes.length === 0 && filteredUsers.length === 0 && (
               <p className="mt-12 font-medium text-sm text-neutral-500 w-fit mx-auto">
                 No results
