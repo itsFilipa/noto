@@ -36,6 +36,10 @@ interface UserNoteStore {
       mine: boolean;
       forked: boolean;
     }) => { notes: Note[] | null; error: Error | null };
+    fullTextSearch: (query: string) => {
+      notes: Note[] | null;
+      error: Error | null;
+    };
   };
 }
 
@@ -233,17 +237,29 @@ export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
         forks: [...noteToBeForked.forks, user],
       };
 
+      //add the tags the forked note has to the user's tags
+      if (noteToBeForked.tags && noteToBeForked.tags.length > 0) {
+        const forkedTags:Tag[] = noteToBeForked.tags.map((t) => {
+          return {
+            ...t,
+            id: faker.datatype.uuid(),
+            userId: user.id,
+            createdAt: new Date().toISOString(),
+          };
+        });
+        const {data: userTags} = await DB.get<Tag[]>("usertags", 0);
+        const dataToSave = Array.isArray(userTags) ? [...userTags, ...forkedTags] : forkedTags;
+        await DB.set<Tag[]>("usertags", dataToSave, 0);
+      }
+
       const array = notes.map((n) => (n.id === noteId ? forkedNote : n));
 
       await DB.set<Note[]>("notes", array, 0);
 
-      if (!usernotes) {
-        await DB.set<Note[]>("usernotes", [newNote], 0);
-      } else {
-        await DB.set<Note[]>("usernotes", [...usernotes, newNote], 0);
-      }
-
-      set({ note: newNote, isLoading: false });
+      const notesToSave = Array.isArray(usernotes) ? [...usernotes, newNote] : [newNote];
+      await DB.set<Note[]>("usernotes", notesToSave, 0);
+      
+      set({ note: newNote, isLoading: false, notes: notesToSave });
       return { note: newNote, error: null };
     },
     sortNotes: (order, sortBy) => {
@@ -343,7 +359,7 @@ export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
             );
           }
         }
-      } else if(payload.tags.length === 0) {
+      } else if (payload.tags.length === 0) {
         if (payload.mine) {
           const user = useAuthStore.getState().user;
 
@@ -391,6 +407,20 @@ export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
 
       return { notes: filteredNotes, error: null };
     },
+    fullTextSearch: (query) => {
+      const notes = get().notes;
+      if (!notes)
+        return { notes: null, error: new Error("Something went wrong.") };
+
+      const fuse = new Fuse(notes, {
+        keys: ["title", "content"],
+        threshold: 0.3,
+      });
+
+      const result = fuse.search(query).map((r) => r.item);
+
+      return { notes: result, error: null };
+    },
   },
 }));
 
@@ -418,7 +448,8 @@ export const useUserNotes = () => {
     moveToTrash,
     sortNotes,
     filterNotes,
-    forkNote
+    forkNote,
+    fullTextSearch,
   } = useUserNotesStore((state) => state.actions);
 
   useEffect(() => {
@@ -447,6 +478,7 @@ export const useUserNotes = () => {
     moveToTrash,
     sortNotes,
     filterNotes,
-    forkNote
+    forkNote,
+    fullTextSearch,
   };
 };

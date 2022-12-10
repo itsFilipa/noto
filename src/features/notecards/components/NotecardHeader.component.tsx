@@ -19,6 +19,7 @@ export const NotecardHeader = ({ openPopover }: NotecardHeaderProps) => {
             iconOnly
             variant="outline"
             size="large"
+            id="open-search"
             prefix={
               <Icon icon={searchIcon} className="!h-5 !w-5 text-neutral-400" />
             }

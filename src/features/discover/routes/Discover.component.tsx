@@ -4,6 +4,7 @@ import {
   IonModal,
   IonPage,
   IonSpinner,
+  IonToast,
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
@@ -17,7 +18,7 @@ import {
 import { Note, useNotes } from "../../../store/note";
 import { memo, useEffect, useRef, useState } from "react";
 import { DiscoverChip, Icon, Searchbar } from "../../../components";
-import { UserSimplified, useUser } from "../../../store";
+import { useAlert, UserSimplified, useUser } from "../../../store";
 
 import hashtagIcon from "../../../assets/iconout/hashtag.svg";
 import cardsIcon from "../../../assets/iconout/cards.svg";
@@ -51,6 +52,7 @@ const searchFilters = [
 export const DiscoverPage = memo(() => {
   const { notes, isLoading, listNotes } = useNotes();
   const { query } = useUser();
+  const { alert, deleteAlert } = useAlert();
 
   const modal = useRef<HTMLIonModalElement>(null);
   const page = useRef(null);
@@ -278,6 +280,14 @@ export const DiscoverPage = memo(() => {
             ))}
           </IonContent>
         </IonModal>
+
+        <IonToast
+          isOpen={alert !== null}
+          color="success"
+          message={alert?.message}
+          duration={3000}
+          onDidDismiss={() => deleteAlert()}
+        />
       </IonContent>
     </IonPage>
   );

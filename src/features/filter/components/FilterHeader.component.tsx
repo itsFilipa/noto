@@ -3,9 +3,6 @@ import { Icon, Button } from "../../../components";
 import searchIcon from "../../../assets/iconout/magnifying-glass.svg";
 import filterIcon from "../../../assets/iconout/filter.svg";
 
-//TODO: animate searchbar
-//https://www.w3schools.com/howto/howto_css_animated_search.asp
-
 export const FilterHeader = () => {
   return (
     <IonHeader>
@@ -15,6 +12,7 @@ export const FilterHeader = () => {
             iconOnly
             variant="outline"
             size="large"
+            id="open-search-filter"
             prefix={
               <Icon icon={searchIcon} className="!h-5 !w-5 text-neutral-400" />
             }
@@ -29,11 +27,6 @@ export const FilterHeader = () => {
             id="filter"
           ></Button>
         </IonButtons>
-        {/* <Searchbar
-          searchIcon={searchIcon}
-          placeholder="Search for tags here..."
-          className="header-search"
-        /> */}
       </IonToolbar>
     </IonHeader>
   );

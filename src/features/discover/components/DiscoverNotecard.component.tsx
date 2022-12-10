@@ -6,7 +6,7 @@ import forkIcon from "../../../assets/iconout/fork.svg";
 import forkFullIcon from "../../../assets/iconout/fork-full.svg";
 import heartIcon from "../../../assets/iconout/heart.svg";
 import heartFullIcon from "../../../assets/iconout/heart-full.svg";
-import { useUserNotes } from "../../../store";
+import { useAlert, useUserNotes } from "../../../store";
 import { useState } from "react";
 
 export const DiscoverNotecard = ({ notecard }: NoteEntity) => {
@@ -14,6 +14,7 @@ export const DiscoverNotecard = ({ notecard }: NoteEntity) => {
   const [isLiked, setIsLiked] = useState(false);
 
   const { forkNote } = useUserNotes();
+  const { setAlert } = useAlert();
 
   return (
     <div className="w-full bg-white col rounded-xl py-3 px-4 mt-4">
@@ -70,7 +71,11 @@ export const DiscoverNotecard = ({ notecard }: NoteEntity) => {
               )
             }
             onClick={() => {
-              forkNote(notecard.id);
+              forkNote(notecard.id).then((note) => {
+                if(note){
+                  setAlert({success: true, message: "Note forked"})
+                }
+              });
               setIsForked(!isForked);
             }}
           />

@@ -90,7 +90,7 @@ export const Notecard = ({ notecard }: NoteEntity) => {
               </p>
             )}
           </div>
-          <Button
+          {/* <Button
             size="default"
             variant="outline"
             iconOnly
@@ -98,7 +98,7 @@ export const Notecard = ({ notecard }: NoteEntity) => {
               <Icon icon={pencilIcon} className="!w-5 !h-5 text-neutral-400" />
             }
             onClick={(e) => {redirect(); e.stopPropagation()}}
-          />
+          /> */}
         </div>
 
         {/* Body */}

@@ -6,8 +6,11 @@ import {
   IonPopover,
   IonLabel,
   IonSpinner,
+  IonModal,
+  IonHeader,
+  IonToolbar,
 } from "@ionic/react";
-import { Icon } from "../../../components";
+import { Button, Icon, Searchbar } from "../../../components";
 import { NotecardHeader } from "../components";
 import { Notecard } from "../components/Notecard.component";
 import { Toggle } from "../../../components/Toggle";
@@ -18,22 +21,53 @@ import calendarIcon from "../../../assets/iconout/calendar-days.svg";
 import clockIcon from "../../../assets/iconout/clock.svg";
 import graphIcon from "../../../assets/iconout/graph.svg";
 import trashIcon from "../../../assets/iconout/trash.svg";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const NotecardsPage = () => {
-  const { notes, isLoading, sortNotes } = useUserNotes();
-
+  const { notes, isLoading, sortNotes, fullTextSearch } = useUserNotes();
   const popover = useRef<HTMLIonPopoverElement>(null);
+  const modal = useRef<HTMLIonModalElement>(null);
+  const page = useRef(null);
+
+  const [searchResult, setSearchResult] = useState<Note[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [showPopover, setShowPopover] = useState(false);
   const [sortToggle, setSortToggle] = useState(false);
+  const [presentingElement, setPresentingElement] =
+    useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setPresentingElement(page.current);
+  }, []);
 
   const openPopover = (e: any) => {
     popover.current!.event = e;
     setShowPopover(true);
   };
 
+  const dismissModal = () => {
+    modal.current?.dismiss();
+  };
+
+  const handleSearch = (e: any) => {
+    setSearchQuery(e.target.value);
+    if (e.target.value.length > 0) {
+      const { notes } = fullTextSearch(e.target.value);
+      if (notes) {
+        setSearchResult(notes);
+      }
+    } else {
+      setSearchResult([]);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery("");
+    setSearchResult([]);
+  };
+
   return (
-    <IonPage>
+    <IonPage ref={page}>
       <NotecardHeader openPopover={openPopover} />
       <IonContent>
         {isLoading && (
@@ -145,6 +179,39 @@ export const NotecardsPage = () => {
             </IonList>
           </IonContent>
         </IonPopover>
+
+        <IonModal
+          ref={modal}
+          trigger="open-search"
+          presentingElement={presentingElement!}
+          canDismiss
+        >
+          <IonHeader>
+            <IonToolbar>
+              <div className="flex justify-between items-center">
+                <Searchbar
+                  className="!p-0"
+                  value={searchQuery}
+                  onIonInput={handleSearch}
+                  onIonClear={clearSearch}
+                />
+                <Button variant="clear" size="small" onClick={dismissModal}>
+                  Close
+                </Button>
+              </div>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            {searchResult && searchResult.length > 0 && (
+              <>
+                {searchResult.map((notecard: Note) => (
+                  <Notecard key={notecard.id} notecard={notecard as Note} />
+                ))}
+                <div className="mb-3" />
+              </>
+            )}
+          </IonContent>
+        </IonModal>
       </IonContent>
     </IonPage>
   );
