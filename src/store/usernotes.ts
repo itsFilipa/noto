@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { useEffect } from "react";
 import create from "zustand";
-import { Note, Tag, useAuthStore, User } from ".";
+import { DatabaseUser, Note, Tag, useAuthStore, User } from ".";
 import type { NoteVisibility } from ".";
 import { DB } from "../lib/db";
 import { sort } from "fast-sort";
@@ -49,7 +49,7 @@ export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
     createNote: async () => {
       set({ isLoading: true });
 
-      const { data: user, error: userError } = await DB.get<User>(
+      const { data: user, error: userError } = await DB.get<DatabaseUser>(
         "currentUser",
         0
       );
@@ -77,7 +77,7 @@ export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
         likes: [],
         forks: [],
         visibility: "private",
-        author: user,
+        author: user.user,
         inlineLinks: [],
         createdAt: date,
         lastModifiedAt: date,
@@ -247,14 +247,11 @@ export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
       return { note: newNote, error: null };
     },
     sortNotes: (order, sortBy) => {
-      console.log("entered");
-
       const notes = get().notes;
       if (!notes) return;
 
       switch (sortBy) {
         case "alphabetical":
-          console.log("entered alphabetical");
           if (order === "asc") {
             const sortedNotes = sort(notes).asc((n) => n.title);
             set({ notes: sortedNotes });

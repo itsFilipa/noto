@@ -37,7 +37,6 @@ const getAllTags = async () => {
     return null;
   }
   const sorted = sort(tags).asc((tag) => tag.name);
-  console.log(sorted);
   return sorted;
 };
 

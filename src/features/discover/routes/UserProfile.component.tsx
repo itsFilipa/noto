@@ -31,14 +31,11 @@ export const UserProfilePage = () => {
   const [user, setUser] = useState<User>();
   const [isFollowing, setIsFollowing] = useState(false);
 
-  console.log(isFollowing);
-
   useEffect(() => {
     async function fetchData() {
       const { user } = await getUser(id);
       setUser(user ? user : undefined);
       if (auth && user) {
-        console.log("hereeee");
         const fuse = new Fuse(user.profile.followers, {
           keys: ["id"],
           threshold: 0.0,

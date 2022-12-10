@@ -1,4 +1,4 @@
-import { IonIcon, useIonAlert, useIonRouter } from "@ionic/react";
+import { useIonAlert, useIonRouter } from "@ionic/react";
 import { Button } from "../../../components/Button";
 import { NoteEntity } from "../../../types/";
 import { Icon } from "../../../components";
@@ -12,6 +12,7 @@ import eyeIcon from "../../../assets/iconout/eye.svg";
 import heartIcon from "../../../assets/iconout/heart.svg";
 import chartIcon from "../../../assets/iconout/chart-bar-square.svg";
 import { useUserNotes } from "../../../store";
+import { useState } from "react";
 
 //Create a function to convert ISO Date to the format 'dd MMM yyyy'
 const convertDate = (date: string) => {
@@ -24,8 +25,37 @@ const convertDate = (date: string) => {
   return newDate.toLocaleDateString("en-GB", options);
 };
 
+//function to calculate the time difference until now
+const getTimeSince = (dateString: string) => {
+  // Parse the given date using the Date object
+  const date = new Date(dateString);
+
+  // Calculate the difference in milliseconds between the given date and the current moment
+  const diff = Date.now() - date.getTime();
+
+  // Round down the difference to the nearest whole number
+  const roundedDiff = Math.floor(diff);
+
+  // Determine the unit of time to use for the result
+  // If the rounded difference is less than 1 minute, return the result in minutes
+  if (roundedDiff < 1000 * 60) {
+    return "just moments ago";
+  }
+  else if( 1000 * 60 < roundedDiff && roundedDiff < 1000 * 60 * 60){
+    return Math.floor(roundedDiff / (1000 * 60)).toString() + " minutes ago";
+    // If the rounded difference is less than 1 hour, return the result in hours
+  } else if (1000 * 60 * 60 < roundedDiff && roundedDiff < 1000 * 60 * 60 * 24) {
+    return Math.floor(roundedDiff / (1000 * 60 * 60)).toString() + " hours ago";
+    
+    // If the rounded difference is greater than or equal to 1 hour, return the result in days
+  } else {
+    return Math.floor(roundedDiff / (1000 * 60 * 60 * 24)).toString() + " days ago";
+  }
+}
+
 export const Notecard = ({ notecard }: NoteEntity) => {
   
+  const [infoOpen, setInfoOpen] = useState(false);
   const { moveToTrash } = useUserNotes();
   const [presentAlert] = useIonAlert();
   const router = useIonRouter();
@@ -108,6 +138,8 @@ export const Notecard = ({ notecard }: NoteEntity) => {
               prefix={
                 <Icon icon={infoIcon} className="!w-5 !h-5 text-neutral-400" />
               }
+              href={`/notecards#${notecard.id}`}
+              onClick={(e) => e.stopPropagation()}
             />
             <Button
               size="default"
@@ -148,22 +180,22 @@ export const Notecard = ({ notecard }: NoteEntity) => {
         https://javascript.plainenglish.io/how-to-create-a-collapsable-panel-with-smooth-animations-in-react-bb10c22edb5e
       */}
 
-      {/* <div className="mt-2 px-4">
+      <div className="mt-2 px-4 expandable-info" id={notecard.id}>
         <div className="mb-3">
-          <div className="flex gap-2 mb-1">
-            <ClockIcon className="w-4 h-4 text-neutral-500" />
+          <div className="flex gap-2 mb-1 items-center">
+            <Icon icon={clockIcon} className="w-4 h-4 text-neutral-500" />
             <p className="font-semibold text-xs text-neutral-500">
               Last Modified
             </p>
           </div>
           <p className="font-semibold text-xs text-neutral-400">
-            {notecard.lastModifiedAt}
+            {getTimeSince(notecard.lastModifiedAt)}
           </p>
         </div>
 
         <div className="mb-3">
-          <div className="flex gap-2 mb-1">
-            <CalendarDaysIcon className="w-4 h-4 text-neutral-500" />
+          <div className="flex gap-2 mb-1 items-center">
+            <Icon icon={calendarIcon} className="w-4 h-4 text-neutral-500" />
             <p className="font-semibold text-xs text-neutral-500">
               Created at
             </p>
@@ -174,27 +206,27 @@ export const Notecard = ({ notecard }: NoteEntity) => {
         </div>
 
         <div className="mb-3">
-          <div className="flex gap-2 mb-1">
-            <ChartBarSquareIcon className="w-4 h-4 text-neutral-500" />
+          <div className="flex gap-2 mb-1 items-center">
+            <Icon icon={chartIcon} className="w-4 h-4 text-neutral-500" />
             <p className="font-semibold text-xs text-neutral-500">
               Stats
             </p>
           </div>
           <div className="flex gap-6">
               <div className="flex gap-2 items-center">
-                <p className="font-semibold text-xs text-neutral-400">{notecard.likes}</p>
-                <HeartIcon className="w-4 h-4 text-neutral-400" />
+                <p className="font-semibold text-xs text-neutral-400">{notecard.likes.length}</p>
+                <Icon icon={heartIcon} className="w-4 h-4 text-neutral-400" />
               </div>
               <div className="flex gap-2 items-center">
-                <p className="font-semibold text-xs text-neutral-400">{notecard.forks}</p>
-                <IonIcon icon={forkIcon} className="text-neutral-400" />
+                <p className="font-semibold text-xs text-neutral-400">{notecard.forks.length}</p>
+                <Icon icon={forkIcon} className="w-4 h-4 text-neutral-400" />
               </div>
           </div>
         </div>
 
         <div>
-          <div className="flex gap-2 mb-1">
-            <EyeIcon className="w-4 h-4 text-neutral-500" />
+          <div className="flex gap-2 mb-1 items-center">
+            <Icon icon={eyeIcon} className="w-4 h-4 text-neutral-500" />
             <p className="font-semibold text-xs text-neutral-500">
               Visibility
             </p>
@@ -203,7 +235,7 @@ export const Notecard = ({ notecard }: NoteEntity) => {
             {notecard.visibility.charAt(0).toUpperCase() + notecard.visibility.slice(1)}
           </p>
         </div>
-      </div> */}
+      </div>
     </>
   );
 };

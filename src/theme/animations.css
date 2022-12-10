@@ -1,0 +1,12 @@
+.expandable-info {
+  overflow: hidden;
+  line-height: 200px;
+  transition: all .5s ease-in-out;
+  height: 0;
+}
+
+.expandable-info:target{
+  height: 200px;
+  line-height: 200px;
+}
+

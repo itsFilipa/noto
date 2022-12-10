@@ -59,8 +59,6 @@ const useTrashStore = create<TrashStore>((set, get) => ({
 
       //set the state for the usernotes store
       const usernotes = useUserNotesStore.getState().notes;
-      console.log(usernotes);
-      console.log(note);
       const newUserNotes = Array.isArray(usernotes)
         ? [...usernotes, note]
         : [note];

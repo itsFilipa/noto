@@ -35,7 +35,6 @@ export const NotecardHeader = ({ openPopover }: NotecardHeaderProps) => {
                 className="!h-5 !w-5 text-neutral-400"
               />
             }
-            // id="sort"
             onClick={(e) => openPopover(e)}
           ></Button>
           <Button

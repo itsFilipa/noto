@@ -51,7 +51,6 @@ export const EditNotecardPage = () => {
   useEffect(() => {
     if (user) {
       getNote(noteId).then(({ note }) => {
-        console.log(note);
         if (note) {
           setvalueTitle(note.title);
           setvalueContent(note.content);

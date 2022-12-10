@@ -45,8 +45,6 @@ export const NewNotecardPage = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
-  console.log(noteTags);
-
   useEffect(() => {
     createNote();
   }, [createNote]);

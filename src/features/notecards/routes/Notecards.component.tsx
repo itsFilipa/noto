@@ -5,13 +5,7 @@ import {
   IonList,
   IonPopover,
   IonLabel,
-  IonRefresher,
-  IonRefresherContent,
-  RefresherEventDetail,
   IonSpinner,
-  IonLoading,
-  useIonRouter,
-  useIonActionSheet,
 } from "@ionic/react";
 import { Icon } from "../../../components";
 import { NotecardHeader } from "../components";
@@ -28,7 +22,6 @@ import { useRef, useState } from "react";
 
 export const NotecardsPage = () => {
   const { notes, isLoading, sortNotes } = useUserNotes();
-  const router = useIonRouter();
 
   const popover = useRef<HTMLIonPopoverElement>(null);
   const [showPopover, setShowPopover] = useState(false);
@@ -43,18 +36,27 @@ export const NotecardsPage = () => {
     <IonPage>
       <NotecardHeader openPopover={openPopover} />
       <IonContent>
-        {notes && notes.length > 0 ? (
+        {isLoading && (
+          <div className="flex justify-center">
+            <IonSpinner name="crescent" />
+          </div>
+        )}
+
+        {notes && notes.length > 0 && (
           <>
             {notes.map((notecard: Note) => (
               <Notecard key={notecard.id} notecard={notecard as Note} />
             ))}
             <div className="mb-3" />
           </>
-        ) : (
+        )}
+
+        {!isLoading && !notes && (
           <p className="mt-12 font-medium text-neutral-500 mx-auto w-fit">
             There are no notes to show you
           </p>
         )}
+
         <IonPopover
           ref={popover}
           isOpen={showPopover}
@@ -80,7 +82,6 @@ export const NotecardsPage = () => {
                 className="[--padding-start:0px]"
                 onClick={() => {
                   sortNotes(sortToggle ? "desc" : "asc", "alphabetical");
-                  console.log("sorting");
                   setShowPopover(false);
                 }}
               >
@@ -94,7 +95,6 @@ export const NotecardsPage = () => {
                 className="[--padding-start:0px]"
                 onClick={() => {
                   sortNotes(sortToggle ? "desc" : "asc", "createdAt");
-                  console.log("sorting");
                   setShowPopover(false);
                 }}
               >
@@ -108,7 +108,6 @@ export const NotecardsPage = () => {
                 className="[--padding-start:0px]"
                 onClick={() => {
                   sortNotes(sortToggle ? "desc" : "asc", "lastModifiedAt");
-                  console.log("sorting");
                   setShowPopover(false);
                 }}
               >
@@ -146,7 +145,6 @@ export const NotecardsPage = () => {
             </IonList>
           </IonContent>
         </IonPopover>
-        <IonLoading isOpen={isLoading} animated spinner="crescent" />
       </IonContent>
     </IonPage>
   );
