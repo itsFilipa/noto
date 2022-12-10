@@ -27,7 +27,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "./store";
 import { createFakeNotes, createFakeTags, createFakeUsers } from "./utils/fakedata";
 
-setupIonicReact();
+setupIonicReact({scrollAssist: false});
 
 const populateFakeData = async () => {
 
