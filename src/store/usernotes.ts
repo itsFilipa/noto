@@ -239,7 +239,7 @@ export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
 
       //add the tags the forked note has to the user's tags
       if (noteToBeForked.tags && noteToBeForked.tags.length > 0) {
-        const forkedTags:Tag[] = noteToBeForked.tags.map((t) => {
+        const forkedTags: Tag[] = noteToBeForked.tags.map((t) => {
           return {
             ...t,
             id: faker.datatype.uuid(),
@@ -247,18 +247,28 @@ export const useUserNotesStore = create<UserNoteStore>((set, get) => ({
             createdAt: new Date().toISOString(),
           };
         });
-        const {data: userTags} = await DB.get<Tag[]>("usertags", 0);
-        const dataToSave = Array.isArray(userTags) ? [...userTags, ...forkedTags] : forkedTags;
-        await DB.set<Tag[]>("usertags", dataToSave, 0);
+        const { data: userTags } = await DB.get<Tag[]>("usertags", 0);
+
+        if (userTags) {
+          const filteredForkedTags = forkedTags.filter(forkedTag => {
+            // Check if the name property of the forkedTag exists in the name property of the Tag objects in userTags
+            return !userTags.some(userTag => userTag.name === forkedTag.name);
+          });
+          await DB.set<Tag[]>("usertags", filteredForkedTags, 0);
+        } else {
+          await DB.set<Tag[]>("usertags", forkedTags, 0);
+        }
       }
 
       const array = notes.map((n) => (n.id === noteId ? forkedNote : n));
 
       await DB.set<Note[]>("notes", array, 0);
 
-      const notesToSave = Array.isArray(usernotes) ? [...usernotes, newNote] : [newNote];
+      const notesToSave = Array.isArray(usernotes)
+        ? [...usernotes, newNote]
+        : [newNote];
       await DB.set<Note[]>("usernotes", notesToSave, 0);
-      
+
       set({ note: newNote, isLoading: false, notes: notesToSave });
       return { note: newNote, error: null };
     },
